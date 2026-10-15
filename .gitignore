@@ -44,3 +44,6 @@ next-env.d.ts
 # playwright / capturas
 /screenshots/
 /test-results/
+
+# vercel
+.vercel
