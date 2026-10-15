@@ -1,0 +1,50 @@
+{
+  "name": "frigorifico-cuchilla-grande",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "next typegen && tsc --noEmit",
+    "lint": "eslint",
+    "i18n:check": "tsx scripts/i18n-check.ts",
+    "db:push": "node --env-file=.env.local scripts/db-push.mjs",
+    "db:seed": "tsx --env-file=.env.local scripts/seed.ts",
+    "db:test-permissions": "tsx --env-file=.env.local scripts/test-permissions.ts",
+    "shots": "tsx scripts/screenshots.ts"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.117.3",
+    "next": "16.4.1",
+    "next-intl": "^4.14.9",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "server-only": "^0.0.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.1",
+    "@tailwindcss/turbopack": "^4",
+    "@types/node": "^24",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.4.1",
+    "supabase": "^2.121.0",
+    "tailwindcss": "^4",
+    "tsx": "^4.23.15",
+    "typescript": "^5"
+  },
+  "allowScripts": {
+    "sharp": true,
+    "unrs-resolver": true,
+    "@tailwindcss/oxide": true,
+    "esbuild@0.28.2": true,
+    "@swc/core": false,
+    "@parcel/watcher": false
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}

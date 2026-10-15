@@ -1,0 +1,28 @@
+{
+  "Meta": {
+    "siteName": "Frigorífico Cuchilla Grande",
+    "description": "Uruguayan beef and lamb exporter. Demo website of a fictitious company."
+  },
+  "Home": {
+    "eyebrow": "{city} · {department} · Uruguay",
+    "title": "Uruguayan beef and lamb for the world",
+    "lead": "We process up to {cattle} cattle and {sheep} sheep per day and export to more than {countries} countries, with individual traceability for every animal.",
+    "pricesLoading": "Loading the price board…",
+    "pricesAsOf": "Reference price board valid from {date, date, long}.",
+    "pricesUnavailable": "The price board is not available right now."
+  },
+  "Footer": {
+    "disclaimer": "Demo website — fictitious company",
+    "mgap": "MGAP approval No. {number} (fictitious number)"
+  },
+  "LocaleSwitcher": {
+    "label": "Language",
+    "es": "Español",
+    "en": "English"
+  },
+  "NotFound": {
+    "title": "We couldn't find this page",
+    "text": "The link may be mistyped or the page may no longer exist.",
+    "back": "Back to home"
+  }
+}
