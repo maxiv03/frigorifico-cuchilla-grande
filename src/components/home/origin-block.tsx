@@ -12,7 +12,7 @@ export async function OriginBlock() {
   const { founded, foundingFamily, figures } = company;
 
   return (
-    <Section aria-labelledby="origen">
+    <Section tone="muted" aria-labelledby="origen">
       <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-16">
         <div className="lg:col-span-6">
           <SectionHeader id="origen" eyebrow={t("eyebrow")} title={t("title")} />

@@ -31,11 +31,13 @@ type SectionHeaderProps = {
   id?: string;
   align?: "left" | "center";
   invert?: boolean;
+  /** Nivel del título: h1 en encabezados de página, h2 (por defecto) en secciones. */
+  as?: "h1" | "h2";
   className?: string;
 };
 
 /** Encabezado estándar de sección: antetítulo, título serif y bajada. */
-export function SectionHeader({ eyebrow, title, lead, id, align = "left", invert, className }: SectionHeaderProps) {
+export function SectionHeader({ eyebrow, title, lead, id, align = "left", invert, as: Heading = "h2", className }: SectionHeaderProps) {
   return (
     <header className={cn("max-w-3xl", align === "center" && "mx-auto text-center", className)}>
       {eyebrow && (
@@ -48,7 +50,7 @@ export function SectionHeader({ eyebrow, title, lead, id, align = "left", invert
           {eyebrow}
         </p>
       )}
-      <h2
+      <Heading
         id={id}
         className={cn(
           "mt-3 text-3xl leading-tight font-semibold sm:text-4xl",
@@ -56,7 +58,7 @@ export function SectionHeader({ eyebrow, title, lead, id, align = "left", invert
         )}
       >
         {title}
-      </h2>
+      </Heading>
       {lead && (
         <p className={cn("mt-4 text-lg leading-relaxed", invert ? "text-earth-200" : "text-ink-muted")}>{lead}</p>
       )}

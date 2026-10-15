@@ -29,7 +29,8 @@ function flatten(obj: Json, prefix = "", out: Record<string, string> = {}) {
   return out;
 }
 
-const placeholders = (s: string) => [...s.matchAll(/\{(\w+)/g)].map((m) => m[1]).sort().join(",");
+// Solo nombres de argumento ICU ("{count, plural, …}" o "{cut}"), no el texto de las ramas.
+const placeholders = (s: string) => [...new Set([...s.matchAll(/\{\s*(\w+)\s*[,}]/g)].map((m) => m[1]))].sort().join(",");
 
 // ─── 1. Mensajes ────────────────────────────────────────────────────────────
 const messages = Object.fromEntries(
@@ -68,12 +69,17 @@ function isLocalized(v: unknown): v is Record<string, unknown> {
   return !!v && typeof v === "object" && !Array.isArray(v) && locales.some((l) => l in v);
 }
 
+/** Campos traducibles opcionales por idioma (pueden faltar; si están, no vacíos ni copiados). */
+const OPTIONAL_PER_LOCALE = new Set(["alias"]);
+
 function walk(value: unknown, path: string) {
   if (isLocalized(value)) {
     localizedFields++;
+    const optional = OPTIONAL_PER_LOCALE.has(path.split(".").pop() ?? "");
     const ref = value[defaultLocale];
     for (const l of locales) {
       const v = value[l];
+      if (optional && v === undefined) continue;
       if (typeof v !== "string" || v.trim() === "") {
         errors.push(`[contenido] ${path}.${l} vacío o faltante`);
       } else if (l !== defaultLocale && v === ref && !allowedValues.includes(v)) {

@@ -1,6 +1,5 @@
 "use client";
 
-import NextLink from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 import { useParams, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
@@ -14,6 +13,10 @@ type Props = { className?: string; tone?: "dark" | "light" };
 /**
  * Selector de idioma: lleva a la página equivalente (slug traducido si la página
  * declaró alternates) y conserva los filtros de la URL (?species=…).
+ *
+ * Usa <a> y no <Link>: cambiar de idioma cambia el layout raíz ([locale] es root param,
+ * con su propio <html lang>). La navegación de cliente entre layouts raíz dejaba montadas
+ * las dos páginas (ES y EN a la vez); una carga completa de documento lo evita.
  */
 export function LocaleSwitcher(props: Props) {
   // useSearchParams requiere Suspense con Cache Components; el fallback no conserva query.
@@ -36,11 +39,29 @@ function Links({ className, tone = "dark", query }: Props & { query: string }) {
   const params = useParams();
   const alternates = useAlternates();
 
+  // next-intl devuelve la plantilla ("/products/[species]/[cut]") o la ruta interna con
+  // valores ("/products/vacuno/lomo") según el caso: se normaliza a plantilla + params.
+  const dynamicParams = Object.fromEntries(Object.entries(params).filter(([k]) => k !== "locale"));
+  const template = pathname.includes("[") ? { pathname, params: dynamicParams } : matchTemplate(pathname);
+
   function hrefFor(locale: Locale) {
-    const base =
-      alternates[locale] ??
-      // @ts-expect-error -- pathname y params corresponden a la ruta actual
-      getPathname({ locale, href: { pathname, params } });
+    if (alternates[locale]) return withQuery(alternates[locale]);
+    if (locale === current) {
+      // @ts-expect-error -- plantilla y params salen de la ruta actual
+      return withQuery(getPathname({ locale, href: template ?? pathname }));
+    }
+    // Rutas con params de contenido ([species], [cut], [slug]): sus valores son del idioma
+    // actual y no sirven en el otro. Hasta que la página declare sus alternates (al hidratar),
+    // el link apunta a la página padre estática (p. ej. /en/products), nunca a una URL inválida.
+    if (Object.keys(dynamicParams).length > 0) {
+      const parent = template ? template.pathname.slice(0, template.pathname.indexOf("/[")) || "/" : "/";
+      // @ts-expect-error -- `parent` es un prefijo estático de la ruta actual
+      return withQuery(getPathname({ locale, href: parent }));
+    }
+    // @ts-expect-error -- pathname corresponde a la ruta actual (estática)
+    return withQuery(getPathname({ locale, href: pathname }));
+  }
+  function withQuery(base: string) {
     return query ? `${base}?${query}` : base;
   }
 
@@ -55,7 +76,7 @@ function Links({ className, tone = "dark", query }: Props & { query: string }) {
                 |
               </span>
             )}
-            <NextLink
+            <a
               href={hrefFor(locale)}
               hrefLang={locale}
               lang={locale}
@@ -73,10 +94,27 @@ function Links({ className, tone = "dark", query }: Props & { query: string }) {
             >
               <span aria-hidden="true">{locale}</span>
               <span className="sr-only">{t(locale)}</span>
-            </NextLink>
+            </a>
           </span>
         );
       })}
     </nav>
   );
+}
+
+/** "/products/vacuno/lomo" → { pathname: "/products/[species]/[cut]", params: { species, cut } } */
+function matchTemplate(internal: string) {
+  for (const template of Object.keys(routing.pathnames)) {
+    if (!template.includes("[")) continue;
+    const names: string[] = [];
+    const re = new RegExp(
+      `^${template.replace(/\[([^\]]+)\]/g, (_, name: string) => {
+        names.push(name);
+        return "([^/]+)";
+      })}$`,
+    );
+    const m = internal.match(re);
+    if (m) return { pathname: template, params: Object.fromEntries(names.map((n, i) => [n, decodeURIComponent(m[i + 1])])) };
+  }
+  return null;
 }

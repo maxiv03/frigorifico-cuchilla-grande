@@ -95,6 +95,105 @@
       "unavailable": "La pizarra de precios no está disponible en este momento."
     }
   },
+  "Products": {
+    "metaTitle": "Productos: cortes vacunos y ovinos",
+    "metaDescription": "Catálogo de cortes vacunos y ovinos de exportación, enfriados y congelados, con y sin hueso. Filtrá por zona, mercado y presentación.",
+    "eyebrow": "Catálogo de exportación",
+    "title": "Cortes vacunos y ovinos",
+    "lead": "Elegí una zona del animal o usá los filtros. Cada corte indica sus presentaciones, si va con o sin hueso y los mercados donde más se vende.",
+    "speciesLabel": "Especie",
+    "species": {
+      "beef": "Vacuno",
+      "lamb": "Ovino"
+    },
+    "diagram": {
+      "title": "Zonas de corte",
+      "hint": "Tocá una zona del animal o elegila en la lista.",
+      "label": "Diagrama de zonas de corte: {species}",
+      "zone": "{zone}: {count, plural, =0 {sin cortes con estos filtros} one {# corte} other {# cortes}}",
+      "selected": "seleccionada",
+      "chipsLabel": "Zonas",
+      "seeAll": "Ver todos"
+    },
+    "filters": {
+      "title": "Filtros",
+      "zone": "Zona",
+      "market": "Mercado",
+      "allMarkets": "Todos los mercados",
+      "presentation": "Presentación",
+      "bone": "Hueso",
+      "any": "Todas",
+      "anyBone": "Indistinto",
+      "active": "Filtros activos",
+      "remove": "Quitar filtro: {label}",
+      "clear": "Limpiar filtros"
+    },
+    "presentation": {
+      "chilled": "Enfriado",
+      "frozen": "Congelado"
+    },
+    "bone": {
+      "bone_in": "Con hueso",
+      "boneless": "Sin hueso"
+    },
+    "results": {
+      "count": "{count, plural, =0 {Ningún corte} one {# corte} other {# cortes}}",
+      "live": "{count, plural, =0 {No quedan cortes con estos filtros} one {Queda # corte} other {Quedan # cortes}}"
+    },
+    "empty": {
+      "title": "No hay cortes con esta combinación",
+      "suggestion": "Si quitás el filtro «{filter}» vas a ver {count, plural, one {# corte} other {# cortes}}.",
+      "generic": "Probá con otra combinación de filtros.",
+      "remove": "Quitar «{filter}»"
+    },
+    "card": {
+      "quote": "Pedir cotización",
+      "quoteFor": "Pedir cotización de {cut}",
+      "quoteSubject": "[Demo] Cotización: {cut} ({species})",
+      "zone": "Zona: {zone}"
+    },
+    "specs": {
+      "title": "Presentaciones y formato de caja",
+      "chilled": "Envasado al vacío y conservado entre {min} y {max} °C. Vida útil de hasta {beef} días en vacuno y {lamb} días en ovino. Cajas de {boxMin} a {boxMax} kg.",
+      "frozen": "Envasado al vacío y congelado a {min} °C o menos. Vida útil de hasta {months} meses. Cajas de {boxMin} a {boxMax} kg.",
+      "note": "Datos referenciales. Cada pedido se ajusta a la ficha técnica del cliente."
+    },
+    "detail": {
+      "breadcrumb": "Ruta de navegación",
+      "alias": "También conocido como {alias}",
+      "dataTitle": "Datos del corte",
+      "zone": "Zona",
+      "bone": "Hueso",
+      "presentations": "Presentaciones",
+      "markets": "Mercados habituales",
+      "diagramLabel": "Ubicación del corte en {species}: zona {zone}",
+      "sameZone": "Otros cortes de la zona {zone}",
+      "quoteTitle": "¿Le interesa este corte?",
+      "quoteText": "Contanos volumen, presentación y destino, y un ejecutivo comercial te responde con precio y disponibilidad.",
+      "back": "Volver al catálogo",
+      "metaTitle": "{cut} ({species})",
+      "speciesInline": {
+        "beef": "la res",
+        "lamb": "el cordero"
+      }
+    },
+    "images": {
+      "beef-steak": "Dos bifes anchos vacunos crudos sobre papel",
+      "beef-roast": "Pieza vacuna cruda atada para asar",
+      "beef-ribs": "Tiras de asado vacuno crudo con hueso",
+      "beef-braise": "Pieza vacuna cruda y un bife sobre una fuente",
+      "beef-flank": "Corte vacuno plano y crudo sobre una tabla",
+      "lamb-rack": "Dos chuletas de cordero crudas con el hueso limpio",
+      "lamb-chops": "Chuletas de lomo de cordero crudas sobre una tabla",
+      "lamb-cuts": "Cortes de cordero crudos sobre una tabla"
+    }
+  },
+  "Featured": {
+    "eyebrow": "Catálogo",
+    "title": "Cortes destacados",
+    "lead": "Algunos de los cortes que más exportamos, enfriados y congelados.",
+    "cta": "Ver catálogo completo"
+  },
   "Footer": {
     "about": "Frigorífico exportador de carne vacuna y ovina, con planta habilitada en Sarandí del Yí, departamento de Durazno.",
     "contactTitle": "Contacto",

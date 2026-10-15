@@ -13,7 +13,10 @@
     "db:seed": "tsx --env-file=.env.local scripts/seed.ts",
     "db:test-permissions": "tsx --env-file=.env.local scripts/test-permissions.ts",
     "shots": "tsx scripts/screenshots.ts",
-    "check:links": "tsx scripts/check-links.ts"
+    "check:links": "tsx scripts/check-links.ts",
+    "diagram:preview": "tsx scripts/diagram-preview.ts",
+    "qa:catalog": "tsx scripts/qa-catalog.ts",
+    "qa:layout": "node scripts/qa-layout.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.117.3",

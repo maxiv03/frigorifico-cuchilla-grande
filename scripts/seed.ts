@@ -3,9 +3,11 @@
  * Orden en la base compartida: migración aditiva → este seed → deploy.
  *   npm run db:seed
  */
+import { company } from "@/data/company";
 import type { Locale } from "@/i18n/routing";
 import { initialHistory, mondayOf } from "@/lib/prices/rotation";
-import { locales, priceCategories } from "../supabase/seed";
+import { slugify } from "@/lib/catalog/slug";
+import { cutZones, cuts, locales, markets, priceCategories } from "../supabase/seed";
 import { adminClient } from "./lib/db";
 
 const HISTORY_WEEKS = 12;
@@ -58,6 +60,76 @@ async function seedPrices() {
   );
 }
 
+async function seedCatalog() {
+  await upsert(
+    "markets",
+    markets.map((m) => ({
+      id: m.id,
+      lat: m.lat,
+      lng: m.lng,
+      share_pct: m.sharePct,
+      volume_tonnes: Math.round((company.figures.exportTonnesPerYear * m.sharePct) / 100),
+      sort: m.sort,
+    })),
+    "id",
+  );
+  await upsert(
+    "market_translations",
+    markets.flatMap((m) =>
+      localeCodes.map((locale) => ({ market_id: m.id, locale, name: m.name[locale], description: m.description[locale] })),
+    ),
+    "market_id,locale",
+  );
+  await upsert(
+    "cut_zones",
+    cutZones.map((z) => ({ id: `${z.species}_${z.key}`, species: z.species, sort: z.sort })),
+    "id",
+  );
+  await upsert(
+    "cut_zone_translations",
+    cutZones.flatMap((z) => localeCodes.map((locale) => ({ zone_id: `${z.species}_${z.key}`, locale, name: z.name[locale] }))),
+    "zone_id,locale",
+  );
+  await upsert(
+    "cuts",
+    cuts.map((c, i) => ({
+      id: `${c.species}_${c.key}`,
+      species: c.species,
+      zone_id: `${c.species}_${c.zone}`,
+      bone: c.bone,
+      presentations: c.presentations,
+      image: c.image,
+      featured: c.featured ?? false,
+      sort: i + 1,
+    })),
+    "id",
+  );
+  await upsert(
+    "cut_translations",
+    cuts.flatMap((c) =>
+      localeCodes.map((locale) => ({
+        cut_id: `${c.species}_${c.key}`,
+        species: c.species,
+        locale,
+        slug: slugify(c.name[locale]),
+        name: c.name[locale],
+        alias: c.alias?.[locale] ?? null,
+        description: c.description[locale],
+      })),
+    ),
+    "cut_id,locale",
+  );
+  // cut_markets: se reemplaza el conjunto de cada corte (un corte puede dejar un mercado).
+  const ids = cuts.map((c) => `${c.species}_${c.key}`);
+  const del = await db.from("cut_markets").delete().in("cut_id", ids);
+  if (del.error) throw new Error(`cut_markets: ${del.error.message}`);
+  await upsert(
+    "cut_markets",
+    cuts.flatMap((c) => c.markets.map((market_id) => ({ cut_id: `${c.species}_${c.key}`, market_id }))),
+    "cut_id,market_id",
+  );
+}
+
 async function main() {
   console.log("Seed →", process.env.SUPABASE_URL);
   await upsert(
@@ -66,6 +138,7 @@ async function main() {
     "code",
   );
   await seedPrices();
+  await seedCatalog();
   console.log("Seed completo.");
 }
 

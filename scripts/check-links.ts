@@ -27,6 +27,13 @@ async function visit(path: string, from: string, depth: number) {
   }
   if (!res.headers.get("content-type")?.includes("text/html")) return;
   const html = await res.text();
+  // Con Cache Components, el 1.er pedido a un slug inexistente puede salir 200 con la página
+  // 404 (noindex). Se cuenta como roto igual.
+  if (/<meta name="robots" content="noindex"/.test(html)) {
+    seen.set(key, 404);
+    failures.push(`404 (soft) ${key}  (desde ${from})`);
+    return;
+  }
   const ids = new Set([...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]));
   for (const [, href] of html.matchAll(/<a[^>]+href="([^"]+)"/g)) {
     const h = href.replace(/&amp;/g, "&");

@@ -1,5 +1,6 @@
 import "server-only";
 import { serverEnv } from "@/lib/env";
+import { buildMailto } from "@/lib/mailto";
 
 /** Datos de contacto demo (teléfono/WhatsApp y mail del equipo, desde variables de entorno). */
 export function contactInfo() {
@@ -30,7 +31,5 @@ export function whatsappUrl(message: string) {
 
 /** mailto: con asunto prellenado (también marcado como demo). */
 export function mailtoUrl(subject: string) {
-  const { CONTACT_EMAIL } = serverEnv();
-  const s = subject.startsWith("[Demo]") ? subject : `[Demo] ${subject}`;
-  return `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(s)}`;
+  return buildMailto(serverEnv().CONTACT_EMAIL, subject);
 }

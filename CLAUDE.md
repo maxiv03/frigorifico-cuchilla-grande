@@ -38,14 +38,17 @@ src/
   components/layout/     header, footer, menú móvil, selector de idioma
   components/brand/      Logo e Isotype
   components/home/       secciones de la home
+  components/cuts/       catálogo: diagrama SVG (geometría + componente), tarjeta, filtros
   lib/supabase/          public.ts (clave publicable) y admin.ts (clave secreta)
   lib/prices/            lógica determinista de la pizarra (compartida por seed y cron)
+  lib/catalog/           tipos y claves neutras, filtros de URL, slugs de especie, fotos por categoría
+  lib/data/              lecturas cacheadas ('use cache'): pizarra y catálogo
   lib/contact.ts         teléfono/WhatsApp/mail desde env + links con "[Demo]"
   lib/format.ts          formatFigure / formatPrice / formatChange
 supabase/
   migrations/            SQL versionado (solo aditivo)
   seed/                  contenido bilingüe en TS → se carga con `npm run db:seed`
-scripts/                 seed, i18n-check, test-permissions, screenshots, check-links
+scripts/                 seed, i18n-check, test-permissions, screenshots, check-links, qa-*, diagram-preview
 public/brand/            isotipo color / mono / blanco (SVG)
 ```
 
@@ -88,7 +91,33 @@ hex sueltos.
 - Menú móvil: el panel va en un portal a `<body>` (el header sticky usa
   `backdrop-filter`, que rompe `position: fixed` dentro de él).
 - Selector de idioma: páginas con slug traducido declaran `<SetAlternates hrefs={…}/>`;
-  los searchParams se conservan siempre.
+  los searchParams se conservan siempre. Usa `<a>` (carga completa), no `<Link>`: cambiar de
+  idioma cambia el layout raíz y la navegación de cliente dejaba montadas las dos páginas.
+  Antes de hidratar, en rutas con params de contenido el link al otro idioma apunta a la
+  página padre estática (nunca a una URL con slugs del idioma equivocado).
+
+## Catálogo de cortes (fase 2)
+- Datos: `cut_zones` / `cuts` con ids globales `${species}_${clave}` (p. ej. `beef_loin`); en la
+  URL y en el código se usa la clave sin prefijo (`?zone=loin`). Slugs por idioma derivados del
+  nombre con `slugify()` en el seed. Especie en la URL del detalle: `speciesSlugs`
+  (`vacuno/ovino` ↔ `beef/lamb`).
+- Vacunos con nombres del manual INAC 2023 (sin códigos). `alias` = término de consumidor,
+  opcional por idioma (i18n:check lo permite solo para `alias`).
+- Fotos por categoría en `src/lib/catalog/images.ts`: `cutImage()` solo devuelve claves de la
+  especie del corte. Alt traducido en `Products.images.<clave>`.
+- Diagrama (`components/cuts/`): siluetas propias; cada zona es un polígono de una partición
+  del plano recortado por la silueta (sin huecos ni superposiciones por construcción).
+  Estados sin depender del color: hover (tono + contorno fino), foco (anillo punteado, solo
+  teclado), seleccionada (rayado + contorno grueso + etiqueta en negrita). Revisar cambios
+  de geometría con `npm run diagram:preview`.
+- Filtros: estado propio del componente + `history.replaceState` (sin ida y vuelta al
+  servidor). No depender de `useSearchParams` después de montar: llega desfasado con clics
+  rápidos. La página lee `searchParams` dentro de `<Suspense>`; el fallback es el catálogo
+  sin filtros (queda en el HTML estático).
+- Detalle: `generateStaticParams` para todos los cortes y `export const instant = false`
+  (lee params fuera de Suspense a propósito, para que el contenido quede en el HTML).
+  Slug desconocido → `notFound()`; con Cache Components el 1.er pedido puede salir 200 con la
+  404 + noindex (no existe `dynamicParams=false`). `check:links` lo cuenta como roto.
 
 ## Reglas
 
@@ -194,11 +223,14 @@ npm run db:push              # aplica migraciones (SUPABASE_DB_URL)
 npm run db:seed              # upsert idempotente del contenido (clave secreta)
 npm run db:test-permissions  # verifica que anon no lea/modifique formularios
 npm run shots -- <url-base> es en es/productos [--menu]  # capturas 1440 y 375 px (rutas sin "/" inicial en Git Bash)
-npm run check:links -- <url-base>  # links internos y anclas sin errores
+npm run check:links -- <url-base>  # links internos y anclas sin errores (cuenta soft-404)
+npm run qa:layout -- <url-base>    # skip link, menú móvil, idioma, imágenes, overflow
+npm run qa:catalog -- <url-base>   # diagrama por teclado, filtros en URL, idioma, vacío, detalle
+npm run diagram:preview            # PNG de las siluetas en screenshots/diagram
 ```
 
 ## Cierre de cada fase
 typecheck, lint, build, i18n:check (y db:test-permissions si se tocó la base),
-check:links contra producción,
+check:links, qa:layout y qa:catalog contra producción,
 capturas en escritorio y 375 px de las páginas tocadas en ES y EN. Esperar revisión
 del usuario antes de pasar a la siguiente fase.

@@ -14,7 +14,7 @@ const HOME_CATEGORIES = ["steer", "heifer", "cow", "heavy_lamb"];
 export async function PriceSummary() {
   const t = await getTranslations("Home.prices");
   return (
-    <Section tone="muted" aria-labelledby="pizarra">
+    <Section aria-labelledby="pizarra">
       <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
         <SectionHeader id="pizarra" eyebrow={t("eyebrow")} title={t("title")} lead={t("lead")} />
         <Badge tone="earth" className="self-start lg:self-auto">

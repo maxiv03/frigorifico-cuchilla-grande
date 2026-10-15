@@ -9,7 +9,11 @@ export const allowedMessageKeys: string[] = [
   "Home.hero.eyebrow", // solo topónimos
   "LocaleSwitcher.es", // endónimos: cada idioma se nombra en su propia lengua
   "LocaleSwitcher.en",
+  "Products.detail.metaTitle", // solo placeholders
 ];
 
 /** Valores de contenido (seed y company.ts) que pueden repetirse entre idiomas. */
-export const allowedValues: string[] = ["Halal", "Kosher", "HACCP", "BRCGS"];
+export const allowedValues: string[] = [
+  "Halal", "Kosher", "HACCP", "BRCGS",
+  "China", "Israel", // topónimos iguales en ES y EN
+];

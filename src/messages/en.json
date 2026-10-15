@@ -95,6 +95,105 @@
       "unavailable": "The price board is not available right now."
     }
   },
+  "Products": {
+    "metaTitle": "Products: beef and lamb cuts",
+    "metaDescription": "Catalogue of export beef and lamb cuts, chilled and frozen, bone-in and boneless. Filter by area, market and presentation.",
+    "eyebrow": "Export catalogue",
+    "title": "Beef and lamb cuts",
+    "lead": "Choose an area of the animal or use the filters. Each cut shows its presentations, whether it is bone-in or boneless, and its main markets.",
+    "speciesLabel": "Species",
+    "species": {
+      "beef": "Beef",
+      "lamb": "Lamb"
+    },
+    "diagram": {
+      "title": "Cut areas",
+      "hint": "Tap an area of the animal or pick it from the list.",
+      "label": "Cut area diagram: {species}",
+      "zone": "{zone}: {count, plural, =0 {no cuts with these filters} one {# cut} other {# cuts}}",
+      "selected": "selected",
+      "chipsLabel": "Areas",
+      "seeAll": "Show all"
+    },
+    "filters": {
+      "title": "Filters",
+      "zone": "Area",
+      "market": "Market",
+      "allMarkets": "All markets",
+      "presentation": "Presentation",
+      "bone": "Bone",
+      "any": "All",
+      "anyBone": "Any",
+      "active": "Active filters",
+      "remove": "Remove filter: {label}",
+      "clear": "Clear filters"
+    },
+    "presentation": {
+      "chilled": "Chilled",
+      "frozen": "Frozen"
+    },
+    "bone": {
+      "bone_in": "Bone-in",
+      "boneless": "Boneless"
+    },
+    "results": {
+      "count": "{count, plural, =0 {No cuts} one {# cut} other {# cuts}}",
+      "live": "{count, plural, =0 {No cuts match these filters} one {# cut left} other {# cuts left}}"
+    },
+    "empty": {
+      "title": "No cuts match this combination",
+      "suggestion": "Remove the “{filter}” filter to see {count, plural, one {# cut} other {# cuts}}.",
+      "generic": "Try a different combination of filters.",
+      "remove": "Remove “{filter}”"
+    },
+    "card": {
+      "quote": "Request a quote",
+      "quoteFor": "Request a quote for {cut}",
+      "quoteSubject": "[Demo] Quote: {cut} ({species})",
+      "zone": "Area: {zone}"
+    },
+    "specs": {
+      "title": "Presentations and carton format",
+      "chilled": "Vacuum-packed and kept between {min} and {max} °C. Shelf life of up to {beef} days for beef and {lamb} days for lamb. Cartons of {boxMin} to {boxMax} kg.",
+      "frozen": "Vacuum-packed and frozen at {min} °C or below. Shelf life of up to {months} months. Cartons of {boxMin} to {boxMax} kg.",
+      "note": "Reference data. Every order is adjusted to the customer's specification sheet."
+    },
+    "detail": {
+      "breadcrumb": "Breadcrumb",
+      "alias": "Also known as {alias}",
+      "dataTitle": "Cut details",
+      "zone": "Area",
+      "bone": "Bone",
+      "presentations": "Presentations",
+      "markets": "Main markets",
+      "diagramLabel": "Location of the cut on {species}: {zone} area",
+      "sameZone": "Other cuts from the {zone} area",
+      "quoteTitle": "Interested in this cut?",
+      "quoteText": "Tell us the volume, presentation and destination, and a sales executive will reply with price and availability.",
+      "back": "Back to the catalogue",
+      "metaTitle": "{cut} ({species})",
+      "speciesInline": {
+        "beef": "the steer",
+        "lamb": "the lamb"
+      }
+    },
+    "images": {
+      "beef-steak": "Two raw beef ribeye steaks on paper",
+      "beef-roast": "Raw beef joint tied for roasting",
+      "beef-ribs": "Raw bone-in beef short rib strips",
+      "beef-braise": "Raw beef piece and a steak on a platter",
+      "beef-flank": "Flat raw beef cut on a board",
+      "lamb-rack": "Two raw frenched lamb cutlets",
+      "lamb-chops": "Raw lamb loin chops on a board",
+      "lamb-cuts": "Raw lamb cuts on a board"
+    }
+  },
+  "Featured": {
+    "eyebrow": "Catalogue",
+    "title": "Featured cuts",
+    "lead": "Some of the cuts we export most, chilled and frozen.",
+    "cta": "View full catalogue"
+  },
   "Footer": {
     "about": "Beef and lamb exporter with an approved processing plant in Sarandí del Yí, Durazno, Uruguay.",
     "contactTitle": "Contact",
