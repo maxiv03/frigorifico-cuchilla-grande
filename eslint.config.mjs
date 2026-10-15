@@ -22,12 +22,17 @@ const eslintConfig = defineConfig([
         "error",
         {
           selector:
-            "JSXAttribute[name.name=/^(alt|title|placeholder|aria-label|aria-description|label)$/] > Literal",
+            "JSXOpeningElement:not([name.name='Image']) > JSXAttribute[name.name=/^(alt|title|placeholder|aria-label|aria-description|label)$/] > Literal",
           message: "Texto visible sin traducir: usá next-intl.",
         },
         {
           selector:
-            "JSXAttribute[name.name=/^(alt|title|placeholder|aria-label|aria-description|label)$/] > JSXExpressionContainer > TemplateLiteral[expressions.length=0]",
+            "JSXOpeningElement:not([name.name='Image']) > JSXAttribute[name.name=/^(alt|title|placeholder|aria-label|aria-description|label)$/] > JSXExpressionContainer > TemplateLiteral[expressions.length=0]",
+          message: "Texto visible sin traducir: usá next-intl.",
+        },
+        {
+          // En <Image>, placeholder="blur" es configuración; el alt sí debe traducirse.
+          selector: "JSXOpeningElement[name.name='Image'] > JSXAttribute[name.name='alt'] > Literal",
           message: "Texto visible sin traducir: usá next-intl.",
         },
       ],

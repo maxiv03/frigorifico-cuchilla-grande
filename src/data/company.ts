@@ -9,6 +9,8 @@ export type Localized = Record<Locale, string>;
 
 export const company = {
   name: "Frigorífico Cuchilla Grande",
+  /** Partes del logotipo (nombre propio: no se traduce). */
+  brand: { kicker: "Frigorífico", name: "Cuchilla Grande" },
   legalName: "Frigorífico Cuchilla Grande S.A.",
   founded: 1968,
   foundingFamily: "Iturralde",

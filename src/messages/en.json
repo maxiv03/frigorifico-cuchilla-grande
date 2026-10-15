@@ -3,22 +3,108 @@
     "siteName": "Frigorífico Cuchilla Grande",
     "description": "Uruguayan beef and lamb exporter. Demo website of a fictitious company."
   },
-  "Home": {
-    "eyebrow": "{city} · {department} · Uruguay",
-    "title": "Uruguayan beef and lamb for the world",
-    "lead": "We process up to {cattle} cattle and {sheep} sheep per day and export to more than {countries} countries, with individual traceability for every animal.",
-    "pricesLoading": "Loading the price board…",
-    "pricesAsOf": "Reference price board valid from {date, date, long}.",
-    "pricesUnavailable": "The price board is not available right now."
+  "Nav": {
+    "home": "Home",
+    "products": "Products",
+    "markets": "Markets",
+    "quality": "Quality",
+    "company": "Company",
+    "producers": "Producers",
+    "contact": "Contact",
+    "news": "News",
+    "sustainability": "Sustainability",
+    "careers": "Careers"
   },
-  "Footer": {
-    "disclaimer": "Demo website — fictitious company",
-    "mgap": "MGAP approval No. {number} (fictitious number)"
+  "Header": {
+    "skip": "Skip to content",
+    "home": "Frigorífico Cuchilla Grande — go to homepage",
+    "mainNav": "Main navigation",
+    "utilityNav": "Secondary links",
+    "menu": "Menu",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "language": "Language",
+    "whatsappMessage": "[Demo] Hello, I'm contacting you from your website."
   },
   "LocaleSwitcher": {
     "label": "Language",
     "es": "Español",
     "en": "English"
+  },
+  "Home": {
+    "hero": {
+      "eyebrow": "{city} · {department} · Uruguay",
+      "title": "Uruguayan beef and lamb for the world",
+      "lead": "We process up to {cattle} cattle and {sheep} sheep per day and export to more than {countries} countries, with individual traceability for every animal.",
+      "ctaBuyer": "I'm a buyer",
+      "ctaProducer": "I sell livestock",
+      "imageAlt": "Angus and Hereford cattle on pasture at sunset"
+    },
+    "figures": {
+      "title": "The plant in figures",
+      "siteHectares": "hectares of land",
+      "cattlePerDay": "cattle per day",
+      "sheepPerDay": "sheep per day",
+      "frozenStorage": "tonnes of frozen storage",
+      "countries": "destination countries",
+      "employees": "people employed"
+    },
+    "audiences": {
+      "eyebrow": "Two audiences, one plant",
+      "title": "How can we work together?",
+      "buyers": {
+        "title": "Buyers and importers",
+        "text": "Chilled and frozen beef and lamb cuts, with the approvals required by the most demanding markets.",
+        "benefit1": "Bone-in and boneless cuts, chilled or frozen",
+        "benefit2": "Approved for China, the United States, the European Union and Israel",
+        "benefit3": "Individual traceability from farm to container",
+        "cta": "Request a quote",
+        "mailSubject": "[Demo] Quote request",
+        "imageAlt": "Container ship at sea, seen from above"
+      },
+      "producers": {
+        "title": "Livestock producers",
+        "text": "We buy steers, heifers, cows and sheep nationwide, dealing directly with you and paying on time.",
+        "benefit1": "Weekly reference price board",
+        "benefit2": "Livestock buyers who travel to your area",
+        "benefit3": "Clear settlement, with yield and grading for every animal",
+        "cta": "Talk to a buyer",
+        "whatsappMessage": "[Demo] Hello, I'd like to offer livestock to the plant.",
+        "imageAlt": "Herd of Hereford cattle in the field"
+      }
+    },
+    "origin": {
+      "eyebrow": "From Sarandí del Yí to the world",
+      "title": "More than five decades in the heart of Uruguay's cattle country",
+      "p1": "Since {founded}, the {family} family has processed pasture-raised livestock from the centre of the country. The plant, on Route 6 just outside Sarandí del Yí, covers {hectares} hectares and employs {employees} people from the area.",
+      "p2": "Every animal arrives identified through the national individual traceability system, and every box that leaves the plant can be traced back to the farm where it was raised.",
+      "imageAlt": "Cattle resting on a rolling natural grassland"
+    },
+    "prices": {
+      "eyebrow": "For producers",
+      "title": "Reference price board",
+      "lead": "Indicative purchase prices in US dollars per kilo of carcass weight, updated every Monday.",
+      "fictitious": "Fictitious values",
+      "asOf": "Valid from {date, date, long}",
+      "unit": "US$/kg carcass",
+      "change": "{change} vs. previous week",
+      "noChange": "No change vs. previous week",
+      "up": "Up",
+      "down": "Down",
+      "seeFull": "See full price board",
+      "loading": "Loading price board…",
+      "unavailable": "The price board is not available right now."
+    }
+  },
+  "Footer": {
+    "about": "Beef and lamb exporter with an approved processing plant in Sarandí del Yí, Durazno, Uruguay.",
+    "contactTitle": "Contact",
+    "navTitle": "Site",
+    "whatsappHint": "(opens WhatsApp)",
+    "whatsappMessage": "[Demo] Hello, I'm contacting you from your website.",
+    "disclaimer": "Demo website — fictitious company",
+    "mgap": "MGAP approval No. {number} (fictitious number)",
+    "credit": "Design and development: <link>fourvexa.com</link>"
   },
   "NotFound": {
     "title": "We couldn't find this page",

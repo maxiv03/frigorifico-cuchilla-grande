@@ -33,13 +33,62 @@ src/
   i18n/                  routing.ts (locales + pathnames), request.ts, navigation.ts
   messages/{es,en}.json  textos de interfaz
   data/company.ts        ÚNICA fuente de verdad de cifras y datos de la empresa
+  config/navigation.ts   ítems de menú con flag `enabled` por sección
+  components/ui/         Button, Section, Container, Card, Badge (+ cn)
+  components/layout/     header, footer, menú móvil, selector de idioma
+  components/brand/      Logo e Isotype
+  components/home/       secciones de la home
   lib/supabase/          public.ts (clave publicable) y admin.ts (clave secreta)
   lib/prices/            lógica determinista de la pizarra (compartida por seed y cron)
+  lib/contact.ts         teléfono/WhatsApp/mail desde env + links con "[Demo]"
+  lib/format.ts          formatFigure / formatPrice / formatChange
 supabase/
   migrations/            SQL versionado (solo aditivo)
   seed/                  contenido bilingüe en TS → se carga con `npm run db:seed`
-scripts/                 seed, i18n-check, test-permissions, screenshots
+scripts/                 seed, i18n-check, test-permissions, screenshots, check-links
+public/brand/            isotipo color / mono / blanco (SVG)
 ```
+
+## Sistema visual (fase 1)
+
+Tokens en `src/app/globals.css` (`@theme` de Tailwind 4). Usar siempre los tokens, nunca
+hex sueltos.
+
+| Grupo | Tokens | Uso |
+|---|---|---|
+| Marca (bordó) | `brand-50…950`, principal `brand-700` #7a1f2b | CTA primario, acentos, links |
+| Tierra/arena | `earth-50…800` | secundario; público productores (`earth-700`, `earth-100`) |
+| Neutros | `surface` #fff, `surface-muted` #f7f5f1, `ink`, `ink-muted`, `ink-subtle`, `line`, `night` | fondos alternados, texto, footer |
+| Estado | `up` / `down` | variaciones de la pizarra |
+| Radios | `rounded-sm` 4px, `rounded-md` 8px, `rounded-lg` 14px | botones `md`, tarjetas `lg` |
+| Sombras | `shadow-card`, `shadow-raised` | tarjetas / fotos destacadas |
+| Espaciado | `py-section` (5rem), `py-section-lg` (7rem), `h-header` (4.5rem), `max-w-site` (76rem) | secciones y layout |
+
+- Tipografía: **Source Serif 4** (títulos, `font-serif`) + **Source Sans 3** (texto,
+  `font-sans`), con `next/font`. Misma superfamilia de Adobe: combinan sin choque.
+- Contraste AA verificado para todos los pares usados (texto sobre `surface`,
+  `surface-muted`, `earth-100`, `night`, blanco sobre `brand-600/700/800`). Al sumar un
+  par nuevo, verificarlo.
+- Secciones: alternar `<Section tone="white">` y `tone="muted"`. Encabezados con
+  `<SectionHeader eyebrow title lead />`.
+- Fotos: `next/image` con `sizes` reales; prioridad solo en el hero
+  (`loading="eager"` + `fetchPriority="high"`, no `preload`, porque hay una imagen por
+  breakpoint). Todas con `alt` traducido.
+- Logo: `<Logo variant="color|mono|light" />`; isotipo suelto `<Isotype />`
+  (currentColor). Favicon `src/app/icon.svg`, `apple-icon.png`, `manifest.ts`.
+
+## Navegación
+- `src/config/navigation.ts`: cada ítem con `enabled`. **Solo se activan secciones que
+  existen**; al cerrar una fase se activa su ítem. CTAs usan `isEnabled(key)` para ir a
+  la página real o, mientras no exista, a un ancla de la home / mailto / WhatsApp.
+- `NAV_PREVIEW=1 npm run dev` muestra todos los ítems para revisar diseño (ignorado en
+  producción).
+- `npm run check:links -- <url>` recorre el sitio y falla ante cualquier link interno o
+  ancla rota. Correrlo contra producción al cerrar cada fase.
+- Menú móvil: el panel va en un portal a `<body>` (el header sticky usa
+  `backdrop-filter`, que rompe `position: fixed` dentro de él).
+- Selector de idioma: páginas con slug traducido declaran `<SetAlternates hrefs={…}/>`;
+  los searchParams se conservan siempre.
 
 ## Reglas
 
@@ -93,6 +142,19 @@ scripts/                 seed, i18n-check, test-permissions, screenshots
   + `cacheTag`; el cron invalida con `revalidateTag`.
 - `generateStaticParams` en `[locale]/layout.tsx` es obligatorio (root param).
 
+### Caché de la pizarra de precios (verificado en producción el 2026-10-15)
+- `getPriceBoard()` (`src/lib/data/prices.ts`): `'use cache'` + `cacheTag("prices")` +
+  `cacheLife("days")`. La home es estática y la pizarra queda dentro del prerender.
+- El cron, cuando inserta una semana, llama `revalidateTag("prices", { expire: 0 })`:
+  la siguiente visita renderiza la pizarra nueva (no sirve la vieja). `updateTag` no
+  aplica: solo existe en Server Actions.
+- `cacheLife("days")` es solo red de seguridad si el cron no corre (revalida a las 24 h).
+  No bajarlo a `hours`: taparía fallas del cron y multiplica lecturas.
+- Prueba reproducible: borrar la semana vigente de `price_quotes` → deploy (el build
+  hornea la semana anterior, `X-Vercel-Cache: PRERENDER`) → `GET /api/cron/daily` con
+  `Authorization: Bearer $CRON_SECRET` → la home muestra la semana nueva en la 1.ª
+  visita (`REVALIDATED`) y luego `HIT`, sin redeploy.
+
 ### Vercel
 - Hobby: crons como máximo 1 vez por día y solo en producción. Hay UN cron
   (`/api/cron/daily`, 09:00 UTC) protegido con `Authorization: Bearer $CRON_SECRET`.
@@ -111,6 +173,9 @@ scripts/                 seed, i18n-check, test-permissions, screenshots
   de plantas reales. **Cada foto corresponde a su especie** (nunca un corte vacuno
   ilustrando uno ovino).
 - Precios de hacienda rotulados como referenciales/ficticios.
+- Cifras destacadas (hero, banda de cifras) con `formatFigure()` de `src/lib/format.ts`
+  (`useGrouping: "always"` → "1.800" / "1,800"). En texto corrido, formato por defecto
+  del idioma.
 
 ## Comandos
 
@@ -123,10 +188,12 @@ npm run i18n:check           # mensajes + seed
 npm run db:push              # aplica migraciones (SUPABASE_DB_URL)
 npm run db:seed              # upsert idempotente del contenido (clave secreta)
 npm run db:test-permissions  # verifica que anon no lea/modifique formularios
-npm run shots -- <url-base> es en es/productos   # capturas 1440 y 375 px (rutas sin "/" inicial en Git Bash)
+npm run shots -- <url-base> es en es/productos [--menu]  # capturas 1440 y 375 px (rutas sin "/" inicial en Git Bash)
+npm run check:links -- <url-base>  # links internos y anclas sin errores
 ```
 
 ## Cierre de cada fase
 typecheck, lint, build, i18n:check (y db:test-permissions si se tocó la base),
+check:links contra producción,
 capturas en escritorio y 375 px de las páginas tocadas en ES y EN. Esperar revisión
 del usuario antes de pasar a la siguiente fase.

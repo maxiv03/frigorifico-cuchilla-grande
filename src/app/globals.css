@@ -1,18 +1,93 @@
 @import "tailwindcss";
 
-/* Tokens provisorios de la fase 0; el sistema de diseño completo llega en la fase 1. */
-:root {
-  --background: #ffffff;
-  --foreground: #1c1917;
+/*
+ * Sistema visual — Frigorífico Cuchilla Grande
+ * Corporativo sobrio: bordó de marca, tierra/arena secundarios, blanco y gris cálido.
+ * Todos los pares texto/fondo usados cumplen WCAG AA (ver CLAUDE.md → Tokens).
+ */
+@theme {
+  /* Tipografía (variables definidas por next/font en el layout) */
+  --font-serif: var(--font-source-serif), ui-serif, Georgia, serif;
+  --font-sans: var(--font-source-sans), ui-sans-serif, system-ui, sans-serif;
+
+  /* Marca: bordó */
+  --color-brand-50: #fbf3f4;
+  --color-brand-100: #f5e3e5;
+  --color-brand-200: #ebc5ca;
+  --color-brand-300: #d99aa3;
+  --color-brand-500: #a8394a;
+  --color-brand-600: #8f2b3b;
+  --color-brand-700: #7a1f2b;
+  --color-brand-800: #631824;
+  --color-brand-900: #4c121c;
+  --color-brand-950: #2e0a10;
+
+  /* Secundario: tierra / arena */
+  --color-earth-50: #faf6ef;
+  --color-earth-100: #f3ece0;
+  --color-earth-200: #e7dac3;
+  --color-earth-300: #d4bf9c;
+  --color-earth-500: #a8875a;
+  --color-earth-600: #8a6c44;
+  --color-earth-700: #6e5536;
+  --color-earth-800: #574330;
+
+  /* Neutros cálidos */
+  --color-surface: #ffffff;
+  --color-surface-muted: #f7f5f1;
+  --color-ink: #1f1a17;
+  --color-ink-muted: #57514c;
+  --color-ink-subtle: #6f6862;
+  --color-line: #e6e1da;
+  --color-night: #1b1513;
+
+  /* Estado (pizarra de precios) */
+  --color-up: #2f6b3a;
+  --color-down: #9b2c2c;
+
+  /* Radios */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.875rem;
+
+  /* Sombras */
+  --shadow-card: 0 1px 2px rgb(31 26 23 / 0.06), 0 10px 28px -14px rgb(31 26 23 / 0.22);
+  --shadow-raised: 0 2px 4px rgb(31 26 23 / 0.08), 0 18px 40px -18px rgb(31 26 23 / 0.32);
+
+  /* Espaciado de secciones y layout */
+  --spacing-section: 5rem;
+  --spacing-section-lg: 7rem;
+  --spacing-header: 4.5rem;
+  --container-site: 76rem;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: ui-sans-serif, system-ui, sans-serif;
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+  body {
+    background: var(--color-surface);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-serif);
+    text-wrap: balance;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-brand-600);
+    outline-offset: 2px;
+  }
+  /* Anclas: que el header sticky no tape el destino */
+  [id] {
+    scroll-margin-top: calc(var(--spacing-header) + 1rem);
+  }
 }

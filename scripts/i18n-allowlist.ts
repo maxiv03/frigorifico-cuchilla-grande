@@ -6,7 +6,7 @@
 /** Claves de mensajes (ruta con puntos) cuyo valor puede repetirse entre idiomas. */
 export const allowedMessageKeys: string[] = [
   "Meta.siteName",
-  "Home.eyebrow", // solo topónimos
+  "Home.hero.eyebrow", // solo topónimos
   "LocaleSwitcher.es", // endónimos: cada idioma se nombra en su propia lengua
   "LocaleSwitcher.en",
 ];

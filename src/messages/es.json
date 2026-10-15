@@ -3,22 +3,108 @@
     "siteName": "Frigorífico Cuchilla Grande",
     "description": "Frigorífico uruguayo exportador de carne vacuna y ovina. Sitio de demostración de una empresa ficticia."
   },
-  "Home": {
-    "eyebrow": "{city} · {department} · Uruguay",
-    "title": "Carne vacuna y ovina uruguaya para el mundo",
-    "lead": "Faenamos hasta {cattle} vacunos y {sheep} ovinos por día y exportamos a más de {countries} países, con trazabilidad individual de cada animal.",
-    "pricesLoading": "Consultando la pizarra de precios…",
-    "pricesAsOf": "Pizarra de precios de referencia vigente desde el {date, date, long}.",
-    "pricesUnavailable": "La pizarra de precios no está disponible en este momento."
+  "Nav": {
+    "home": "Inicio",
+    "products": "Productos",
+    "markets": "Mercados",
+    "quality": "Calidad",
+    "company": "Empresa",
+    "producers": "Productores",
+    "contact": "Contacto",
+    "news": "Noticias",
+    "sustainability": "Sostenibilidad",
+    "careers": "Trabajá con nosotros"
   },
-  "Footer": {
-    "disclaimer": "Sitio de demostración — empresa ficticia",
-    "mgap": "Habilitación MGAP N.º {number} (número ficticio)"
+  "Header": {
+    "skip": "Saltar al contenido",
+    "home": "Frigorífico Cuchilla Grande — ir al inicio",
+    "mainNav": "Navegación principal",
+    "utilityNav": "Enlaces secundarios",
+    "menu": "Menú",
+    "openMenu": "Abrir menú",
+    "closeMenu": "Cerrar menú",
+    "language": "Idioma",
+    "whatsappMessage": "[Demo] Hola, los contacto desde el sitio web."
   },
   "LocaleSwitcher": {
     "label": "Idioma",
     "es": "Español",
     "en": "English"
+  },
+  "Home": {
+    "hero": {
+      "eyebrow": "{city} · {department} · Uruguay",
+      "title": "Carne vacuna y ovina uruguaya para el mundo",
+      "lead": "Faenamos hasta {cattle} vacunos y {sheep} ovinos por día y exportamos a más de {countries} países, con trazabilidad individual de cada animal.",
+      "ctaBuyer": "Soy comprador",
+      "ctaProducer": "Vendo hacienda",
+      "imageAlt": "Rodeo de ganado Angus y Hereford en una pradera al atardecer"
+    },
+    "figures": {
+      "title": "La planta en cifras",
+      "siteHectares": "hectáreas de predio",
+      "cattlePerDay": "vacunos por día",
+      "sheepPerDay": "ovinos por día",
+      "frozenStorage": "toneladas de capacidad en frío",
+      "countries": "países de destino",
+      "employees": "personas trabajando"
+    },
+    "audiences": {
+      "eyebrow": "Dos públicos, una misma planta",
+      "title": "¿Cómo podemos trabajar juntos?",
+      "buyers": {
+        "title": "Compradores e importadores",
+        "text": "Cortes vacunos y ovinos enfriados y congelados, con las habilitaciones que piden los mercados más exigentes.",
+        "benefit1": "Cortes con y sin hueso, enfriados o congelados",
+        "benefit2": "Habilitada para China, Estados Unidos, Unión Europea e Israel",
+        "benefit3": "Trazabilidad individual desde el campo hasta el contenedor",
+        "cta": "Pedir cotización",
+        "mailSubject": "[Demo] Pedido de cotización",
+        "imageAlt": "Buque portacontenedores navegando, visto desde arriba"
+      },
+      "producers": {
+        "title": "Productores ganaderos",
+        "text": "Compramos novillos, vaquillonas, vacas y ovinos en todo el país, con trato directo y pago puntual.",
+        "benefit1": "Pizarra semanal de precios de referencia",
+        "benefit2": "Compradores de hacienda que recorren su zona",
+        "benefit3": "Liquidación clara, con rendimiento y clasificación de cada animal",
+        "cta": "Hablar con un comprador",
+        "whatsappMessage": "[Demo] Hola, quiero ofrecer hacienda al frigorífico.",
+        "imageAlt": "Rodeo de vacunos Hereford en el campo"
+      }
+    },
+    "origin": {
+      "eyebrow": "Desde Sarandí del Yí al mundo",
+      "title": "Más de cinco décadas en el centro ganadero del Uruguay",
+      "p1": "Desde {founded}, la familia {family} procesa hacienda criada a campo abierto en el centro del país. La planta, sobre la ruta 6 en las afueras de Sarandí del Yí, ocupa {hectares} hectáreas y da trabajo a {employees} personas de la zona.",
+      "p2": "Cada animal llega identificado por el sistema nacional de trazabilidad individual, y cada caja que sale de la planta puede rastrearse hasta el establecimiento donde se crió.",
+      "imageAlt": "Vacunos descansando en una loma de campo natural"
+    },
+    "prices": {
+      "eyebrow": "Para productores",
+      "title": "Pizarra de precios de referencia",
+      "lead": "Precios de compra orientativos en dólares por kilo de carcasa, actualizados cada lunes.",
+      "fictitious": "Valores ficticios",
+      "asOf": "Vigente desde el {date, date, long}",
+      "unit": "US$/kg carcasa",
+      "change": "{change} vs. semana anterior",
+      "noChange": "Sin cambios vs. semana anterior",
+      "up": "Subió",
+      "down": "Bajó",
+      "seeFull": "Ver pizarra completa",
+      "loading": "Cargando pizarra…",
+      "unavailable": "La pizarra de precios no está disponible en este momento."
+    }
+  },
+  "Footer": {
+    "about": "Frigorífico exportador de carne vacuna y ovina, con planta habilitada en Sarandí del Yí, departamento de Durazno.",
+    "contactTitle": "Contacto",
+    "navTitle": "Sitio",
+    "whatsappHint": "(abre WhatsApp)",
+    "whatsappMessage": "[Demo] Hola, los contacto desde el sitio web.",
+    "disclaimer": "Sitio de demostración — empresa ficticia",
+    "mgap": "Habilitación MGAP N.º {number} (número ficticio)",
+    "credit": "Diseño y desarrollo: <link>fourvexa.com</link>"
   },
   "NotFound": {
     "title": "No encontramos esta página",

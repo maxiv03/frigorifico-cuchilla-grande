@@ -12,7 +12,8 @@
     "db:push": "node --env-file=.env.local scripts/db-push.mjs",
     "db:seed": "tsx --env-file=.env.local scripts/seed.ts",
     "db:test-permissions": "tsx --env-file=.env.local scripts/test-permissions.ts",
-    "shots": "tsx scripts/screenshots.ts"
+    "shots": "tsx scripts/screenshots.ts",
+    "check:links": "tsx scripts/check-links.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.117.3",
