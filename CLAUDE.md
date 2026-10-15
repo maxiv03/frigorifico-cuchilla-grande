@@ -123,7 +123,7 @@ npm run i18n:check           # mensajes + seed
 npm run db:push              # aplica migraciones (SUPABASE_DB_URL)
 npm run db:seed              # upsert idempotente del contenido (clave secreta)
 npm run db:test-permissions  # verifica que anon no lea/modifique formularios
-npm run shots -- <url-base> [rutas…]   # capturas 1440 px y 375 px, ES y EN
+npm run shots -- <url-base> es en es/productos   # capturas 1440 y 375 px (rutas sin "/" inicial en Git Bash)
 ```
 
 ## Cierre de cada fase
