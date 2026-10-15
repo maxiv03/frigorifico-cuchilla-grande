@@ -76,7 +76,7 @@
     "origin": {
       "eyebrow": "Desde Sarandí del Yí al mundo",
       "title": "Más de cinco décadas en el centro ganadero del Uruguay",
-      "p1": "Desde {founded}, la familia {family} procesa hacienda criada a campo abierto en el centro del país. La planta, sobre la ruta 6 en las afueras de Sarandí del Yí, ocupa {hectares} hectáreas y da trabajo a {employees} personas de la zona.",
+      "p1": "Desde {founded}, la familia {family} procesa hacienda criada a campo abierto en el centro del país. La planta, sobre la ruta 6 en las afueras de Sarandí del Yí, ocupa {hectares, number} hectáreas y da trabajo a {employees, number} personas de la zona.",
       "p2": "Cada animal llega identificado por el sistema nacional de trazabilidad individual, y cada caja que sale de la planta puede rastrearse hasta el establecimiento donde se crió.",
       "imageAlt": "Vacunos descansando en una loma de campo natural"
     },
