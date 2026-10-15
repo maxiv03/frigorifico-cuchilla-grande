@@ -1,12 +1,14 @@
 import Image from "next/image";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { Section, SectionHeader } from "@/components/ui/section";
 import { company } from "@/data/company";
+import { formatFigure } from "@/lib/format";
 import campo from "../../../public/images/home/campo-ondulado.jpg";
 
 /** Bloque institucional "Desde Sarandí del Yí al mundo": texto + foto. */
 export async function OriginBlock() {
   const t = await getTranslations("Home.origin");
+  const locale = await getLocale();
   const { founded, foundingFamily, figures } = company;
 
   return (
@@ -15,13 +17,12 @@ export async function OriginBlock() {
         <div className="lg:col-span-6">
           <SectionHeader id="origen" eyebrow={t("eyebrow")} title={t("title")} />
           <div className="mt-6 space-y-5 text-lg leading-relaxed text-ink-muted">
-            {/* Texto corrido: formato numérico por defecto del idioma */}
             <p>
               {t("p1", {
                 founded: String(founded),
                 family: foundingFamily,
-                hectares: figures.siteHectares,
-                employees: figures.employees,
+                hectares: formatFigure(figures.siteHectares, locale),
+                employees: formatFigure(figures.employees, locale),
               })}
             </p>
             <p>{t("p2")}</p>

@@ -55,7 +55,7 @@ export async function Hero() {
                 {t("ctaBuyer")}
               </ButtonLink>
             ) : (
-              <ButtonAnchor href="#compradores" size="lg" icon={<IconArrowRight />}>
+              <ButtonAnchor href="#buyers" size="lg" icon={<IconArrowRight />}>
                 {t("ctaBuyer")}
               </ButtonAnchor>
             )}
@@ -64,7 +64,7 @@ export async function Hero() {
                 {t("ctaProducer")}
               </ButtonLink>
             ) : (
-              <ButtonAnchor href="#productores" size="lg" variant="outlineLight">
+              <ButtonAnchor href="#producers" size="lg" variant="outlineLight">
                 {t("ctaProducer")}
               </ButtonAnchor>
             )}

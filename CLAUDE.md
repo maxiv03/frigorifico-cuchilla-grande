@@ -145,6 +145,10 @@ hex sueltos.
 ### Caché de la pizarra de precios (verificado en producción el 2026-10-15)
 - `getPriceBoard()` (`src/lib/data/prices.ts`): `'use cache'` + `cacheTag("prices")` +
   `cacheLife("days")`. La home es estática y la pizarra queda dentro del prerender.
+- Datos en `'use cache'` **no van dentro de `<Suspense>`**: React "outlinea" los límites
+  completos cuando el HTML previo supera `progressiveChunkSize` (12,8 KB) y el HTML
+  inicial queda con el fallback (los valores llegan al final del documento y los inserta
+  un script). Verificar con curl que el precio aparece antes de cualquier `<template id="B:`.
 - El cron, cuando inserta una semana, llama `revalidateTag("prices", { expire: 0 })`:
   la siguiente visita renderiza la pizarra nueva (no sirve la vieja). `updateTag` no
   aplica: solo existe en Server Actions.
@@ -173,9 +177,10 @@ hex sueltos.
   de plantas reales. **Cada foto corresponde a su especie** (nunca un corte vacuno
   ilustrando uno ovino).
 - Precios de hacienda rotulados como referenciales/ficticios.
-- Cifras destacadas (hero, banda de cifras) con `formatFigure()` de `src/lib/format.ts`
-  (`useGrouping: "always"` → "1.800" / "1,800"). En texto corrido, formato por defecto
-  del idioma.
+- Toda cifra (destacada o en texto corrido) con `formatFigure()` de `src/lib/format.ts`
+  (`useGrouping: "always"` → "1.150" / "1,150"), pasada al mensaje como string. Nunca
+  `{n, number}` de ICU en los mensajes (en ES omite el separador con cuatro cifras).
+- Anclas de la home con ids neutros, iguales en ES y EN (`#buyers`, `#producers`).
 
 ## Comandos
 

@@ -19,7 +19,7 @@ export async function AudienceCards() {
       <SectionHeader id="publicos" eyebrow={t("eyebrow")} title={t("title")} />
       <div className="mt-12 grid gap-8 lg:grid-cols-2">
         <AudienceCard
-          id="compradores"
+          id="buyers"
           image={buyersImg}
           imageAlt={t("buyers.imageAlt")}
           title={t("buyers.title")}
@@ -38,7 +38,7 @@ export async function AudienceCards() {
           }
         />
         <AudienceCard
-          id="productores"
+          id="producers"
           accent="earth"
           image={producersImg}
           imageAlt={t("producers.imageAlt")}

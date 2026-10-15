@@ -76,7 +76,7 @@
     "origin": {
       "eyebrow": "From Sarandí del Yí to the world",
       "title": "More than five decades in the heart of Uruguay's cattle country",
-      "p1": "Since {founded}, the {family} family has processed pasture-raised livestock from the centre of the country. The plant, on Route 6 just outside Sarandí del Yí, covers {hectares, number} hectares and employs {employees, number} people from the area.",
+      "p1": "Since {founded}, the {family} family has processed pasture-raised livestock from the centre of the country. The plant, on Route 6 just outside Sarandí del Yí, covers {hectares} hectares and employs {employees} people from the area.",
       "p2": "Every animal arrives identified through the national individual traceability system, and every box that leaves the plant can be traced back to the farm where it was raised.",
       "imageAlt": "Cattle resting on a rolling natural grassland"
     },
@@ -92,7 +92,6 @@
       "up": "Up",
       "down": "Down",
       "seeFull": "See full price board",
-      "loading": "Loading price board…",
       "unavailable": "The price board is not available right now."
     }
   },

@@ -1,5 +1,4 @@
 import { getLocale, getTranslations } from "next-intl/server";
-import { Suspense } from "react";
 import { IconArrowRight, IconMinus, IconTrendDown, IconTrendUp } from "@/components/icons";
 import { Badge } from "@/components/ui/badge";
 import { ButtonLink } from "@/components/ui/button";
@@ -22,9 +21,10 @@ export async function PriceSummary() {
           {t("fictitious")}
         </Badge>
       </div>
-      <Suspense fallback={<BoardSkeleton label={t("loading")} />}>
-        <Board />
-      </Suspense>
+      {/* Sin <Suspense>: getPriceBoard está en 'use cache', así que la pizarra queda dentro del
+          HTML estático. Con Suspense, React la "outlinea" al final del documento (el shell supera
+          progressiveChunkSize, 12,8 KB) y el HTML inicial solo trae el fallback. */}
+      <Board />
     </Section>
   );
 }
@@ -89,19 +89,5 @@ async function Change({ row, locale }: { row: PriceRow; locale: Parameters<typeo
       <span className="sr-only">{up ? t("up") : t("down")}</span>
       {t("change", { change: formatChange(row.changePct, locale) })}
     </p>
-  );
-}
-
-function BoardSkeleton({ label }: { label: string }) {
-  return (
-    <div className="mt-10" role="status">
-      <span className="sr-only">{label}</span>
-      <div className="h-4 w-48 animate-pulse rounded bg-line" />
-      <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {HOME_CATEGORIES.map((id) => (
-          <div key={id} className="h-36 animate-pulse rounded-lg bg-surface ring-1 ring-line" />
-        ))}
-      </div>
-    </div>
   );
 }
