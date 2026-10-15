@@ -1,14 +1,16 @@
-import { useTranslations } from "next-intl";
-import { getTranslations } from "next-intl/server";
+import { useLocale, useTranslations } from "next-intl";
+import { getLocale, getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { company } from "@/data/company";
-import { getCurrentPriceWeek } from "@/lib/data/prices";
+import { getPriceBoard, type PriceBoard } from "@/lib/data/prices";
+import { formatChange, formatFigure, formatPrice } from "@/lib/format";
 
 // Home provisoria de la fase 0: verifica i18n, datos de company.ts y lectura de Supabase.
 export default function HomePage() {
   const t = useTranslations("Home");
   const f = useTranslations("Footer");
+  const locale = useLocale();
   const { figures, address } = company;
 
   return (
@@ -22,7 +24,11 @@ export default function HomePage() {
         </p>
         <h1 className="text-4xl font-semibold tracking-tight text-stone-900 sm:text-5xl">{t("title")}</h1>
         <p className="text-lg leading-8 text-stone-600">
-          {t("lead", { cattle: figures.cattlePerDay, sheep: figures.sheepPerDay, countries: figures.countries })}
+          {t("lead", {
+            cattle: formatFigure(figures.cattlePerDay, locale),
+            sheep: formatFigure(figures.sheepPerDay, locale),
+            countries: formatFigure(figures.countries, locale),
+          })}
         </p>
         <Suspense fallback={<p className="text-sm text-stone-500">{t("pricesLoading")}</p>}>
           <PriceWeek />
@@ -38,14 +44,25 @@ export default function HomePage() {
 
 async function PriceWeek() {
   const t = await getTranslations("Home");
-  let week: string | null = null;
+  const locale = await getLocale();
+  let board: PriceBoard | null = null;
   try {
-    week = await getCurrentPriceWeek();
+    board = await getPriceBoard(locale);
   } catch (error) {
     console.error(error);
   }
-  if (!week) return <p className="text-sm text-stone-500">{t("pricesUnavailable")}</p>;
+  if (!board) return <p className="text-sm text-stone-500">{t("pricesUnavailable")}</p>;
   return (
-    <p className="text-sm text-stone-500">{t("pricesAsOf", { date: new Date(`${week}T12:00:00Z`) })}</p>
+    <div className="text-sm text-stone-600">
+      <p>{t("pricesAsOf", { date: new Date(`${board.weekStart}T12:00:00Z`) })}</p>
+      <ul className="mt-2 grid grid-cols-2 gap-x-6 gap-y-1 sm:grid-cols-3">
+        {board.rows.map((r) => (
+          <li key={r.categoryId} data-category={r.categoryId}>
+            {r.name}: <strong className="text-stone-900">{formatPrice(r.price, locale)}</strong>
+            {r.changePct !== null && <span className="ml-1 text-stone-500">({formatChange(r.changePct, locale)})</span>}
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }

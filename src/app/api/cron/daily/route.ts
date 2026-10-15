@@ -54,7 +54,9 @@ export async function GET() {
     if (insError) return fail("price_quotes insert", insError.message);
     inserted.push(...quotes);
   }
-  if (inserted.length > 0) revalidateTag("prices", "max");
+  // expire: 0 → la próxima visita renderiza la pizarra nueva (sin servir la semana vieja).
+  // El cron corre 06:00 UY, con poco tráfico: ese único render bloqueante es barato.
+  if (inserted.length > 0) revalidateTag("prices", { expire: 0 });
 
   // ─── Purga de formularios ─────────────────────────────────────────────────
   const cutoff = new Date(Date.now() - RETENTION_DAYS * 24 * 60 * 60 * 1000).toISOString();

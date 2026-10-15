@@ -6,7 +6,7 @@
   "Home": {
     "eyebrow": "{city} · {department} · Uruguay",
     "title": "Carne vacuna y ovina uruguaya para el mundo",
-    "lead": "Faenamos hasta {cattle, number} vacunos y {sheep, number} ovinos por día y exportamos a más de {countries, number} países, con trazabilidad individual de cada animal.",
+    "lead": "Faenamos hasta {cattle} vacunos y {sheep} ovinos por día y exportamos a más de {countries} países, con trazabilidad individual de cada animal.",
     "pricesLoading": "Consultando la pizarra de precios…",
     "pricesAsOf": "Pizarra de precios de referencia vigente desde el {date, date, long}.",
     "pricesUnavailable": "La pizarra de precios no está disponible en este momento."

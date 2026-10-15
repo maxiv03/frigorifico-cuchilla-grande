@@ -6,7 +6,7 @@
   "Home": {
     "eyebrow": "{city} · {department} · Uruguay",
     "title": "Uruguayan beef and lamb for the world",
-    "lead": "We process up to {cattle, number} cattle and {sheep, number} sheep per day and export to more than {countries, number} countries, with individual traceability for every animal.",
+    "lead": "We process up to {cattle} cattle and {sheep} sheep per day and export to more than {countries} countries, with individual traceability for every animal.",
     "pricesLoading": "Loading the price board…",
     "pricesAsOf": "Reference price board valid from {date, date, long}.",
     "pricesUnavailable": "The price board is not available right now."
