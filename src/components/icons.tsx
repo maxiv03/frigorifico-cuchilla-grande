@@ -85,3 +85,97 @@ export const IconGlobe = (p: SVGProps<SVGSVGElement>) => (
     <path d="M3.5 12h17M12 3.5c2.5 2.6 3.6 5.4 3.6 8.5s-1.1 5.9-3.6 8.5c-2.5-2.6-3.6-5.4-3.6-8.5s1.1-5.9 3.6-8.5z" />
   </Icon>
 );
+
+// ─── Institucionales (calidad, empresa) ─────────────────────────────────────
+export const IconEarTag = (p: SVGProps<SVGSVGElement>) => (
+  <Icon {...p}>
+    <path d="M9 3.5h6l2.5 5-5.5 12-5.5-12z" />
+    <circle cx="12" cy="7.5" r="1.3" />
+    <path d="M10 12.5h4M10.7 15h2.6" />
+  </Icon>
+);
+export const IconDatabase = (p: SVGProps<SVGSVGElement>) => (
+  <Icon {...p}>
+    <ellipse cx="12" cy="6" rx="7" ry="2.5" />
+    <path d="M5 6v12c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5V6M5 12c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5" />
+  </Icon>
+);
+export const IconTruck = (p: SVGProps<SVGSVGElement>) => (
+  <Icon {...p}>
+    <path d="M2.5 6.5h11v9h-11zM13.5 9.5h4l3 3v3h-7" />
+    <circle cx="6.5" cy="17" r="1.8" />
+    <circle cx="17" cy="17" r="1.8" />
+  </Icon>
+);
+export const IconFactory = (p: SVGProps<SVGSVGElement>) => (
+  <Icon {...p}>
+    <path d="M3 20.5V10l5 3V10l5 3V6.5h3V4h3v16.5zM3 20.5h18" />
+    <path d="M7 17h2M12 17h2" />
+  </Icon>
+);
+export const IconCuts = (p: SVGProps<SVGSVGElement>) => (
+  <Icon {...p}>
+    <path d="M4 10c0-3.3 3.4-6 8-6s8 2.7 8 6-3.6 7-8 7-8-3.7-8-7z" />
+    <path d="M9 9.5c0-1.4 1.3-2.5 3-2.5s3 1.1 3 2.5-1.3 2.5-3 2.5-3-1.1-3-2.5zM12 17v3.5" />
+  </Icon>
+);
+export const IconBox = (p: SVGProps<SVGSVGElement>) => (
+  <Icon {...p}>
+    <path d="M3.5 7.5L12 3.5l8.5 4v9L12 20.5l-8.5-4zM3.5 7.5L12 11.5l8.5-4M12 11.5v9" />
+  </Icon>
+);
+export const IconBarcode = (p: SVGProps<SVGSVGElement>) => (
+  <Icon {...p}>
+    <path d="M4 5.5v13M7 5.5v13M10.5 5.5v13M13 5.5v13M16.5 5.5v13M20 5.5v13" />
+  </Icon>
+);
+export const IconSnowflake = (p: SVGProps<SVGSVGElement>) => (
+  <Icon {...p}>
+    <path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9M9.5 4.5L12 7l2.5-2.5M9.5 19.5L12 17l2.5 2.5" />
+  </Icon>
+);
+export const IconShip = (p: SVGProps<SVGSVGElement>) => (
+  <Icon {...p}>
+    <path d="M3 15.5h18l-2.5 4h-13zM6 15.5v-5h12v5M9 10.5V7h6v3.5" />
+  </Icon>
+);
+export const IconWater = (p: SVGProps<SVGSVGElement>) => (
+  <Icon {...p}>
+    <path d="M12 3.5s-6 6.6-6 10.5a6 6 0 0 0 12 0c0-3.9-6-10.5-6-10.5z" />
+  </Icon>
+);
+export const IconHand = (p: SVGProps<SVGSVGElement>) => (
+  <Icon {...p}>
+    <path d="M8 12V5.5a1.5 1.5 0 0 1 3 0V11M11 10V4.5a1.5 1.5 0 0 1 3 0V11M14 10.5V6a1.5 1.5 0 0 1 3 0v7.5c0 4-2.7 7-6.5 7-2.6 0-4.2-1.4-5.6-3.6L3.5 13.5a1.5 1.5 0 0 1 2.4-1.7L8 14" />
+  </Icon>
+);
+export const IconShieldCheck = (p: SVGProps<SVGSVGElement>) => (
+  <Icon {...p}>
+    <path d="M12 3l7.5 3v5.5c0 4.4-3.1 8.1-7.5 9.5-4.4-1.4-7.5-5.1-7.5-9.5V6z" />
+    <path d="M8.5 12l2.5 2.5 4.5-5" />
+  </Icon>
+);
+export const IconClipboard = (p: SVGProps<SVGSVGElement>) => (
+  <Icon {...p}>
+    <path d="M8.5 4.5h-2a1.5 1.5 0 0 0-1.5 1.5v13.5A1.5 1.5 0 0 0 6.5 21h11a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5h-2" />
+    <path d="M9 3h6v3H9zM8.5 11.5l2 2 4-4M8.5 17h7" />
+  </Icon>
+);
+export const IconStethoscope = (p: SVGProps<SVGSVGElement>) => (
+  <Icon {...p}>
+    <path d="M6 3.5v5a4 4 0 0 0 8 0v-5M10 12.5V15a4.5 4.5 0 0 0 9 0v-2" />
+    <circle cx="19" cy="11" r="2" />
+  </Icon>
+);
+export const IconFlask = (p: SVGProps<SVGSVGElement>) => (
+  <Icon {...p}>
+    <path d="M9.5 3.5h5M10.5 3.5v5.5L5 18.5a1.5 1.5 0 0 0 1.3 2.2h11.4a1.5 1.5 0 0 0 1.3-2.2L13.5 9V3.5" />
+    <path d="M7.5 14.5h9" />
+  </Icon>
+);
+export const IconThermometer = (p: SVGProps<SVGSVGElement>) => (
+  <Icon {...p}>
+    <path d="M14 14.8V5a2 2 0 0 0-4 0v9.8a4 4 0 1 0 4 0z" />
+    <path d="M12 9v7" />
+  </Icon>
+);

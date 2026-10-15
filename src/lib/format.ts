@@ -23,3 +23,8 @@ export function formatChange(value: number, locale: Locale) {
     maximumFractionDigits: 2,
   }).format(value / 100);
 }
+
+/** Participación entera ("38 %" / "38%"), con el formato de porcentaje de cada idioma. */
+export function formatShare(pct: number, locale: Locale) {
+  return new Intl.NumberFormat(locale, { style: "percent", maximumFractionDigits: 0 }).format(pct / 100);
+}

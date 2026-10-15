@@ -6,8 +6,8 @@ import { Container } from "@/components/ui/container";
 import { isEnabled } from "@/config/navigation";
 import { company } from "@/data/company";
 import { formatFigure } from "@/lib/format";
-import heroH from "../../../public/images/home/hero-angus-atardecer-h.jpg";
-import heroV from "../../../public/images/home/hero-angus-atardecer-v.jpg";
+import heroH from "../../../public/images/home/hero-angus-campo-h.jpg";
+import heroV from "../../../public/images/home/hero-angus-campo-v.jpg";
 
 /** Hero a pantalla completa. Encuadre horizontal en escritorio y vertical en móvil. */
 export async function Hero() {

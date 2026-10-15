@@ -91,3 +91,55 @@
     scroll-margin-top: calc(var(--spacing-header) + 1rem);
   }
 }
+
+/* ─── Mapa de mercados (Leaflet) ───────────────────────────────────────────── */
+.leaflet-container {
+  font-family: var(--font-sans);
+  background: var(--color-surface-muted);
+}
+/* El preflight de Tailwind (img { max-width: 100%; height: auto }) desarma las teselas */
+.leaflet-container img.leaflet-tile {
+  max-width: none;
+  height: 256px;
+}
+.leaflet-popup-content-wrapper {
+  border-radius: var(--radius-md);
+}
+.leaflet-container a.leaflet-popup-close-button {
+  width: 2.25rem;
+  height: 2.25rem;
+  font-size: 1.25rem;
+  line-height: 2.25rem;
+}
+.leaflet-control-attribution {
+  font-size: 0.75rem;
+  color: var(--color-ink);
+}
+/* Círculo proporcional: bordó translúcido con borde sólido; foco de teclado bien visible */
+.market-marker span {
+  display: block;
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--color-brand-700) 55%, transparent);
+  border: 2px solid var(--color-brand-800);
+  box-shadow: 0 0 0 2px rgb(255 255 255 / 0.85);
+  transition: transform 150ms;
+}
+.market-marker:hover span,
+.market-marker:focus-visible span {
+  transform: scale(1.08);
+  background: color-mix(in srgb, var(--color-brand-700) 75%, transparent);
+}
+.market-marker:focus-visible {
+  outline: 3px dashed var(--color-ink);
+  outline-offset: 4px;
+  border-radius: 9999px;
+}
+.origin-marker span {
+  display: block;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  background: var(--color-earth-700);
+  border: 2px solid white;
+  transform: rotate(45deg);
+}

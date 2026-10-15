@@ -30,7 +30,7 @@ export async function FeaturedCuts() {
             <CutCard
               cut={{ ...c, zoneName: zoneNames.get(`${c.species}:${c.zone}`) ?? c.zone }}
               email={email}
-              sizes="(min-width: 1216px) 384px, (min-width: 1024px) 31vw, (min-width: 640px) 46vw, 100vw"
+              visual="photo"
               className="w-full"
             />
           </li>

@@ -29,9 +29,9 @@ export type NavItem = {
 
 export const mainNav: NavItem[] = [
   { key: "products", href: "/products", enabled: true }, // fase 2
-  { key: "markets", href: "/markets", enabled: false }, // fase 3
-  { key: "quality", href: "/quality", enabled: false }, // fase 3
-  { key: "company", href: "/company", enabled: false }, // fase 3
+  { key: "markets", href: "/markets", enabled: true }, // fase 3
+  { key: "quality", href: "/quality", enabled: true }, // fase 3
+  { key: "company", href: "/company", enabled: true }, // fase 3
   { key: "producers", href: "/producers", enabled: false, highlight: true }, // fase 4
   { key: "contact", href: "/contact", enabled: false }, // fase 5
 ];

@@ -1,11 +1,12 @@
 import { AudienceCards } from "@/components/home/audience-cards";
+import { CertStrip } from "@/components/home/cert-strip";
 import { FeaturedCuts } from "@/components/home/featured-cuts";
 import { FiguresBand } from "@/components/home/figures-band";
 import { Hero } from "@/components/home/hero";
+import { MarketsPreview } from "@/components/home/markets-preview";
 import { OriginBlock } from "@/components/home/origin-block";
 import { PriceSummary } from "@/components/home/price-summary";
 
-// Los destacados de mercados y calidad se suman en la fase 3.
 export default function HomePage() {
   return (
     <>
@@ -13,6 +14,8 @@ export default function HomePage() {
       <FiguresBand />
       <AudienceCards />
       <FeaturedCuts />
+      <CertStrip />
+      <MarketsPreview />
       <OriginBlock />
       <PriceSummary />
     </>

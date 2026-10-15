@@ -38,7 +38,7 @@
       "lead": "We process up to {cattle} cattle and {sheep} sheep per day and export to more than {countries} countries, with individual traceability for every animal.",
       "ctaBuyer": "I'm a buyer",
       "ctaProducer": "I sell livestock",
-      "imageAlt": "Angus and Hereford cattle on pasture at sunset"
+      "imageAlt": "Red Angus cattle on a rolling natural grassland at sunset"
     },
     "figures": {
       "title": "The plant in figures",
@@ -78,7 +78,7 @@
       "title": "More than five decades in the heart of Uruguay's cattle country",
       "p1": "Since {founded}, the {family} family has processed pasture-raised livestock from the centre of the country. The plant, on Route 6 just outside Sarandí del Yí, covers {hectares} hectares and employs {employees} people from the area.",
       "p2": "Every animal arrives identified through the national individual traceability system, and every box that leaves the plant can be traced back to the farm where it was raised.",
-      "imageAlt": "Cattle resting on a rolling natural grassland"
+      "imageAlt": "Cattle grazing on a rolling natural grassland, with a stand of eucalyptus"
     },
     "prices": {
       "eyebrow": "For producers",
@@ -93,6 +93,16 @@
       "down": "Down",
       "seeFull": "See full price board",
       "unavailable": "The price board is not available right now."
+    },
+    "certStrip": {
+      "title": "Certifications and approvals",
+      "cta": "Quality and traceability"
+    },
+    "marketsPreview": {
+      "eyebrow": "Markets",
+      "title": "Where our meat is eaten",
+      "lead": "Main destinations by share of exports.",
+      "cta": "See the markets map"
     }
   },
   "Products": {
@@ -113,7 +123,11 @@
       "zone": "{zone}: {count, plural, =0 {no cuts with these filters} one {# cut} other {# cuts}}",
       "selected": "selected",
       "chipsLabel": "Areas",
-      "seeAll": "Show all"
+      "seeAll": "Show all",
+      "pieces": {
+        "shin": "Shin",
+        "shank": "Shank"
+      }
     },
     "filters": {
       "title": "Filters",
@@ -126,7 +140,11 @@
       "anyBone": "Any",
       "active": "Active filters",
       "remove": "Remove filter: {label}",
-      "clear": "Clear filters"
+      "clear": "Clear filters",
+      "open": "Filters",
+      "openCount": "Filters ({count})",
+      "close": "Close filters",
+      "show": "{count, plural, =0 {See results} one {See # cut} other {See # cuts}}"
     },
     "presentation": {
       "chilled": "Chilled",
@@ -178,14 +196,16 @@
       }
     },
     "images": {
-      "beef-steak": "Two raw beef ribeye steaks on paper",
-      "beef-roast": "Raw beef joint tied for roasting",
+      "beef-tenderloin": "Raw beef tenderloin, whole and cut into medallions",
+      "beef-striploin": "Two raw beef striploin steaks with their fat cap",
+      "beef-rump-cap": "Raw beef rump cap cut into steaks, with its fat cap",
+      "beef-ribeye": "Two raw beef ribeye steaks on paper",
       "beef-ribs": "Raw bone-in beef short rib strips",
-      "beef-braise": "Raw beef piece and a steak on a platter",
-      "beef-flank": "Flat raw beef cut on a board",
-      "lamb-rack": "Two raw frenched lamb cutlets",
-      "lamb-chops": "Raw lamb loin chops on a board",
-      "lamb-cuts": "Raw lamb cuts on a board"
+      "beef-flank": "Raw beef thin flank on a board",
+      "beef-shank": "Raw cross-cut beef shank with the bone",
+      "lamb-rack": "Two raw frenched lamb rack cutlets",
+      "lamb-leg": "Raw bone-in leg of lamb",
+      "lamb-chops": "Raw lamb loin chops on a board"
     }
   },
   "Featured": {
@@ -208,5 +228,163 @@
     "title": "We couldn't find this page",
     "text": "The link may be mistyped or the page may no longer exist.",
     "back": "Back to home"
+  },
+  "Quality": {
+    "metaTitle": "Quality, certifications and traceability",
+    "metaDescription": "Certifications and approvals by market, individual traceability from the farm to the box, animal welfare and quality control at the Sarandí del Yí plant.",
+    "eyebrow": "Quality",
+    "title": "Food safety and traceability, from ear tag to box",
+    "lead": "Every box that leaves the plant can be traced back to the animal and its farm of origin. We work under official veterinary inspection and hold the certifications each market requires.",
+    "sectionsLabel": "On this page",
+    "certs": {
+      "title": "Certifications and approvals",
+      "lead": "Illustrative badges for this demo site: they are not official logos or seals of the certification bodies.",
+      "markets": "Required or requested by",
+      "marketLink": "See cuts for {market}"
+    },
+    "trace": {
+      "title": "Individual traceability",
+      "lead": "Uruguay identifies every animal from birth. The plant keeps that link at every stage, all the way to the box label.",
+      "steps": {
+        "field": {
+          "title": "Identification on the farm",
+          "text": "Every calf carries two ear tags with the same number, one visual and one electronic, fitted at the farm of origin."
+        },
+        "registry": {
+          "title": "National system",
+          "text": "The number is recorded in the national livestock information system, together with every move between farms."
+        },
+        "reception": {
+          "title": "Arrival at the plant",
+          "text": "On arrival the tags are read and the movement permit and producer declaration are checked. The lot is linked to its producer."
+        },
+        "slaughter": {
+          "title": "Slaughter",
+          "text": "Each side of beef gets a label with the animal's number, which stays with it while it chills in the cold rooms."
+        },
+        "boning": {
+          "title": "Boning",
+          "text": "Cuts are linked to the boning lot and the carcass sides it contains, recorded in the plant's system."
+        },
+        "box": {
+          "title": "Coded box",
+          "text": "Every box carries a barcode label: cut, production date, lot and the plant's approval number."
+        }
+      }
+    },
+    "welfare": {
+      "title": "Animal welfare",
+      "lead": "Animal welfare is an obligation and also a condition for meat quality. We apply it throughout the journey to the plant and inside it.",
+      "items": {
+        "transport": {
+          "title": "Transport",
+          "text": "Approved trucks, loads within the recommended density and trained drivers. Trips are planned to be short and without waiting times."
+        },
+        "rest": {
+          "title": "Rest in pens",
+          "text": "Animals rest in pens with permanent water and shade before slaughter, kept apart by lot of origin."
+        },
+        "handling": {
+          "title": "Handling",
+          "text": "Curved races and non-slip floors, with no electric prods as routine practice. Staff are trained every year."
+        },
+        "stunning": {
+          "title": "Stunning",
+          "text": "Stunning before slaughter in line with current regulations, with effectiveness checks recorded on every shift."
+        },
+        "audits": {
+          "title": "Audits",
+          "text": "Internal and customer audits using recognised protocols. Results are reviewed with producers and hauliers."
+        }
+      }
+    },
+    "control": {
+      "title": "Quality control",
+      "lead": "Quality is checked at every stage, from the arrival of the cattle to the loading of the container.",
+      "items": {
+        "vet": {
+          "title": "Official veterinary inspection",
+          "text": "Official veterinarians inspect the live animals and every carcass on the slaughter line. No product leaves without their approval."
+        },
+        "lab": {
+          "title": "Laboratory",
+          "text": "Microbiological testing of surfaces and product, plus sampling under the national residue programme. Results are linked to each lot."
+        },
+        "cold": {
+          "title": "Cold chain",
+          "text": "Temperature is logged continuously in cold rooms, blast freezing tunnels and containers, with alarms and a check before every load."
+        }
+      }
+    }
+  },
+  "Company": {
+    "metaTitle": "Company: history, plant and team",
+    "metaDescription": "Family-owned meat packer founded in {founded} in Sarandí del Yí. Our history, a five-stage tour of the plant and the team that serves buyers and producers.",
+    "eyebrow": "Company",
+    "title": "A family-owned plant built for export",
+    "lead": "Since {founded}, the {family} family has processed cattle from central Uruguay in Sarandí del Yí. Today we export to more than {countries} countries with a team of {employees} people.",
+    "history": {
+      "title": "History",
+      "lead": "More than five decades of step-by-step growth, always in the same place."
+    },
+    "plant": {
+      "title": "Plant tour",
+      "lead": "Five stages, from the arrival of the cattle to the loading of the container.",
+      "stages": {
+        "reception": {
+          "title": "Reception",
+          "text": "Cattle arrive, ear tags are read, live animals are inspected by a veterinarian and rest in pens."
+        },
+        "slaughter": {
+          "title": "Processing",
+          "text": "Carried out under continuous official inspection, on separate lines for cattle and sheep."
+        },
+        "boning": {
+          "title": "Boning",
+          "text": "Temperature-controlled rooms where each market's cuts are prepared and vacuum-packed."
+        },
+        "cold": {
+          "title": "Cold storage",
+          "text": "Chilling rooms and blast freezing tunnels, with capacity for {tonnes} tonnes."
+        },
+        "shipping": {
+          "title": "Shipping",
+          "text": "Temperature-controlled loading of refrigerated containers, bound for the port of Montevideo."
+        }
+      },
+      "stageLabel": "Stage {n} of {total}"
+    },
+    "team": {
+      "title": "Team",
+      "lead": "The people who work with overseas buyers and livestock producers.",
+      "note": "Fictitious people on this demo site."
+    }
+  },
+  "Markets": {
+    "metaTitle": "Export markets",
+    "metaDescription": "Where Frigorífico Cuchilla Grande's beef and lamb go: share by market, main cuts and required certifications.",
+    "eyebrow": "Markets",
+    "title": "Uruguayan meat in more than {countries} countries",
+    "lead": "{share} of our production is exported. These are our main destinations, with their share of export sales, the cuts they buy most and the certifications they require.",
+    "map": {
+      "title": "Destination map",
+      "hint": "The area of each circle is proportional to its share. Tap it, or move with Tab and open it with Enter, to see the details.",
+      "label": "Map of export markets",
+      "marker": "{market}: {share} of exports",
+      "loading": "Loading the map…",
+      "ofExports": "of exports",
+      "origin": "Plant: Sarandí del Yí, Uruguay"
+    },
+    "list": {
+      "title": "Destinations and share",
+      "lead": "The same information as the map, sorted by share.",
+      "share": "Share",
+      "volume": "Annual volume",
+      "volumeValue": "{tonnes} t",
+      "others": "Other destinations (more than {countries} countries in total): {share}"
+    },
+    "topCuts": "Main cuts",
+    "certifications": "Required certifications",
+    "catalogLink": "See cuts for {market}"
   }
 }

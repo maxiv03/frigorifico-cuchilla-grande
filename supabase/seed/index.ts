@@ -4,3 +4,4 @@ export { priceCategories } from "./price-categories";
 export { markets } from "./markets";
 export { cutZones } from "./cut-zones";
 export { cuts } from "./cuts";
+export { certifications } from "./certifications";

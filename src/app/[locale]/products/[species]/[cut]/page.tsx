@@ -61,12 +61,13 @@ async function load(params: Promise<Params>) {
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const { locale, species, cut, hrefs } = await load(params);
   const t = await getTranslations({ locale, namespace: "Products" });
+  const image = cutImage(cut.image, species);
   const title = t("detail.metaTitle", { cut: cut.alias ? `${cut.name} (${cut.alias})` : cut.name, species: t(`species.${species}`) });
   return {
     title,
     description: cut.description,
     alternates: { canonical: hrefs[locale], languages: { ...hrefs, "x-default": hrefs[routing.defaultLocale] } },
-    openGraph: { title, description: cut.description, images: [cutImage(cut.image, species).src.src] },
+    openGraph: { title, description: cut.description, images: image ? [image.src.src] : undefined },
   };
 }
 
@@ -82,6 +83,7 @@ export default async function CutPage({ params }: { params: Promise<Params> }) {
   const sameZone = catalog.cuts.filter((c) => c.species === species && c.zone === cut.zone && c.id !== cut.id);
   const speciesName = t(`species.${species}`);
   const toCard = (c: CatalogCut) => ({ ...c, zoneName });
+  const diagramLabel = t("detail.diagramLabel", { species: t(`detail.speciesInline.${species}`), zone: zoneName });
 
   const site = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
   const breadcrumbLd = {
@@ -135,26 +137,40 @@ export default async function CutPage({ params }: { params: Promise<Params> }) {
       <Section className="lg:pt-16">
         <div className="grid gap-10 lg:grid-cols-12 lg:gap-14">
           <div className="lg:col-span-6">
-            <div className="relative aspect-[4/3] overflow-hidden rounded-lg shadow-raised">
-              <Image
-                src={image.src}
-                alt={t(`images.${image.key}`)}
-                fill
-                placeholder="blur"
-                loading="eager"
-                fetchPriority="high"
-                sizes="(min-width: 1216px) 560px, (min-width: 1024px) 46vw, 100vw"
-                className="object-cover"
-              />
-            </div>
-            <div className="mt-6 rounded-lg bg-surface-muted p-4 ring-1 ring-line sm:p-6">
-              <DetailDiagram
-                species={species}
-                zone={cut.zone}
-                zones={catalog.zones.filter((z) => z.species === species)}
-                label={t("detail.diagramLabel", { species: t(`detail.speciesInline.${species}`), zone: zoneName })}
-              />
-            </div>
+            {/* Foto de la pieza si hay una adecuada; si no, la ilustración grande de la zona. */}
+            {image ? (
+              <>
+                <div className="relative aspect-[4/3] overflow-hidden rounded-lg shadow-raised">
+                  <Image
+                    src={image.src}
+                    alt={t(`images.${image.key}`)}
+                    fill
+                    placeholder="blur"
+                    loading="eager"
+                    fetchPriority="high"
+                    sizes="(min-width: 1216px) 560px, (min-width: 1024px) 46vw, 100vw"
+                    className="object-cover"
+                  />
+                </div>
+                <div className="mt-6 rounded-lg bg-surface-muted p-4 ring-1 ring-line sm:p-6">
+                  <DetailDiagram
+                    species={species}
+                    zone={cut.zone}
+                    zones={catalog.zones.filter((z) => z.species === species)}
+                    label={diagramLabel}
+                  />
+                </div>
+              </>
+            ) : (
+              <div className="rounded-lg bg-surface-muted px-4 py-8 ring-1 ring-line sm:px-8 sm:py-12">
+                <DetailDiagram
+                  species={species}
+                  zone={cut.zone}
+                  zones={catalog.zones.filter((z) => z.species === species)}
+                  label={diagramLabel}
+                />
+              </div>
+            )}
           </div>
 
           <div className="lg:col-span-6">

@@ -81,22 +81,22 @@ export async function SiteHeader() {
             main={main}
             utility={utility}
             footer={
-              <div className="space-y-6">
+              <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-semibold text-ink-muted">{t("language")}</span>
                   <LocaleSwitcher />
                 </div>
-                <div className="space-y-3 text-base">
+                <div className="space-y-1 text-base">
                   <a
                     href={whatsappUrl(t("whatsappMessage"))}
-                    className="flex items-center gap-3 text-ink hover:text-brand-700"
+                    className="flex items-center gap-3 py-1.5 text-ink hover:text-brand-700"
                     rel="noopener"
                     target="_blank"
                   >
                     <IconWhatsApp className="text-brand-700" />
                     <span>{contact.phoneDisplay}</span>
                   </a>
-                  <a href={`mailto:${contact.email}`} className="flex items-center gap-3 text-ink hover:text-brand-700">
+                  <a href={`mailto:${contact.email}`} className="flex items-center gap-3 py-1.5 text-ink hover:text-brand-700">
                     <IconMail className="text-brand-700" />
                     <span>{contact.email}</span>
                   </a>

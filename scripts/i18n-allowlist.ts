@@ -10,6 +10,7 @@ export const allowedMessageKeys: string[] = [
   "LocaleSwitcher.es", // endónimos: cada idioma se nombra en su propia lengua
   "LocaleSwitcher.en",
   "Products.detail.metaTitle", // solo placeholders
+  "Markets.list.volumeValue", // placeholder + unidad (t)
 ];
 
 /** Valores de contenido (seed y company.ts) que pueden repetirse entre idiomas. */

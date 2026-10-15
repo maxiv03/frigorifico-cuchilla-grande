@@ -15,7 +15,7 @@ export const cuts: CutSeed[] = [
     bone: "boneless",
     presentations: ["chilled", "frozen"],
     markets: ["eu", "us", "uk", "ca", "br"],
-    image: "beef-roast",
+    image: "beef-tenderloin",
     featured: true,
     name: { es: "Lomo", en: "Tenderloin" },
     alias: { en: "Fillet" },
@@ -31,7 +31,7 @@ export const cuts: CutSeed[] = [
     bone: "boneless",
     presentations: ["chilled", "frozen"],
     markets: ["eu", "us", "uk", "ca", "br", "jp"],
-    image: "beef-steak",
+    image: "beef-striploin",
     featured: true,
     name: { es: "Bife angosto", en: "Striploin" },
     alias: { en: "New York strip" },
@@ -47,7 +47,6 @@ export const cuts: CutSeed[] = [
     bone: "bone_in",
     presentations: ["chilled", "frozen"],
     markets: ["us", "ca", "uk"],
-    image: "beef-steak",
     name: { es: "Espinazo trasero", en: "Shortloin" },
     alias: { en: "T-bone" },
     description: {
@@ -63,7 +62,6 @@ export const cuts: CutSeed[] = [
     bone: "boneless",
     presentations: ["chilled", "frozen"],
     markets: ["eu", "uk", "br", "us"],
-    image: "beef-steak",
     name: { es: "Cuadril con tapa", en: "D-Rump" },
     alias: { es: "Cuadril D", en: "Top sirloin" },
     description: {
@@ -78,7 +76,7 @@ export const cuts: CutSeed[] = [
     bone: "boneless",
     presentations: ["chilled", "frozen"],
     markets: ["br", "eu", "uk", "us"],
-    image: "beef-roast",
+    image: "beef-rump-cap",
     featured: true,
     name: { es: "Tapa de cuadril", en: "Rump Cap" },
     alias: { es: "Picaña", en: "Picanha" },
@@ -94,7 +92,6 @@ export const cuts: CutSeed[] = [
     bone: "boneless",
     presentations: ["chilled", "frozen"],
     markets: ["eu", "uk"],
-    image: "beef-steak",
     name: { es: "Corazón de cuadril", en: "Eye of Rump" },
     description: {
       es: "El músculo central del cuadril, magro y parejo. Ideal para bifes porcionados y para el retail que busca piezas sin desperdicio. Se envía al vacío, varias piezas por caja.",
@@ -108,7 +105,6 @@ export const cuts: CutSeed[] = [
     bone: "boneless",
     presentations: ["chilled", "frozen"],
     markets: ["us", "br", "eu"],
-    image: "beef-roast",
     name: { es: "Colita de cuadril", en: "Tri-tip" },
     description: {
       es: "Pieza chica y sabrosa del extremo del cuadril, para asar entera o en bifes. Muy buscada en Estados Unidos y Brasil. Envasada al vacío en piezas individuales.",
@@ -123,7 +119,6 @@ export const cuts: CutSeed[] = [
     bone: "boneless",
     presentations: ["chilled", "frozen"],
     markets: ["eu", "us", "cn"],
-    image: "beef-roast",
     name: { es: "Nalga de adentro", en: "Inside" },
     alias: { en: "Top round" },
     description: {
@@ -138,7 +133,6 @@ export const cuts: CutSeed[] = [
     bone: "boneless",
     presentations: ["chilled", "frozen"],
     markets: ["cn", "us", "eu"],
-    image: "beef-roast",
     name: { es: "Bola de lomo", en: "Knuckle" },
     alias: { en: "Sirloin tip" },
     description: {
@@ -153,7 +147,6 @@ export const cuts: CutSeed[] = [
     bone: "boneless",
     presentations: ["frozen", "chilled"],
     markets: ["cn", "us", "eu"],
-    image: "beef-roast",
     name: { es: "Nalga de afuera", en: "Silverside" },
     alias: { en: "Bottom round" },
     description: {
@@ -168,7 +161,6 @@ export const cuts: CutSeed[] = [
     bone: "boneless",
     presentations: ["frozen", "chilled"],
     markets: ["us", "eu", "cn"],
-    image: "beef-roast",
     name: { es: "Cuadrada", en: "Outside Flat" },
     alias: { en: "Bottom round flat" },
     description: {
@@ -183,7 +175,6 @@ export const cuts: CutSeed[] = [
     bone: "boneless",
     presentations: ["chilled", "frozen"],
     markets: ["us", "eu", "br"],
-    image: "beef-roast",
     name: { es: "Peceto", en: "Eye Round" },
     alias: { en: "Eye of round" },
     description: {
@@ -199,7 +190,7 @@ export const cuts: CutSeed[] = [
     bone: "bone_in",
     presentations: ["frozen"],
     markets: ["cn", "eu"],
-    image: "beef-braise",
+    image: "beef-shank",
     name: { es: "Garrón con hueso", en: "Shank bone-in" },
     description: {
       es: "Garrón trasero con su hueso, para osobuco y caldos. Rico en colágeno, pensado para cocción lenta. Se envía congelado, en cajas de piezas enteras.",
@@ -213,7 +204,6 @@ export const cuts: CutSeed[] = [
     bone: "boneless",
     presentations: ["frozen"],
     markets: ["cn", "us"],
-    image: "beef-braise",
     name: { es: "Brazuelo", en: "Shin" },
     description: {
       es: "Músculo de la pata delantera, deshuesado. Gelatinoso y sabroso, muy usado en guisos y en la cocina china. Congelado, en bloques o piezas al vacío.",
@@ -242,7 +232,6 @@ export const cuts: CutSeed[] = [
     bone: "boneless",
     presentations: ["frozen"],
     markets: ["cn", "br"],
-    image: "beef-flank",
     name: { es: "Matambre", en: "Rose Meat" },
     alias: { en: "Matambre" },
     description: {
@@ -273,7 +262,6 @@ export const cuts: CutSeed[] = [
     bone: "boneless",
     presentations: ["chilled", "frozen"],
     markets: ["jp", "us", "eu", "cn"],
-    image: "beef-flank",
     name: { es: "Entraña fina", en: "Thin Skirt" },
     alias: { en: "Outside skirt" },
     description: {
@@ -288,9 +276,7 @@ export const cuts: CutSeed[] = [
     bone: "boneless",
     presentations: ["frozen", "chilled"],
     markets: ["jp", "us", "cn"],
-    image: "beef-flank",
     name: { es: "Entraña gruesa", en: "Thick Skirt" },
-    alias: { en: "Hanging tender" },
     description: {
       es: "Pieza única por res, de sabor intenso, para parrilla y bistró. Producción limitada, muy pedida por Japón. Congelada o enfriada, al vacío.",
       en: "One piece per carcass, with an intense flavour, for grilling and bistro menus. Limited supply, in high demand from Japan. Frozen or chilled, vacuum-packed.",
@@ -304,7 +290,7 @@ export const cuts: CutSeed[] = [
     bone: "boneless",
     presentations: ["chilled", "frozen"],
     markets: ["eu", "us", "uk", "ca", "il", "jp"],
-    image: "beef-steak",
+    image: "beef-ribeye",
     featured: true,
     name: { es: "Bife ancho sin tapa", en: "Cube Roll" },
     alias: { es: "Ojo de bife", en: "Ribeye" },
@@ -321,7 +307,6 @@ export const cuts: CutSeed[] = [
     bone: "boneless",
     presentations: ["frozen", "chilled"],
     markets: ["cn", "il", "us", "jp"],
-    image: "beef-braise",
     name: { es: "Aguja", en: "Chuck Roll" },
     description: {
       es: "Pieza grande del cuarto delantero, con buen sabor y algo de grasa intramuscular. Para hot pot, guisos y bifes de aguja. Congelada o enfriada, una pieza por caja.",
@@ -335,7 +320,6 @@ export const cuts: CutSeed[] = [
     bone: "bone_in",
     presentations: ["frozen"],
     markets: ["cn", "il"],
-    image: "beef-ribs",
     name: { es: "Aguja con hueso", en: "Chuck Square Cut" },
     description: {
       es: "Aguja con sus costillas y vértebras, para despiezar o cortar con sierra en destino. Formato económico para procesadores. Se envía congelada, con hueso protegido.",
@@ -350,7 +334,6 @@ export const cuts: CutSeed[] = [
     bone: "boneless",
     presentations: ["frozen", "chilled"],
     markets: ["cn", "il", "us"],
-    image: "beef-braise",
     name: { es: "Paleta", en: "Blade Clod" },
     description: {
       es: "Conjunto de músculos de la paleta, para despiezar en cortes de cocción lenta o para procesamiento. Rendimiento alto a buen precio. Congelada, al vacío.",
@@ -364,7 +347,6 @@ export const cuts: CutSeed[] = [
     bone: "boneless",
     presentations: ["chilled", "frozen"],
     markets: ["us", "eu", "il", "cn"],
-    image: "beef-braise",
     name: { es: "Marucha", en: "Blade Oyster" },
     alias: { en: "Top blade" },
     description: {
@@ -380,7 +362,6 @@ export const cuts: CutSeed[] = [
     bone: "boneless",
     presentations: ["frozen", "chilled"],
     markets: ["cn", "il", "us"],
-    image: "beef-braise",
     name: { es: "Pecho", en: "Brisket" },
     description: {
       es: "Corte del pecho con grasa de cobertura, para ahumado, pastrami y cocción lenta. Clásico del mercado kosher. Piezas enteras al vacío, enfriadas o congeladas.",
@@ -394,7 +375,6 @@ export const cuts: CutSeed[] = [
     bone: "boneless",
     presentations: ["frozen"],
     markets: ["cn", "il"],
-    image: "beef-braise",
     name: { es: "Cogote", en: "Neck" },
     description: {
       es: "Carne del cuello, sabrosa y con colágeno, para guisos, carne picada y procesamiento. Formato industrial de buen rendimiento. Congelado, en piezas o bloques.",
@@ -426,7 +406,7 @@ export const cuts: CutSeed[] = [
     bone: "bone_in",
     presentations: ["chilled", "frozen"],
     markets: ["eu", "uk", "br", "us"],
-    image: "lamb-cuts",
+    image: "lamb-leg",
     featured: true,
     name: { es: "Pierna", en: "Leg" },
     description: {
@@ -441,7 +421,6 @@ export const cuts: CutSeed[] = [
     bone: "boneless",
     presentations: ["chilled", "frozen"],
     markets: ["eu", "uk", "us"],
-    image: "lamb-cuts",
     name: { es: "Pierna deshuesada", en: "Boneless Leg" },
     description: {
       es: "Pierna sin hueso, entera o en mariposa, lista para rellenar, asar o porcionar. Rendimiento total para gastronomía y retail. Al vacío, con o sin red.",
@@ -455,7 +434,6 @@ export const cuts: CutSeed[] = [
     bone: "boneless",
     presentations: ["chilled", "frozen"],
     markets: ["eu", "uk", "br"],
-    image: "lamb-cuts",
     name: { es: "Cuadril", en: "Rump" },
     alias: { en: "Chump" },
     description: {
@@ -470,7 +448,6 @@ export const cuts: CutSeed[] = [
     bone: "boneless",
     presentations: ["chilled", "frozen"],
     markets: ["eu", "uk", "us", "br"],
-    image: "lamb-chops",
     name: { es: "Lomo", en: "Backstrap" },
     alias: { en: "Boneless loin" },
     description: {
@@ -499,7 +476,6 @@ export const cuts: CutSeed[] = [
     bone: "bone_in",
     presentations: ["frozen", "chilled"],
     markets: ["cn", "br", "eu"],
-    image: "lamb-cuts",
     name: { es: "Paleta", en: "Shoulder" },
     description: {
       es: "Paleta entera con hueso, para asar lento o despiezar. Sabrosa y con buena relación precio-rendimiento. Congelada o enfriada, al vacío.",
@@ -513,7 +489,6 @@ export const cuts: CutSeed[] = [
     bone: "bone_in",
     presentations: ["frozen"],
     markets: ["cn", "us", "eu"],
-    image: "lamb-cuts",
     name: { es: "Garrón", en: "Shank" },
     description: {
       es: "Garrón de cordero con hueso, para braseados y cocción lenta. Un clásico de las cartas de bistró. Congelado, en piezas individuales al vacío.",
@@ -527,7 +502,6 @@ export const cuts: CutSeed[] = [
     bone: "bone_in",
     presentations: ["frozen"],
     markets: ["cn", "uk"],
-    image: "lamb-cuts",
     name: { es: "Cogote", en: "Neck" },
     description: {
       es: "Cuello de cordero con hueso, entero o en rodajas, para guisos y currys. Formato de buen precio para procesadores y gastronomía. Congelado.",
@@ -541,7 +515,6 @@ export const cuts: CutSeed[] = [
     bone: "boneless",
     presentations: ["frozen"],
     markets: ["cn"],
-    image: "lamb-cuts",
     name: { es: "Pecho", en: "Flap" },
     alias: { en: "Breast" },
     description: {

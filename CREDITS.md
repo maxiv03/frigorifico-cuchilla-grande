@@ -11,27 +11,31 @@ compresión propios.
 
 | Archivo | Dónde se usa | Autor | Fuente |
 |---|---|---|---|
-| `public/images/home/hero-angus-atardecer-h.jpg` / `-v.jpg` | Home · hero (recorte horizontal para escritorio, vertical para móvil) | Leopold Maitre ([@lm](https://unsplash.com/@lm)) | [unsplash.com/photos/ldYEiVPOCi8](https://unsplash.com/photos/ldYEiVPOCi8) |
+| `public/images/home/hero-angus-campo-h.jpg` / `-v.jpg` | Home · hero (recorte horizontal para escritorio, vertical para móvil) | Priscilla Du Preez ([@priscilladupreez](https://unsplash.com/@priscilladupreez)) | [unsplash.com/photos/tGtWKDdicn4](https://unsplash.com/photos/tGtWKDdicn4) |
 | `public/images/home/compradores-buque.jpg` | Home · tarjeta "Compradores e importadores" | Venti Views ([@ventiviews](https://unsplash.com/@ventiviews)) | [unsplash.com/photos/1cqIcrWFQBI](https://unsplash.com/photos/1cqIcrWFQBI) |
 | `public/images/home/productores-hereford.jpg` | Home · tarjeta "Productores ganaderos" | Dmitry Fomin ([@dafomin](https://unsplash.com/@dafomin)) | [unsplash.com/photos/YZUyYzgvnAY](https://unsplash.com/photos/YZUyYzgvnAY) |
-| `public/images/home/campo-ondulado.jpg` | Home · bloque "Desde Sarandí del Yí al mundo" | Quaritsch Photography ([@quaritsch](https://unsplash.com/@quaritsch)) | [unsplash.com/photos/N8A0Dwp9_CI](https://unsplash.com/photos/N8A0Dwp9_CI) |
+| `public/images/home/campo-angus-eucaliptos.jpg` | Home · bloque "Desde Sarandí del Yí al mundo" | Jason Leung ([@ninjason](https://unsplash.com/@ninjason)) | [unsplash.com/photos/VZYJ9uuZFp0](https://unsplash.com/photos/VZYJ9uuZFp0) |
 
-### Fotos de cortes (fase 2)
+### Fotos de cortes
 
-Una foto por categoría de corte, siempre de la especie del corte (`src/lib/catalog/images.ts`
-solo permite claves `beef-*` en vacunos y `lamb-*` en ovinos). Carne cruda, sin faena ni marcas.
-Recorte 4:3 a 1200×900.
+Una foto por tipo de pieza, solo cuando muestra ESA pieza y es de la especie del corte
+(`src/lib/catalog/images.ts` solo permite claves `beef-*` en vacunos y `lamb-*` en ovinos).
+Los cortes sin foto adecuada se ilustran con el diagrama de su zona. Las tarjetas del catálogo
+usan la mini-silueta; las fotos aparecen en el detalle y en los destacados de la home.
+Carne cruda, sin faena ni marcas. Recorte 4:3 a 1200×900.
 
-| Archivo | Categoría / dónde se usa | Autor | Fuente | Licencia |
+| Archivo | Corte | Autor | Fuente | Licencia |
 |---|---|---|---|---|
-| `public/images/cuts/vacuno-bifes.jpg` | Vacuno · bifes (bife angosto, bife ancho, cuadril con tapa, corazón de cuadril, espinazo) | Sergey Kotenev ([@sergeykotenev](https://unsplash.com/@sergeykotenev)) | [unsplash.com/photos/x--wK7akQWw](https://unsplash.com/photos/x--wK7akQWw) | Unsplash License |
-| `public/images/cuts/vacuno-asado-al-horno.jpg` | Vacuno · piezas enteras (lomo, pierna, tapa y colita de cuadril) | Wesual Click ([@wesual](https://unsplash.com/@wesual)) | [unsplash.com/photos/DxJvLtab4ak](https://unsplash.com/photos/DxJvLtab4ak) | Unsplash License |
-| `public/images/cuts/vacuno-asado-tira.jpg` | Vacuno · con hueso (asado, aguja con hueso) | Lucas Vinicius Peixoto ([@pilgrimcomunicacao](https://unsplash.com/@pilgrimcomunicacao)) | [unsplash.com/photos/P7Um6_hkwbU](https://unsplash.com/photos/P7Um6_hkwbU) | Unsplash License |
-| `public/images/cuts/vacuno-coccion-lenta.jpg` | Vacuno · cocción lenta (aguja, paleta, marucha, pecho, cogote, garrón, brazuelo) | David Foodphototasty ([@phototastyfood](https://unsplash.com/@phototastyfood)) | [unsplash.com/photos/U5lLwx17rWs](https://unsplash.com/photos/U5lLwx17rWs) | Unsplash License |
-| `public/images/cuts/vacuno-vacio.jpg` | Vacuno · cortes planos (vacío, matambre, entrañas) | Jakob Trost ([@jwtrost](https://unsplash.com/@jwtrost)) | [unsplash.com/photos/vPIco9WVV2s](https://unsplash.com/photos/vPIco9WVV2s) | Unsplash License |
-| `public/images/cuts/ovino-carre.jpg` | Ovino · costillar (carré francés) | zydeaosika ([Pexels](https://www.pexels.com/@zydeaosika-2261055/)) | [pexels.com/photo/4411696](https://www.pexels.com/photo/4411696/) | Pexels License |
-| `public/images/cuts/ovino-chuletas-lomo.jpg` | Ovino · lomo (lomo, chuletas de lomo) | Ragil Tagiyev ([Pexels](https://www.pexels.com/@ragil-tagiyev-1303759/)) | [pexels.com/photo/6281506](https://www.pexels.com/photo/6281506/) | Pexels License |
-| `public/images/cuts/ovino-cortes.jpg` | Ovino · resto (pierna, cuadril, paleta, garrón, cogote, pecho) | Ragil Tagiyev ([Pexels](https://www.pexels.com/@ragil-tagiyev-1303759/)) | [pexels.com/photo/6281509](https://www.pexels.com/photo/6281509/) | Pexels License |
+| `public/images/cuts/vacuno-lomo.jpg` | Lomo | Cindie Hansen ([@cindie_photographer](https://unsplash.com/@cindie_photographer)) | [unsplash.com/photos/Qt0qVGExVps](https://unsplash.com/photos/Qt0qVGExVps) | Unsplash License |
+| `public/images/cuts/vacuno-bife-angosto.jpg` | Bife angosto | Kyle Mackie ([@macrz](https://unsplash.com/@macrz)) | [unsplash.com/photos/QH8SHBARVVk](https://unsplash.com/photos/QH8SHBARVVk) | Unsplash License |
+| `public/images/cuts/vacuno-tapa-de-cuadril.jpg` | Tapa de cuadril (picaña) | Marcos Paulo Prado ([@marcospradobr](https://unsplash.com/@marcospradobr)) | [unsplash.com/photos/2x_AZcI_iPQ](https://unsplash.com/photos/2x_AZcI_iPQ) | Unsplash License |
+| `public/images/cuts/vacuno-bife-ancho.jpg` | Bife ancho sin tapa (ojo de bife) | Sergey Kotenev ([@sergeykotenev](https://unsplash.com/@sergeykotenev)) | [unsplash.com/photos/x--wK7akQWw](https://unsplash.com/photos/x--wK7akQWw) | Unsplash License |
+| `public/images/cuts/vacuno-asado-tira.jpg` | Asado | Lucas Vinicius Peixoto ([@pilgrimcomunicacao](https://unsplash.com/@pilgrimcomunicacao)) | [unsplash.com/photos/P7Um6_hkwbU](https://unsplash.com/photos/P7Um6_hkwbU) | Unsplash License |
+| `public/images/cuts/vacuno-vacio.jpg` | Vacío | Jakob Trost ([@jwtrost](https://unsplash.com/@jwtrost)) | [unsplash.com/photos/vPIco9WVV2s](https://unsplash.com/photos/vPIco9WVV2s) | Unsplash License |
+| `public/images/cuts/vacuno-garron.jpg` | Garrón con hueso | Anastasia Malysh ([@anastasiamalysh11](https://unsplash.com/@anastasiamalysh11)) | [unsplash.com/photos/ovhsJaE-jKo](https://unsplash.com/photos/ovhsJaE-jKo) | Unsplash License |
+| `public/images/cuts/ovino-carre.jpg` | Carré francés | zydeaosika ([Pexels](https://www.pexels.com/@zydeaosika-2261055/)) | [pexels.com/photo/4411696](https://www.pexels.com/photo/4411696/) | Pexels License |
+| `public/images/cuts/ovino-pierna.jpg` | Pierna (recorte sin la botella con etiqueta del original) | alireza nikzad ([@a_nikzad](https://unsplash.com/@a_nikzad)) | [unsplash.com/photos/s5MCHa20XDY](https://unsplash.com/photos/s5MCHa20XDY) | Unsplash License |
+| `public/images/cuts/ovino-chuletas-lomo.jpg` | Chuletas de lomo | Ragil Tagiyev ([Pexels](https://www.pexels.com/@ragil-tagiyev-1303759/)) | [pexels.com/photo/6281506](https://www.pexels.com/photo/6281506/) | Pexels License |
 
 [Pexels License](https://www.pexels.com/license/): uso gratuito, sin atribución obligatoria.
 
@@ -62,4 +66,9 @@ Isotipo, favicon, íconos de interfaz y badges: diseño propio para este proyect
 
 ## Mapas
 
-(Fase 3: atribución de OpenStreetMap y del proveedor de tiles.)
+- Datos del mapa base: © [OpenStreetMap](https://www.openstreetmap.org/copyright) contributors
+  (ODbL). Atribución visible en el control del mapa.
+- Teselas: [CARTO Basemaps](https://carto.com/attributions) (estilo Positron) cuando está
+  configurada `CARTO_BASEMAPS_KEY` (© CARTO en la atribución). Sin clave, teselas estándar de
+  OpenStreetMap según su [política de uso](https://operations.osmfoundation.org/policies/tiles/).
+- Biblioteca: [Leaflet](https://leafletjs.com) (BSD-2-Clause) y react-leaflet (Hippocratic License 2.1).

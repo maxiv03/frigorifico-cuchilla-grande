@@ -3,7 +3,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { Section, SectionHeader } from "@/components/ui/section";
 import { company } from "@/data/company";
 import { formatFigure } from "@/lib/format";
-import campo from "../../../public/images/home/campo-ondulado.jpg";
+import campo from "../../../public/images/home/campo-angus-eucaliptos.jpg";
 
 /** Bloque institucional "Desde Sarandí del Yí al mundo": texto + foto. */
 export async function OriginBlock() {
@@ -36,7 +36,7 @@ export async function OriginBlock() {
               fill
               placeholder="blur"
               sizes="(min-width: 1216px) 560px, (min-width: 1024px) 46vw, 100vw"
-              className="object-cover object-[50%_70%]"
+              className="object-cover object-[50%_60%]"
             />
           </div>
         </div>

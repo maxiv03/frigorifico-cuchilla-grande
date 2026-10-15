@@ -35,16 +35,21 @@ export type CutZoneSeed = {
   name: Localized;
 };
 
-/** Foto por zona/categoría (src/lib/catalog/images.ts). Siempre de la especie del corte. */
+/**
+ * Foto del tipo de pieza (src/lib/catalog/images.ts), siempre de la especie del corte.
+ * Solo cuando la foto muestra ESA pieza; sin foto, el detalle usa la ilustración de la zona.
+ */
 export type CutImageKey =
-  | "beef-steak"
-  | "beef-roast"
+  | "beef-tenderloin"
+  | "beef-striploin"
+  | "beef-rump-cap"
+  | "beef-ribeye"
   | "beef-ribs"
-  | "beef-braise"
   | "beef-flank"
+  | "beef-shank"
   | "lamb-rack"
-  | "lamb-chops"
-  | "lamb-cuts";
+  | "lamb-leg"
+  | "lamb-chops";
 
 export type CutSeed = {
   /** Clave interna; en la base: `${species}_${key}`. No se muestra. */
@@ -54,11 +59,26 @@ export type CutSeed = {
   bone: "bone_in" | "boneless";
   presentations: ("chilled" | "frozen")[];
   markets: string[];
-  image: CutImageKey;
+  image?: CutImageKey;
   featured?: boolean;
   /** ES: nombre INAC. EN: término de exportación. */
   name: Localized;
   /** Término alternativo (EN: de consumidor). Opcional por idioma. */
   alias?: Partial<Localized>;
   description: Localized;
+};
+
+/** Ícono propio del badge (src/components/quality/cert-badge.tsx). Nunca logos oficiales. */
+export type CertIcon = "crescent" | "star" | "shield" | "rosette" | "stamp" | "globe";
+
+export type CertificationSeed = {
+  /** Clave neutra; ancla en /calidad (#cert-halal). */
+  id: string;
+  icon: CertIcon;
+  sort: number;
+  name: Localized;
+  /** Texto breve. Sin números de certificado. */
+  summary: Localized;
+  /** Mercados del seed que la exigen o la piden (market_certifications). */
+  markets: string[];
 };

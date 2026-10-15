@@ -17,7 +17,8 @@ async function main() {
       .map((z, i) => `<path d="${toPath(z.polygon)}" fill="${palette[i % palette.length]}" stroke="#fff" stroke-width="3" clip-path="url(#b)"/>`)
       .join("");
     const labels = g.zones
-      .map((z) => `<text x="${z.label[0]}" y="${z.label[1]}" font-size="16" font-family="sans-serif" text-anchor="middle" fill="#1f1a17">${z.id}</text>`)
+      .filter((z) => z.label)
+      .map((z) => `<text x="${z.label![0]}" y="${z.label![1]}" font-size="16" font-family="sans-serif" text-anchor="${z.anchor ?? "middle"}" fill="#1f1a17">${z.piece ?? z.id}</text>`)
       .join("");
     const [x, y, w, h] = g.viewBox.split(" ").map(Number);
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${g.viewBox}" width="${w * 1.5}" height="${h * 1.5}">

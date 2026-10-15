@@ -44,14 +44,39 @@ export const company = {
   },
 
   people: {
-    ceo: { name: "Lucía Iturralde", role: { es: "Directora general", en: "Chief Executive Officer" } },
+    ceo: {
+      name: "Lucía Iturralde",
+      role: { es: "Directora general", en: "Chief Executive Officer" },
+      bio: {
+        es: "Tercera generación de la familia fundadora; dirige la planta desde 2015.",
+        en: "Third generation of the founding family; has run the plant since 2015.",
+      },
+    },
     commercial: {
       name: "Martín Sosa",
       role: { es: "Gerente comercial de exportación", en: "Export Sales Manager" },
+      bio: {
+        es: "Atiende a importadores de Europa, Asia y América, de la cotización al embarque.",
+        en: "Works with importers in Europe, Asia and the Americas, from quotation to shipment.",
+      },
     },
     livestockBuyers: [
-      { name: "Andrés Píriz", role: { es: "Comprador de hacienda", en: "Livestock buyer" } },
-      { name: "Carolina Fagúndez", role: { es: "Compradora de hacienda", en: "Livestock buyer" } },
+      {
+        name: "Andrés Píriz",
+        role: { es: "Comprador de hacienda", en: "Livestock buyer" },
+        bio: {
+          es: "Recorre establecimientos de Durazno, Florida y Tacuarembó para comprar vacunos.",
+          en: "Visits farms in Durazno, Florida and Tacuarembó to buy cattle.",
+        },
+      },
+      {
+        name: "Carolina Fagúndez",
+        role: { es: "Compradora de hacienda", en: "Livestock buyer" },
+        bio: {
+          es: "Coordina la compra de ovinos y los turnos de ingreso a planta con los productores.",
+          en: "Coordinates sheep purchasing and delivery slots at the plant with producers.",
+        },
+      },
     ],
   },
 

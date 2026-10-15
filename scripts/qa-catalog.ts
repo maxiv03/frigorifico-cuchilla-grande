@@ -38,7 +38,7 @@ async function main() {
   check("diagrama: Enter selecciona (URL)", url(page).searchParams.get("zone") === "chuck", page.url());
   check(
     "diagrama: aria-pressed en la zona elegida",
-    (await page.locator('g[data-zone="chuck"]').getAttribute("aria-pressed")) === "true",
+    (await page.locator('svg[role=group] g[data-zone="chuck"]').getAttribute("aria-pressed")) === "true",
   );
   const live = await page.locator('[role=status][aria-live=polite]').textContent();
   check("diagrama: aria-live anuncia los cortes", /Quedan? \d+ cortes?/.test(live ?? ""), String(live));
@@ -110,7 +110,7 @@ async function main() {
   check("idioma: tras el clic, una sola página (un h1, lang=en)", (await page.locator("h1").count()) === 1);
   check(
     "idioma: en EN se ven los mismos filtros",
-    (await page.locator('g[data-zone="leg"]').getAttribute("aria-pressed")) === "true" &&
+    (await page.locator('svg[role=group] g[data-zone="leg"]').getAttribute("aria-pressed")) === "true" &&
       (await page.locator("#filtro-mercado").inputValue()) === "eu",
   );
 

@@ -16,8 +16,12 @@ export type ZoneShape = {
   id: string;
   /** Polígono de la partición (puede exceder la silueta: se recorta). */
   polygon: readonly Pt[];
-  /** Punto donde va la etiqueta, dentro de la parte visible. */
-  label: Pt;
+  /** Punto de la etiqueta (dentro de la pieza o junto a ella); `null`: sin etiqueta propia. */
+  label: Pt | null;
+  /** Alineación del texto respecto del punto (por defecto, centrado). */
+  anchor?: "start" | "middle" | "end";
+  /** Nombre propio de la pieza (Products.diagram.pieces.<clave>) en vez del de la zona. */
+  piece?: string;
 };
 
 export type DiagramGeometry = {
@@ -57,21 +61,32 @@ function scallops(from: Pt, to: Pt, n: number, amp: number, out: Pt) {
 const beef: DiagramGeometry = {
   viewBox: "40 96 880 500",
   body: [
+    // cabeza: testuz, perfil apenas convexo, hocico redondeado, mandíbula y papada
     "M168 152",
-    "C150 150 128 160 112 178",
-    "L72 262C64 280 70 298 88 302",
-    "C108 306 130 300 146 292",
-    "C168 290 196 298 214 318",
-    "C236 344 252 380 262 412",
-    "C268 428 276 440 290 448",
-    // patas delanteras (cercana y lejana)
-    "L292 545L288 575L324 575L326 545L330 458",
-    "L344 462L346 545L344 575L378 575L378 545L382 456",
+    "C148 148 126 156 112 174",
+    "C98 196 84 228 74 254",
+    "C66 272 66 290 78 298",
+    "C90 306 110 304 126 298",
+    "C142 294 158 294 172 300",
+    "C192 308 208 320 220 336",
+    "C238 360 252 388 262 414",
+    "C268 430 276 442 290 448",
+    // pata delantera cercana: se afina hacia la pezuña, pezuña redondeada
+    "C293 478 295 508 293 534C292 550 289 562 287 572Q286 579 293 579L319 579Q326 579 325 572",
+    "C324 558 324 546 326 532C328 506 329 482 331 458",
+    "C336 460 340 461 344 462",
+    // pata delantera lejana
+    "C347 488 348 512 347 534C346 550 344 562 343 572Q342 579 349 579L373 579Q380 579 379 572",
+    "C378 558 378 546 379 532C380 506 381 480 382 456",
     // vientre
     "C470 466 600 466 700 452",
-    // patas traseras
-    "L712 545L710 575L744 575L748 545L756 470",
-    "L772 474C780 500 790 516 794 530L790 575L826 575L828 530",
+    // pata trasera cercana
+    "C705 480 710 510 712 534C713 550 711 562 710 572Q709 579 716 579L740 579Q747 579 746 572",
+    "C745 556 746 544 748 530C750 510 753 490 756 470",
+    "C762 471 767 472 772 474",
+    // pata trasera lejana, con corvejón
+    "C778 496 788 514 793 530C794 546 791 560 790 572Q789 579 796 579L820 579Q827 579 826 572",
+    "C826 556 827 542 829 528",
     "C836 484 848 440 862 400",
     "C874 360 880 300 878 246",
     "C876 216 868 196 856 184",
@@ -113,12 +128,21 @@ const beef: DiagramGeometry = {
       label: [800, 355],
     },
     {
+      // Una zona ("Garrón y brazuelo") en dos piezas: brazuelo en las patas delanteras y
+      // garrón en las traseras, cada una con su nombre junto a las patas.
       id: "shank",
-      // dos piezas (patas delanteras y traseras) en un solo polígono con hueco intermedio
       polygon: [[0, 478], [420, 478], [420, 600], [0, 600]],
-      label: [228, 530],
+      label: [402, 548],
+      anchor: "start",
+      piece: "shin",
     },
-    { id: "shank_hind", polygon: [[696, 478], [1000, 478], [1000, 600], [684, 600]], label: [770, 530] },
+    {
+      id: "shank_hind",
+      polygon: [[696, 478], [1000, 478], [1000, 600], [684, 600]],
+      label: [684, 548],
+      anchor: "end",
+      piece: "shank",
+    },
   ],
 };
 
@@ -178,8 +202,9 @@ const lamb: DiagramGeometry = {
       ],
       label: [480, 352],
     },
-    { id: "shank", polygon: [[0, 396], [370, 396], [370, 600], [0, 600]], label: [240, 480] },
-    { id: "shank_hind", polygon: [[652, 466], [1000, 466], [1000, 600], [640, 600], [640, 396]], label: [700, 505] },
+    // garrón: patas delanteras y traseras; la etiqueta va entre ambos pares, bajo el vientre
+    { id: "shank", polygon: [[0, 396], [370, 396], [370, 600], [0, 600]], label: [508, 476] },
+    { id: "shank_hind", polygon: [[652, 466], [1000, 466], [1000, 600], [640, 600], [640, 396]], label: null },
   ],
 };
 

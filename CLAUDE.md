@@ -17,7 +17,7 @@ Planta ficticia: Sarandí del Yí (departamento de Durazno), sobre ruta 6.
 | next-intl | 4.14.9 | locale vía `next/root-params` |
 | Supabase (`@supabase/supabase-js`) | 2.117.3 | proyecto cloud gratuito, región São Paulo |
 | zod | 4.6.7 | validación de formularios y env |
-| Leaflet + react-leaflet | (fase 3) | tiles: se decide en fase 3 |
+| Leaflet + react-leaflet | 1.9.4 / 5.0.0 | solo cliente; teselas CARTO Positron (clave) u OSM |
 | Playwright | 1.64.1 | solo para capturas de QA |
 | Node | 24 LTS | |
 
@@ -39,10 +39,14 @@ src/
   components/brand/      Logo e Isotype
   components/home/       secciones de la home
   components/cuts/       catálogo: diagrama SVG (geometría + componente), tarjeta, filtros
+  components/markets/    mapa Leaflet (solo cliente) y su envoltorio con reserva del mismo alto
+  components/quality/    badges genéricos propios de certificaciones
   lib/supabase/          public.ts (clave publicable) y admin.ts (clave secreta)
   lib/prices/            lógica determinista de la pizarra (compartida por seed y cron)
   lib/catalog/           tipos y claves neutras, filtros de URL, slugs de especie, fotos por categoría
-  lib/data/              lecturas cacheadas ('use cache'): pizarra y catálogo
+  lib/data/              lecturas cacheadas ('use cache'): pizarra, catálogo, certificaciones y mercados
+  lib/map-tiles.ts       teselas del mapa (CARTO con CARTO_BASEMAPS_KEY; sin clave, OSM)
+  lib/metadata.ts        metadata de páginas estáticas (canonical + hreflang + x-default)
   lib/contact.ts         teléfono/WhatsApp/mail desde env + links con "[Demo]"
   lib/format.ts          formatFigure / formatPrice / formatChange
 supabase/
@@ -103,13 +107,22 @@ hex sueltos.
   (`vacuno/ovino` ↔ `beef/lamb`).
 - Vacunos con nombres del manual INAC 2023 (sin códigos). `alias` = término de consumidor,
   opcional por idioma (i18n:check lo permite solo para `alias`).
-- Fotos por categoría en `src/lib/catalog/images.ts`: `cutImage()` solo devuelve claves de la
-  especie del corte. Alt traducido en `Products.images.<clave>`.
+- Fotos por tipo de pieza en `src/lib/catalog/images.ts`: solo cuando la foto muestra ESA pieza
+  (la picaña no es un asado atado); `cutImage()` devuelve `null` si el corte no tiene foto o la
+  clave no es de su especie. Sin foto, el detalle muestra la ilustración grande de la zona. Las
+  tarjetas del catálogo usan la mini-silueta (`CutDiagram` sin interacción, `role="img"`); las
+  fotos van en el detalle y en los destacados de la home (`visual="photo"`). Alt traducido en
+  `Products.images.<clave>`.
 - Diagrama (`components/cuts/`): siluetas propias; cada zona es un polígono de una partición
   del plano recortado por la silueta (sin huecos ni superposiciones por construcción).
   Estados sin depender del color: hover (tono + contorno fino), foco (anillo punteado, solo
-  teclado), seleccionada (rayado + contorno grueso + etiqueta en negrita). Revisar cambios
-  de geometría con `npm run diagram:preview`.
+  teclado), seleccionada (rayado + contorno grueso + etiqueta en negrita sobre pastilla; nunca
+  `stroke` en el texto seleccionado). Una pieza puede tener nombre propio (`piece`: brazuelo y
+  garrón de la zona "Garrón y brazuelo") y etiqueta junto a las patas (`anchor`). Revisar
+  cambios de geometría con `npm run diagram:preview`.
+- Catálogo en móvil (< lg): chips de zona en una fila con desplazamiento horizontal, filtros en
+  un panel modal ("Filtros (n)": foco atrapado, Escape, devuelve el foco) y "Presentaciones y
+  formato de caja" plegado debajo de los resultados. Los items de grilla llevan `min-w-0`.
 - Filtros: estado propio del componente + `history.replaceState` (sin ida y vuelta al
   servidor). No depender de `useSearchParams` después de montar: llega desfasado con clics
   rápidos. La página lee `searchParams` dentro de `<Suspense>`; el fallback es el catálogo
@@ -118,6 +131,21 @@ hex sueltos.
   (lee params fuera de Suspense a propósito, para que el contenido quede en el HTML).
   Slug desconocido → `notFound()`; con Cache Components el 1.er pedido puede salir 200 con la
   404 + noindex (no existe `dynamicParams=false`). `check:links` lo cuenta como roto.
+
+## Calidad, empresa y mercados (fase 3)
+- Certificaciones en la base (`certifications`, `market_certifications`), seed en
+  `supabase/seed/certifications.ts`. Badges propios (`CertBadge`), nunca logos oficiales ni
+  números de certificado. Ancla por certificación en /calidad: `#cert-<id>`.
+- Mercados: participación, coordenadas y descripción en el seed; cortes principales derivados
+  de `cut_markets` (destacados primero). `getInstitutional(locale)` arma todo.
+- Mapa: Leaflet solo en el cliente (`next/dynamic` con `ssr: false`) dentro de `<Suspense>`, con
+  reserva del mismo alto (`MAP_BOX`). Marcadores = `Marker` con `divIcon` (área ∝ porcentaje):
+  enfocables con Tab, Enter abre el popup, el foco entra al popup y Escape lo devuelve al
+  marcador. Debajo, la lista equivalente es la vía accesible principal.
+- Teselas: CARTO Positron exige clave desde 2026 (`CARTO_BASEMAPS_KEY`, pública: viaja en la URL;
+  se lee en el build). Sin clave se usan las teselas estándar de OSM. Atribución siempre visible.
+- Contenido institucional (pasos de trazabilidad, bienestar, control, etapas de planta) en los
+  mensajes; personas, cifras e historia en `company.ts`.
 
 ## Reglas
 
@@ -226,11 +254,13 @@ npm run shots -- <url-base> es en es/productos [--menu]  # capturas 1440 y 375 p
 npm run check:links -- <url-base>  # links internos y anclas sin errores (cuenta soft-404)
 npm run qa:layout -- <url-base>    # skip link, menú móvil, idioma, imágenes, overflow
 npm run qa:catalog -- <url-base>   # diagrama por teclado, filtros en URL, idioma, vacío, detalle
+npm run qa:institutional -- <url-base>  # lista = mapa, links a catálogo filtrado, popups con teclado, CLS, 375 px
+npm run qa:fixes -- <url-base>     # menú a 375×667, catálogo móvil, drawer, garrón seleccionado (capturas en screenshots/fixes)
 npm run diagram:preview            # PNG de las siluetas en screenshots/diagram
 ```
 
 ## Cierre de cada fase
 typecheck, lint, build, i18n:check (y db:test-permissions si se tocó la base),
-check:links, qa:layout y qa:catalog contra producción,
+check:links, qa:layout, qa:catalog y qa:institutional contra producción,
 capturas en escritorio y 375 px de las páginas tocadas en ES y EN. Esperar revisión
 del usuario antes de pasar a la siguiente fase.

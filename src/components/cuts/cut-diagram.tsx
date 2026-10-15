@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useId, useState, type KeyboardEvent } from "react";
 import { cn } from "@/components/ui/cn";
 import type { Species } from "@/lib/catalog/types";
@@ -32,9 +33,11 @@ type Props = {
  * - reposo: relleno arena, separadores blancos;
  * - hover: tono más oscuro + contorno fino;
  * - foco de teclado: anillo punteado grueso;
- * - seleccionada: relleno bordó con rayado diagonal + contorno grueso + nombre en negrita.
+ * - seleccionada: relleno bordó con rayado diagonal + contorno grueso + nombre en negrita
+ *   sobre pastilla.
  */
 export function CutDiagram({ species, zones, selected, onSelect, label, showLabels = true, className }: Props) {
+  const t = useTranslations("Products.diagram");
   const geometry = diagrams[species];
   const uid = useId().replace(/:/g, "");
   const [focused, setFocused] = useState<string | null>(null);
@@ -163,35 +166,77 @@ export function CutDiagram({ species, zones, selected, onSelect, label, showLabe
         ))}
 
       {showLabels &&
-        [...groups.entries()].map(([key, pieces]) => {
+        geometry.zones.map((piece) => {
+          const key = zonePieceOf(piece.id);
           const zone = byKey.get(key);
-          if (!zone) return null;
-          const [x, y] = pieces[0].label;
+          if (!zone || !piece.label) return null;
           const isSelected = selected === key;
           if (showLabels === "selected" && !isSelected) return null;
           return (
-            <text
-              key={key}
-              x={x}
-              y={y}
-              textAnchor="middle"
-              aria-hidden="true"
-              className={cn(
-                "pointer-events-none hidden font-sans text-[19px] [paint-order:stroke] sm:inline",
-                isSelected
-                  ? "fill-white font-bold [stroke:var(--color-brand-900)] [stroke-width:5]"
-                  : "fill-ink font-semibold [stroke:var(--color-surface)] [stroke-width:4]",
-              )}
-            >
-              {wrap(zone.name).map((line, i, lines) => (
-                <tspan key={line} x={x} dy={i === 0 ? `${-(lines.length - 1) * 0.55}em` : "1.1em"}>
-                  {line}
-                </tspan>
-              ))}
-            </text>
+            <ZoneLabel
+              key={piece.id}
+              at={piece.label}
+              anchor={piece.anchor ?? "middle"}
+              lines={wrap(piece.piece ? t(`pieces.${piece.piece}` as "pieces.shin") : zone.name)}
+              selected={isSelected}
+            />
           );
         })}
     </svg>
+  );
+}
+
+const FONT = 19;
+const LINE = 1.1 * FONT;
+
+/**
+ * Nombre de zona dentro del dibujo. Reposo: texto con halo claro. Seleccionada: texto
+ * blanco en negrita sobre una pastilla bordó (sin contorno en el texto, que lo emborronaba).
+ */
+function ZoneLabel({
+  at: [x, y],
+  anchor,
+  lines,
+  selected,
+}: {
+  at: readonly [number, number];
+  anchor: "start" | "middle" | "end";
+  lines: string[];
+  selected: boolean;
+}) {
+  const top = y - ((lines.length - 1) * LINE) / 2;
+  // Ancho aproximado (Source Sans 3 en negrita ≈ 0,56 em por carácter) para la pastilla.
+  const width = Math.max(...lines.map((l) => l.length)) * FONT * 0.56 + 22;
+  const height = lines.length * LINE + 10;
+  const left = anchor === "start" ? x - 11 : anchor === "end" ? x - width + 11 : x - width / 2;
+  return (
+    <g aria-hidden="true" className="pointer-events-none hidden sm:inline">
+      {selected && (
+        <rect
+          x={left}
+          y={top - FONT * 0.72 - 5}
+          width={width}
+          height={height}
+          rx={lines.length > 1 ? 12 : height / 2}
+          className="fill-brand-900"
+        />
+      )}
+      <text
+        x={x}
+        y={top}
+        textAnchor={anchor}
+        className={cn(
+          "font-sans text-[19px]",
+          selected ? "fill-white font-bold" : "fill-ink font-semibold [paint-order:stroke] [stroke:var(--color-surface)] [stroke-width:4]",
+        )}
+      >
+        {lines.map((line, i) => (
+          <tspan key={line} x={x} dy={i === 0 ? 0 : LINE}>
+            {line}
+          </tspan>
+        ))}
+      </text>
+    </g>
   );
 }
 

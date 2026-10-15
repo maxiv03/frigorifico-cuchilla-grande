@@ -27,7 +27,7 @@ export async function FiguresBand() {
         <dl className="grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 lg:grid-cols-6">
           {items.map((item) => (
             <div key={item.key} className="flex flex-col gap-1 border-l-2 border-brand-700 pl-4">
-              <dt className="text-sm leading-snug text-ink-muted">{t(item.key)}</dt>
+              <dt className="text-[0.9375rem] leading-snug font-medium text-ink lg:text-base">{t(item.key)}</dt>
               <dd className="order-first font-serif text-3xl font-semibold text-ink tabular-nums lg:text-4xl">{item.value}</dd>
             </div>
           ))}

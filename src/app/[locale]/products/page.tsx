@@ -44,6 +44,7 @@ export default async function ProductsPage({ searchParams }: PageProps<"/[locale
     markets: catalog.markets,
     email: contactInfo().email,
     aside: <PresentationSpecs />,
+    asideCollapsed: <PresentationSpecs collapsible />,
   };
 
   return (

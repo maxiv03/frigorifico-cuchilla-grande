@@ -7,7 +7,7 @@ import { company } from "@/data/company";
 import type { Locale } from "@/i18n/routing";
 import { initialHistory, mondayOf } from "@/lib/prices/rotation";
 import { slugify } from "@/lib/catalog/slug";
-import { cutZones, cuts, locales, markets, priceCategories } from "../supabase/seed";
+import { certifications, cutZones, cuts, locales, markets, priceCategories } from "../supabase/seed";
 import { adminClient } from "./lib/db";
 
 const HISTORY_WEEKS = 12;
@@ -81,6 +81,26 @@ async function seedCatalog() {
     "market_id,locale",
   );
   await upsert(
+    "certifications",
+    certifications.map((c) => ({ id: c.id, icon: c.icon, sort: c.sort })),
+    "id",
+  );
+  await upsert(
+    "certification_translations",
+    certifications.flatMap((c) =>
+      localeCodes.map((locale) => ({ certification_id: c.id, locale, name: c.name[locale], summary: c.summary[locale] })),
+    ),
+    "certification_id,locale",
+  );
+  // market_certifications: se reemplaza el conjunto completo (una certificación puede dejar un mercado).
+  const delMc = await db.from("market_certifications").delete().in("certification_id", certifications.map((c) => c.id));
+  if (delMc.error) throw new Error(`market_certifications: ${delMc.error.message}`);
+  await upsert(
+    "market_certifications",
+    certifications.flatMap((c) => c.markets.map((market_id) => ({ market_id, certification_id: c.id }))),
+    "market_id,certification_id",
+  );
+  await upsert(
     "cut_zones",
     cutZones.map((z) => ({ id: `${z.species}_${z.key}`, species: z.species, sort: z.sort })),
     "id",
@@ -98,7 +118,7 @@ async function seedCatalog() {
       zone_id: `${c.species}_${c.zone}`,
       bone: c.bone,
       presentations: c.presentations,
-      image: c.image,
+      image: c.image ?? null,
       featured: c.featured ?? false,
       sort: i + 1,
     })),

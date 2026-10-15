@@ -115,7 +115,7 @@ export function MobileMenu({ main, utility, footer }: Props) {
             <span className="sr-only">{t("closeMenu")}</span>
           </button>
         </div>
-        <div className="flex-1 overflow-y-auto px-4 pt-4 pb-10">
+        <div className="flex-1 overflow-y-auto px-4 pt-2 pb-6">
           {main.length > 0 && (
             <nav aria-label={t("mainNav")}>
               <ul className="divide-y divide-line">
@@ -124,7 +124,7 @@ export function MobileMenu({ main, utility, footer }: Props) {
                     <Link
                       href={item.href}
                       className={cn(
-                        "flex items-center justify-between py-4 font-serif text-2xl",
+                        "flex min-h-11 items-center justify-between py-2 font-serif text-xl",
                         item.highlight ? "text-earth-700" : "text-ink",
                       )}
                     >
@@ -136,11 +136,11 @@ export function MobileMenu({ main, utility, footer }: Props) {
             </nav>
           )}
           {utility.length > 0 && (
-            <nav aria-label={t("utilityNav")} className="mt-6">
-              <ul className="space-y-1">
+            <nav aria-label={t("utilityNav")} className="mt-3">
+              <ul className="flex flex-wrap gap-x-5">
                 {utility.map((item) => (
                   <li key={item.key}>
-                    <Link href={item.href} className="block py-2 text-lg text-ink-muted hover:text-ink">
+                    <Link href={item.href} className="block py-2 text-base text-ink-muted hover:text-ink">
                       {item.label}
                     </Link>
                   </li>
@@ -148,7 +148,7 @@ export function MobileMenu({ main, utility, footer }: Props) {
               </ul>
             </nav>
           )}
-          <div className={cn(main.length + utility.length > 0 && "mt-8 border-t border-line pt-6")}>{footer}</div>
+          <div className={cn(main.length + utility.length > 0 && "mt-3 border-t border-line pt-4")}>{footer}</div>
         </div>
       </div>,
           document.body,

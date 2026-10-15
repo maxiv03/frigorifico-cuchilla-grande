@@ -38,7 +38,7 @@
       "lead": "Faenamos hasta {cattle} vacunos y {sheep} ovinos por día y exportamos a más de {countries} países, con trazabilidad individual de cada animal.",
       "ctaBuyer": "Soy comprador",
       "ctaProducer": "Vendo hacienda",
-      "imageAlt": "Rodeo de ganado Angus y Hereford en una pradera al atardecer"
+      "imageAlt": "Vacunos Angus colorados en una loma de campo natural al atardecer"
     },
     "figures": {
       "title": "La planta en cifras",
@@ -78,7 +78,7 @@
       "title": "Más de cinco décadas en el centro ganadero del Uruguay",
       "p1": "Desde {founded}, la familia {family} procesa hacienda criada a campo abierto en el centro del país. La planta, sobre la ruta 6 en las afueras de Sarandí del Yí, ocupa {hectares} hectáreas y da trabajo a {employees} personas de la zona.",
       "p2": "Cada animal llega identificado por el sistema nacional de trazabilidad individual, y cada caja que sale de la planta puede rastrearse hasta el establecimiento donde se crió.",
-      "imageAlt": "Vacunos descansando en una loma de campo natural"
+      "imageAlt": "Rodeo pastando en una ladera de campo natural, con un monte de eucaliptos"
     },
     "prices": {
       "eyebrow": "Para productores",
@@ -93,6 +93,16 @@
       "down": "Bajó",
       "seeFull": "Ver pizarra completa",
       "unavailable": "La pizarra de precios no está disponible en este momento."
+    },
+    "certStrip": {
+      "title": "Certificaciones y habilitaciones",
+      "cta": "Calidad y trazabilidad"
+    },
+    "marketsPreview": {
+      "eyebrow": "Mercados",
+      "title": "Dónde se consume nuestra carne",
+      "lead": "Principales destinos por participación en las exportaciones.",
+      "cta": "Ver el mapa de mercados"
     }
   },
   "Products": {
@@ -113,7 +123,11 @@
       "zone": "{zone}: {count, plural, =0 {sin cortes con estos filtros} one {# corte} other {# cortes}}",
       "selected": "seleccionada",
       "chipsLabel": "Zonas",
-      "seeAll": "Ver todos"
+      "seeAll": "Ver todos",
+      "pieces": {
+        "shin": "Brazuelo",
+        "shank": "Garrón"
+      }
     },
     "filters": {
       "title": "Filtros",
@@ -126,7 +140,11 @@
       "anyBone": "Indistinto",
       "active": "Filtros activos",
       "remove": "Quitar filtro: {label}",
-      "clear": "Limpiar filtros"
+      "clear": "Limpiar filtros",
+      "open": "Filtros",
+      "openCount": "Filtros ({count})",
+      "close": "Cerrar filtros",
+      "show": "{count, plural, =0 {Ver resultados} one {Ver # corte} other {Ver # cortes}}"
     },
     "presentation": {
       "chilled": "Enfriado",
@@ -178,14 +196,16 @@
       }
     },
     "images": {
-      "beef-steak": "Dos bifes anchos vacunos crudos sobre papel",
-      "beef-roast": "Pieza vacuna cruda atada para asar",
+      "beef-tenderloin": "Lomo vacuno crudo entero y cortado en medallones",
+      "beef-striploin": "Dos bifes angostos vacunos crudos con su capa de grasa",
+      "beef-rump-cap": "Tapa de cuadril vacuna cruda cortada en bifes, con su capa de grasa",
+      "beef-ribeye": "Dos bifes anchos vacunos crudos sobre papel",
       "beef-ribs": "Tiras de asado vacuno crudo con hueso",
-      "beef-braise": "Pieza vacuna cruda y un bife sobre una fuente",
-      "beef-flank": "Corte vacuno plano y crudo sobre una tabla",
-      "lamb-rack": "Dos chuletas de cordero crudas con el hueso limpio",
-      "lamb-chops": "Chuletas de lomo de cordero crudas sobre una tabla",
-      "lamb-cuts": "Cortes de cordero crudos sobre una tabla"
+      "beef-flank": "Vacío vacuno crudo sobre una tabla",
+      "beef-shank": "Rodaja de garrón vacuno crudo con su hueso",
+      "lamb-rack": "Dos chuletas de carré de cordero crudas con el hueso limpio",
+      "lamb-leg": "Pierna de cordero cruda con hueso",
+      "lamb-chops": "Chuletas de lomo de cordero crudas sobre una tabla"
     }
   },
   "Featured": {
@@ -208,5 +228,163 @@
     "title": "No encontramos esta página",
     "text": "Puede que el enlace esté mal escrito o que la página ya no exista.",
     "back": "Volver al inicio"
+  },
+  "Quality": {
+    "metaTitle": "Calidad, certificaciones y trazabilidad",
+    "metaDescription": "Certificaciones y habilitaciones por mercado, trazabilidad individual desde el campo hasta la caja, bienestar animal y control de calidad en la planta de Sarandí del Yí.",
+    "eyebrow": "Calidad",
+    "title": "Inocuidad y trazabilidad, de la caravana a la caja",
+    "lead": "Cada caja que sale de la planta se puede seguir hasta el animal y el establecimiento de origen. Trabajamos bajo inspección veterinaria oficial y con las certificaciones que pide cada mercado.",
+    "sectionsLabel": "En esta página",
+    "certs": {
+      "title": "Certificaciones y habilitaciones",
+      "lead": "Distintivos ilustrativos de este sitio de demostración: no son logos oficiales ni sellos de las entidades certificadoras.",
+      "markets": "La exigen o la piden",
+      "marketLink": "Ver cortes para {market}"
+    },
+    "trace": {
+      "title": "Trazabilidad individual",
+      "lead": "Uruguay identifica a cada animal desde su nacimiento. La planta mantiene ese vínculo en cada etapa, hasta la etiqueta de la caja.",
+      "steps": {
+        "field": {
+          "title": "Identificación en el campo",
+          "text": "Cada ternero lleva dos caravanas con el mismo número: una visual y otra electrónica, colocadas en el establecimiento de origen."
+        },
+        "registry": {
+          "title": "Sistema nacional",
+          "text": "El número queda registrado en el sistema nacional de información ganadera, con sus movimientos entre establecimientos."
+        },
+        "reception": {
+          "title": "Ingreso a planta",
+          "text": "Al llegar se leen las caravanas y se controlan la guía de tránsito y la declaración del productor. El lote queda asociado al productor."
+        },
+        "slaughter": {
+          "title": "Faena",
+          "text": "Cada media res recibe una etiqueta con el número del animal, que la acompaña durante el oreo en cámaras."
+        },
+        "boning": {
+          "title": "Desosado",
+          "text": "Los cortes se asocian al lote de desosado y a las medias reses que lo componen, registrados en el sistema de la planta."
+        },
+        "box": {
+          "title": "Caja con código",
+          "text": "Cada caja lleva una etiqueta con código de barras: corte, fecha de producción, lote y número de habilitación de la planta."
+        }
+      }
+    },
+    "welfare": {
+      "title": "Bienestar animal",
+      "lead": "El bienestar de los animales es una obligación y también una condición de calidad de la carne. Lo aplicamos en todo el recorrido hasta la planta y dentro de ella.",
+      "items": {
+        "transport": {
+          "title": "Transporte",
+          "text": "Camiones habilitados, cargas dentro de la densidad recomendada y transportistas capacitados. Se planifican viajes cortos y sin esperas."
+        },
+        "rest": {
+          "title": "Descanso en corrales",
+          "text": "Los animales descansan en corrales con agua permanente y sombra antes de la faena, separados por lote de origen."
+        },
+        "handling": {
+          "title": "Manejo",
+          "text": "Mangas curvas y pisos antideslizantes, sin picanas eléctricas como práctica habitual. El personal se capacita cada año."
+        },
+        "stunning": {
+          "title": "Insensibilización",
+          "text": "Insensibilización previa a la faena según la normativa vigente, con controles de efectividad registrados en cada turno."
+        },
+        "audits": {
+          "title": "Auditorías",
+          "text": "Auditorías internas y de clientes con protocolos reconocidos. Los resultados se revisan con los productores y transportistas."
+        }
+      }
+    },
+    "control": {
+      "title": "Control de calidad",
+      "lead": "La calidad se controla en cada etapa: desde la recepción de la hacienda hasta la carga del contenedor.",
+      "items": {
+        "vet": {
+          "title": "Inspección veterinaria oficial",
+          "text": "Veterinarios del servicio oficial inspeccionan los animales en pie y cada res en la línea de faena. Ningún producto sale sin su aprobación."
+        },
+        "lab": {
+          "title": "Laboratorio",
+          "text": "Análisis microbiológicos de superficies y producto, y muestreos del programa nacional de residuos. Los resultados quedan asociados al lote."
+        },
+        "cold": {
+          "title": "Cadena de frío",
+          "text": "Temperatura registrada de forma continua en cámaras, túneles de congelado y contenedores, con alarmas y verificación antes de cada carga."
+        }
+      }
+    }
+  },
+  "Company": {
+    "metaTitle": "Empresa: historia, planta y equipo",
+    "metaDescription": "Frigorífico familiar fundado en {founded} en Sarandí del Yí. Historia, recorrido por la planta en cinco etapas y el equipo que atiende a compradores y productores.",
+    "eyebrow": "Empresa",
+    "title": "Una planta familiar con vocación exportadora",
+    "lead": "Desde {founded}, la familia {family} procesa hacienda del centro del país en Sarandí del Yí. Hoy exportamos a más de {countries} países con un equipo de {employees} personas.",
+    "history": {
+      "title": "Historia",
+      "lead": "Más de cinco décadas de crecimiento paso a paso, siempre en el mismo lugar."
+    },
+    "plant": {
+      "title": "Recorrido por la planta",
+      "lead": "Cinco etapas, de la llegada de la hacienda a la carga del contenedor.",
+      "stages": {
+        "reception": {
+          "title": "Recepción",
+          "text": "Llegada de la hacienda, lectura de caravanas, inspección veterinaria en pie y descanso en corrales."
+        },
+        "slaughter": {
+          "title": "Faena",
+          "text": "Proceso bajo inspección oficial continua, con líneas separadas para vacunos y ovinos."
+        },
+        "boning": {
+          "title": "Desosado",
+          "text": "Salas a temperatura controlada donde se obtienen los cortes de cada mercado y se envasan al vacío."
+        },
+        "cold": {
+          "title": "Frío",
+          "text": "Cámaras de enfriado y túneles de congelado rápido, con capacidad para {tonnes} toneladas."
+        },
+        "shipping": {
+          "title": "Embarque",
+          "text": "Carga de contenedores refrigerados con control de temperatura, rumbo al puerto de Montevideo."
+        }
+      },
+      "stageLabel": "Etapa {n} de {total}"
+    },
+    "team": {
+      "title": "Equipo",
+      "lead": "Las personas que atienden a compradores del exterior y a productores ganaderos.",
+      "note": "Personas ficticias de este sitio de demostración."
+    }
+  },
+  "Markets": {
+    "metaTitle": "Mercados de exportación",
+    "metaDescription": "Destinos de la carne vacuna y ovina de Frigorífico Cuchilla Grande: participación por mercado, cortes principales y certificaciones requeridas.",
+    "eyebrow": "Mercados",
+    "title": "Carne uruguaya en más de {countries} países",
+    "lead": "El {share} de nuestra producción se exporta. Estos son los principales destinos, con su participación en las ventas al exterior, los cortes que más compran y las certificaciones que exigen.",
+    "map": {
+      "title": "Mapa de destinos",
+      "hint": "El área de cada círculo es proporcional a la participación. Tocalo, o navegá con Tab y abrilo con Enter, para ver el detalle.",
+      "label": "Mapa de mercados de exportación",
+      "marker": "{market}: {share} de las exportaciones",
+      "loading": "Cargando el mapa…",
+      "ofExports": "de las exportaciones",
+      "origin": "Planta: Sarandí del Yí, Uruguay"
+    },
+    "list": {
+      "title": "Destinos y participación",
+      "lead": "La misma información del mapa, ordenada por participación.",
+      "share": "Participación",
+      "volume": "Volumen anual",
+      "volumeValue": "{tonnes} t",
+      "others": "Otros destinos (más de {countries} países en total): {share}"
+    },
+    "topCuts": "Cortes principales",
+    "certifications": "Certificaciones requeridas",
+    "catalogLink": "Ver cortes para {market}"
   }
 }

@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useRef, useState, type ComponentProps, type ReactNode } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState, type ComponentProps, type ReactNode } from "react";
 import { IconClose } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/components/ui/cn";
@@ -25,8 +25,10 @@ export type CatalogProps = {
   zones: { key: string; species: Species; name: string }[];
   markets: { id: string; name: string }[];
   email: string;
-  /** Contenido estático (datos de presentación) que se muestra junto a los filtros. */
+  /** Contenido estático (datos de presentación): junto a los filtros desde lg. */
   aside?: ReactNode;
+  /** Versión plegable del mismo contenido, debajo de los resultados en pantallas chicas. */
+  asideCollapsed?: ReactNode;
 };
 
 /** Catálogo con los filtros leídos de la URL. Debe ir dentro de <Suspense>. */
@@ -49,6 +51,7 @@ function Catalog({
   markets,
   email,
   aside,
+  asideCollapsed,
   urlQuery,
   eager = false,
 }: CatalogProps & { urlQuery: string; eager?: boolean }) {
@@ -121,6 +124,55 @@ function Catalog({
           .sort((a, b) => b.n - a.n)[0]
       : undefined;
 
+  // Filtros en pantallas chicas: panel modal ("drawer") que se abre con "Filtros (n)". Desde
+  // lg es una columna fija. Foco atrapado, Escape cierra y devuelve el foco al botón.
+  const [panelOpen, setPanelOpen] = useState(false);
+  const panelId = useId();
+  const panelRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const closePanel = useCallback(() => {
+    setPanelOpen(false);
+    triggerRef.current?.focus();
+  }, []);
+  useEffect(() => {
+    if (!panelOpen) return;
+    const panel = panelRef.current;
+    const focusables = () =>
+      panel ? [...panel.querySelectorAll<HTMLElement>("button:not([disabled]), select, a[href]")].filter((el) => el.offsetParent) : [];
+    focusables()[0]?.focus();
+    const onKey = (e: globalThis.KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        closePanel();
+        return;
+      }
+      if (e.key !== "Tab") return;
+      const items = focusables();
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last?.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first?.focus();
+      }
+    };
+    // Al pasar a escritorio el panel deja de ser modal.
+    const desktop = window.matchMedia("(min-width: 1024px)");
+    const onResize = () => desktop.matches && setPanelOpen(false);
+    document.addEventListener("keydown", onKey);
+    desktop.addEventListener("change", onResize);
+    const overflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      desktop.removeEventListener("change", onResize);
+      document.body.style.overflow = overflow;
+    };
+  }, [panelOpen, closePanel]);
+  const panelFilters = (["market", "presentation", "bone"] as const).filter((k) => filters[k]).length;
+
   return (
     <div>
       {/* Especie */}
@@ -144,9 +196,9 @@ function Catalog({
         </div>
       </fieldset>
 
-      <div className="mt-8 grid gap-8 lg:grid-cols-12 lg:gap-10">
+      <div className="mt-6 grid gap-4 sm:mt-8 lg:grid-cols-12 lg:gap-10">
         {/* Diagrama + zonas */}
-        <section aria-labelledby="zonas-titulo" className="lg:col-span-7">
+        <section aria-labelledby="zonas-titulo" className="min-w-0 lg:col-span-7">
           <div className="rounded-lg bg-surface p-4 shadow-card ring-1 ring-line sm:p-6">
             <div className="flex flex-wrap items-baseline justify-between gap-2">
               <h2 id="zonas-titulo" className="font-serif text-xl font-semibold text-ink">
@@ -167,7 +219,11 @@ function Catalog({
               }))}
               className="mt-4"
             />
-            <div role="group" aria-label={t("diagram.chipsLabel")} className="mt-5 flex flex-wrap gap-2">
+            <div
+              role="group"
+              aria-label={t("diagram.chipsLabel")}
+              className="-mx-4 mt-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:mt-5 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0"
+            >
               <Chip pressed={!filters.zone} onClick={() => update({ zone: null })}>
                 {t("diagram.seeAll")}
               </Chip>
@@ -189,51 +245,94 @@ function Catalog({
           </div>
         </section>
 
-        {/* Filtros */}
-        <section aria-labelledby="filtros-titulo" className="lg:col-span-5">
-          <h2 id="filtros-titulo" className="font-serif text-xl font-semibold text-ink">
-            {t("filters.title")}
-          </h2>
-          <div className="mt-4 space-y-6">
-            <div>
-              <label htmlFor="filtro-mercado" className="text-sm font-semibold text-ink">
-                {t("filters.market")}
-              </label>
-              <select
-                id="filtro-mercado"
-                value={filters.market ?? ""}
-                onChange={(e) => update({ market: e.target.value || null })}
-                className="mt-2 block min-h-11 w-full rounded-md border border-line bg-surface px-3 text-base text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700"
+        {/* Filtros: drawer en pantallas chicas, columna desde lg */}
+        <section aria-labelledby="filtros-titulo" className="min-w-0 lg:col-span-5">
+          <button
+            ref={triggerRef}
+            type="button"
+            aria-expanded={panelOpen}
+            aria-controls={panelId}
+            onClick={() => setPanelOpen(true)}
+            className="inline-flex min-h-11 items-center gap-2 rounded-md bg-surface px-4 font-semibold text-ink ring-1 ring-line hover:bg-earth-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700 lg:hidden"
+          >
+            <svg aria-hidden="true" viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M3 5h14M6 10h8M8.5 15h3" strokeLinecap="round" />
+            </svg>
+            {panelFilters > 0 ? t("filters.openCount", { count: String(panelFilters) }) : t("filters.open")}
+          </button>
+          <div
+            id={panelId}
+            ref={panelRef}
+            role={panelOpen ? "dialog" : undefined}
+            aria-modal={panelOpen || undefined}
+            aria-labelledby={panelOpen ? "filtros-titulo" : undefined}
+            className={cn(
+              panelOpen ? "fixed inset-0 z-50 flex flex-col bg-surface" : "hidden",
+              "lg:static lg:z-auto lg:flex lg:flex-col lg:bg-transparent",
+            )}
+          >
+            <div className="flex h-header shrink-0 items-center justify-between border-b border-line px-4 lg:h-auto lg:border-0 lg:px-0">
+              <h2 id="filtros-titulo" className="font-serif text-xl font-semibold text-ink">
+                {t("filters.title")}
+              </h2>
+              <button
+                type="button"
+                onClick={closePanel}
+                className="-mr-2 inline-flex size-11 items-center justify-center rounded-md text-ink hover:bg-surface-muted lg:hidden"
               >
-                <option value="">{t("filters.allMarkets")}</option>
-                {markets.map((m) => (
-                  <option key={m.id} value={m.id}>
-                    {m.name}
-                  </option>
-                ))}
-              </select>
+                <IconClose width={24} height={24} />
+                <span className="sr-only">{t("filters.close")}</span>
+              </button>
             </div>
-            <ChoiceGroup
-              legend={t("filters.presentation")}
-              anyLabel={t("filters.any")}
-              options={PRESENTATIONS.map((p) => ({ value: p, label: t(`presentation.${p}`) }))}
-              value={filters.presentation}
-              onChange={(v) => update({ presentation: v })}
-            />
-            <ChoiceGroup
-              legend={t("filters.bone")}
-              anyLabel={t("filters.anyBone")}
-              options={BONES.map((b) => ({ value: b, label: t(`bone.${b}`) }))}
-              value={filters.bone}
-              onChange={(v) => update({ bone: v })}
-            />
-            {aside}
+            <div className="flex-1 space-y-6 overflow-y-auto px-4 py-5 lg:mt-4 lg:flex-none lg:overflow-visible lg:p-0">
+              <div>
+                <label htmlFor="filtro-mercado" className="text-sm font-semibold text-ink">
+                  {t("filters.market")}
+                </label>
+                <select
+                  id="filtro-mercado"
+                  value={filters.market ?? ""}
+                  onChange={(e) => update({ market: e.target.value || null })}
+                  className="mt-2 block min-h-11 w-full rounded-md border border-line bg-surface px-3 text-base text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700"
+                >
+                  <option value="">{t("filters.allMarkets")}</option>
+                  {markets.map((m) => (
+                    <option key={m.id} value={m.id}>
+                      {m.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <ChoiceGroup
+                legend={t("filters.presentation")}
+                anyLabel={t("filters.any")}
+                options={PRESENTATIONS.map((p) => ({ value: p, label: t(`presentation.${p}`) }))}
+                value={filters.presentation}
+                onChange={(v) => update({ presentation: v })}
+              />
+              <ChoiceGroup
+                legend={t("filters.bone")}
+                anyLabel={t("filters.anyBone")}
+                options={BONES.map((b) => ({ value: b, label: t(`bone.${b}`) }))}
+                value={filters.bone}
+                onChange={(v) => update({ bone: v })}
+              />
+              {aside && <div className="hidden lg:block">{aside}</div>}
+            </div>
+            <div className="flex shrink-0 gap-3 border-t border-line p-4 lg:hidden">
+              <Button onClick={closePanel} className="flex-1">
+                {t("filters.show", { count })}
+              </Button>
+              <Button variant="secondary" onClick={() => setFilters({ ...filters, market: null, presentation: null, bone: null })}>
+                {t("filters.clear")}
+              </Button>
+            </div>
           </div>
         </section>
       </div>
 
       {/* Resultados */}
-      <section aria-labelledby="resultados-titulo" className="mt-12">
+      <section aria-labelledby="resultados-titulo" className="mt-6 lg:mt-12">
         <div className="flex flex-col gap-4 border-b border-line pb-4 sm:flex-row sm:items-center sm:justify-between">
           <h2 id="resultados-titulo" className="font-serif text-2xl font-semibold text-ink tabular-nums">
             {t("results.count", { count })}
@@ -302,6 +401,8 @@ function Catalog({
           </div>
         )}
       </section>
+
+      {asideCollapsed && <div className="mt-10 lg:hidden">{asideCollapsed}</div>}
     </div>
   );
 }
@@ -317,7 +418,7 @@ function Chip({
       type="button"
       aria-pressed={pressed}
       className={cn(
-        "inline-flex min-h-11 items-center gap-2 rounded-full px-4 text-sm font-semibold ring-1 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700",
+        "inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full px-4 text-sm font-semibold whitespace-nowrap ring-1 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700",
         pressed
           ? "bg-brand-700 text-white ring-brand-700"
           : cn("bg-surface ring-line hover:bg-earth-50 hover:ring-earth-300", muted ? "text-ink-subtle" : "text-ink"),
