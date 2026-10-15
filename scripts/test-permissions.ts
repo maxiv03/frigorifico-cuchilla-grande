@@ -61,15 +61,19 @@ async function main() {
     const { error } = await anon.from(t).select("*").limit(1);
     check(!error, `SELECT ${t}`, error?.message);
   }
-  const writeTargets: { t: string; key: string; row: Record<string, unknown> }[] = [
-    { t: "locales", key: "code", row: { code: "xx", name: "Test" } },
-    { t: "price_quotes", key: "category_id", row: { category_id: "steer", week_start: "2030-01-07", price_usd_kg: 1 } },
-    { t: "cuts", key: "id", row: { id: "x", species: "beef", zone_id: "x", bone: "boneless", presentations: ["frozen"] } },
+  const writeTargets: { t: string; key: string; row: Record<string, unknown>; patch: Record<string, unknown> }[] = [
+    { t: "locales", key: "code", row: { code: "xx", name: "Test" }, patch: { sort: 1 } },
+    { t: "price_quotes", key: "category_id", row: { category_id: "steer", week_start: "2030-01-07", price_usd_kg: 1 },
+      patch: { price_usd_kg: 1 },
+    },
+    { t: "cuts", key: "id", row: { id: "x", species: "beef", zone_id: "x", bone: "boneless", presentations: ["frozen"] },
+      patch: { sort: 1 },
+    },
   ];
-  for (const { t, key, row } of writeTargets) {
+  for (const { t, key, row, patch } of writeTargets) {
     const ins = await anon.from(t).insert(row);
     check(denied(ins.error), `INSERT ${t} rechazado`, ins.error?.message ?? "se permitió escribir");
-    const upd = await anon.from(t).update({ sort: 1 }).neq(key, "__none__");
+    const upd = await anon.from(t).update(patch).neq(key, "__none__");
     check(denied(upd.error), `UPDATE ${t} rechazado`, upd.error?.message ?? "se permitió actualizar");
     const del = await anon.from(t).delete().neq(key, "__none__");
     check(denied(del.error), `DELETE ${t} rechazado`, del.error?.message ?? "se permitió borrar");
