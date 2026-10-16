@@ -56,6 +56,10 @@ export default async function QualityPage() {
   const t = await getTranslations("Quality");
   const { certifications, markets } = await getInstitutional(locale);
   const marketName = new Map(markets.map((m) => [m.id, m.name]));
+  const groups = (["certification", "approval"] as const).map((kind) => ({
+    kind,
+    items: certifications.filter((c) => c.kind === kind),
+  }));
 
   const sections = [
     ["certifications", t("certs.title")],
@@ -84,38 +88,44 @@ export default async function QualityPage() {
         </nav>
       </Section>
 
-      {/* Certificaciones */}
+      {/* Certificaciones y habilitaciones sanitarias por mercado: dos grupos */}
       <Section aria-labelledby="certifications">
         <SectionHeader id="certifications" title={t("certs.title")} lead={t("certs.lead")} />
-        <ul className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {certifications.map((c) => (
-            <li key={c.id} className="flex flex-col rounded-lg bg-surface p-6 shadow-card ring-1 ring-line">
-              <div className="flex items-center gap-4">
-                <CertBadge icon={c.icon} />
-                <h3 id={`cert-${c.id}`} className="text-xl leading-snug font-semibold text-ink">
-                  {c.name}
-                </h3>
-              </div>
-              <p className="mt-4 leading-relaxed text-ink-muted">{c.summary}</p>
-              <div className="mt-auto pt-5">
-                <p className="text-xs font-semibold tracking-[0.12em] text-earth-700 uppercase">{t("certs.markets")}</p>
-                <ul className="mt-2 flex flex-wrap gap-2">
-                  {c.markets.map((m) => (
-                    <li key={m}>
-                      <Link
-                        href={{ pathname: "/products", query: { market: m } }}
-                        aria-label={t("certs.marketLink", { market: marketName.get(m) ?? m })}
-                        className="inline-flex min-h-9 items-center rounded-full bg-brand-50 px-3 text-sm font-semibold text-brand-800 ring-1 ring-brand-200 hover:bg-brand-100"
-                      >
-                        {marketName.get(m) ?? m}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </li>
-          ))}
-        </ul>
+        {groups.map(({ kind, items }) => (
+          <div key={kind} data-cert-group={kind} className="mt-12">
+            <h3 className="font-sans text-xl font-semibold text-ink">{t(`certs.groups.${kind}.title`)}</h3>
+            <p className="mt-1 max-w-3xl text-ink-muted">{t(`certs.groups.${kind}.lead`)}</p>
+            <ul className="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+              {items.map((c) => (
+                <li key={c.id} className="flex flex-col rounded-lg bg-surface p-6 shadow-card ring-1 ring-line">
+                  <div className="flex items-center gap-4">
+                    <CertBadge icon={c.icon} />
+                    <h4 id={`cert-${c.id}`} className="text-xl leading-snug font-semibold text-ink">
+                      {c.name}
+                    </h4>
+                  </div>
+                  <p className="mt-4 leading-relaxed text-ink-muted">{c.summary}</p>
+                  <div className="mt-auto pt-5">
+                    <p className="text-xs font-semibold tracking-[0.12em] text-earth-700 uppercase">{t("certs.markets")}</p>
+                    <ul className="mt-2 flex flex-wrap gap-2">
+                      {c.markets.map((m) => (
+                        <li key={m}>
+                          <Link
+                            href={{ pathname: "/products", query: { market: m } }}
+                            aria-label={t("certs.marketLink", { market: marketName.get(m) ?? m })}
+                            className="inline-flex min-h-9 items-center rounded-full bg-brand-50 px-3 text-sm font-semibold text-brand-800 ring-1 ring-brand-200 hover:bg-brand-100"
+                          >
+                            {marketName.get(m) ?? m}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
       </Section>
 
       {/* Trazabilidad: paso a paso */}

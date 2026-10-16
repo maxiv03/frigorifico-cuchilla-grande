@@ -26,7 +26,7 @@ export async function CertStrip() {
             <IconArrowRight width={18} height={18} />
           </Link>
         </div>
-        <ul className="mt-5 grid grid-cols-2 gap-x-6 gap-y-5 sm:grid-cols-3 lg:grid-cols-6">
+        <ul className="mt-5 grid grid-cols-2 gap-x-6 gap-y-5 lg:grid-cols-4">
           {certifications.map((c) => (
             <li key={c.id} className="flex items-center gap-3">
               <CertBadge icon={c.icon} className="size-12" />

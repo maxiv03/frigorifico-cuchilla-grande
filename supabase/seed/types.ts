@@ -69,16 +69,18 @@ export type CutSeed = {
 };
 
 /** Ícono propio del badge (src/components/quality/cert-badge.tsx). Nunca logos oficiales. */
-export type CertIcon = "crescent" | "star" | "shield" | "rosette" | "stamp" | "globe";
+export type CertIcon = "crescent" | "star" | "shield" | "rosette" | "stamp" | "globe" | "flag" | "pin";
 
 export type CertificationSeed = {
   /** Clave neutra; ancla en /calidad (#cert-halal). */
   id: string;
+  /** Grupo en /calidad: certificación (norma o rito) o habilitación sanitaria de un mercado. */
+  kind: "certification" | "approval";
   icon: CertIcon;
   sort: number;
   name: Localized;
   /** Texto breve. Sin números de certificado. */
   summary: Localized;
-  /** Mercados del seed que la exigen o la piden (market_certifications). */
+  /** Mercados del seed donde se usa (market_certifications); en /calidad, "Mercados". */
   markets: string[];
 };

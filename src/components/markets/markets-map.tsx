@@ -1,79 +1,99 @@
 "use client";
 
-import { useTranslations } from "next-intl";
-import dynamic from "next/dynamic";
-import { Link } from "@/i18n/navigation";
+import { useEffect, useRef, useState, type KeyboardEvent, type ReactNode, type SyntheticEvent } from "react";
 
-export type MapMarket = {
-  id: string;
-  name: string;
-  lat: number;
-  lng: number;
-  sharePct: number;
-  /** Porcentaje ya formateado ("38 %" / "38%"). */
-  share: string;
-  topCuts: { id: string; name: string; href: { species: string; cut: string } }[];
-  certifications: { id: string; name: string }[];
+type Props = {
+  /** SVG del mapa, renderizado en el servidor (un `[data-market]` enfocable por mercado). */
+  map: ReactNode;
+  /** Panel de cada mercado, renderizado en el servidor. */
+  panels: Record<string, ReactNode>;
+  /** Contenido del panel sin mercado elegido. */
+  intro: ReactNode;
+  /** Nombre accesible del panel. */
+  panelLabel: string;
 };
 
-export type MapTiles = { url: string; attribution: string };
+const DESKTOP = "(min-width: 1024px)";
+const marketOf = (e: SyntheticEvent) => (e.target as Element).closest<SVGElement>("[data-market]")?.dataset.market ?? null;
 
-type Props = { markets: MapMarket[]; tiles: MapTiles; origin: { lat: number; lng: number; label: string } };
+/**
+ * Interacción del mapa (lo único que corre en el cliente). Hover o foco en un mercado lo muestra
+ * en el panel lateral (escritorio). Enter/clic: en escritorio pasa el foco al panel (Escape lo
+ * devuelve al mercado); en móvil, sin panel, lleva a la fila del mercado en la lista.
+ */
+export function MarketsMap({ map, panels, intro, panelLabel }: Props) {
+  const [active, setActive] = useState<string | null>(null);
+  const mapRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
 
-/** Mismo tamaño para el mapa y su reserva: sin salto de layout al cargar. */
-export const MAP_BOX = "h-[18rem] sm:h-[28rem] lg:h-[32rem]";
+  // Estado visible del mercado activo en el SVG (contorno + aria-expanded).
+  useEffect(() => {
+    mapRef.current?.querySelectorAll<SVGElement>("[data-market]").forEach((el) => {
+      const on = el.dataset.market === active;
+      el.toggleAttribute("data-active", on);
+      el.setAttribute("aria-expanded", String(on));
+    });
+  }, [active]);
 
-export function MapFallback() {
-  const t = useTranslations("Markets.map");
+  const open = (id: string) => {
+    setActive(id);
+    if (window.matchMedia(DESKTOP).matches) {
+      // El panel se re-renderiza con el mercado nuevo: enfocar su título en el próximo cuadro.
+      requestAnimationFrame(() => panelRef.current?.querySelector<HTMLElement>("[data-panel-heading]")?.focus());
+    } else {
+      const row = document.getElementById(`market-${id}`);
+      row?.scrollIntoView({ behavior: "smooth", block: "start" });
+      row?.focus({ preventScroll: true });
+    }
+  };
+
+  const onMapKey = (e: KeyboardEvent) => {
+    const id = marketOf(e);
+    if (id && (e.key === "Enter" || e.key === " ")) {
+      e.preventDefault();
+      open(id);
+    }
+  };
+
+  const onPanelKey = (e: KeyboardEvent) => {
+    if (e.key === "Escape" && active) {
+      e.preventDefault();
+      mapRef.current?.querySelector<SVGElement>(`[data-market="${active}"]`)?.focus();
+    }
+  };
+
   return (
-    <div className={`${MAP_BOX} flex items-center justify-center bg-surface-muted`}>
-      <p className="text-sm text-ink-muted">{t("loading")}</p>
-    </div>
-  );
-}
-
-// Leaflet usa `window`: solo en el cliente. La página lo envuelve además en <Suspense>.
-const LeafletMap = dynamic(() => import("./leaflet-map"), { ssr: false, loading: () => <MapFallback /> });
-
-export function MarketsMap({ markets, tiles, origin }: Props) {
-  const t = useTranslations("Markets");
-  return (
-    <div className={MAP_BOX}>
-      <LeafletMap
-        markets={markets}
-        tiles={tiles}
-        origin={origin}
-        text={{
-          mapLabel: t("map.label"),
-          markerLabel: (m) => t("map.marker", { market: m.name, share: m.share }),
+    <div className="grid gap-6 lg:grid-cols-12 lg:gap-8">
+      <div
+        ref={mapRef}
+        className="lg:col-span-8"
+        onPointerOver={(e) => {
+          const id = marketOf(e);
+          if (id) setActive(id);
         }}
-        renderPopup={(m) => (
-          <div className="min-w-52 font-sans text-ink">
-            <p className="font-serif text-lg leading-tight font-semibold">{m.name}</p>
-            <p className="mt-1 text-sm">
-              <span className="font-semibold tabular-nums">{m.share}</span> {t("map.ofExports")}
-            </p>
-            <p className="mt-3 text-xs font-semibold tracking-wide text-ink-muted uppercase">{t("topCuts")}</p>
-            <ul className="mt-1 text-sm">
-              {m.topCuts.map((c) => (
-                <li key={c.id}>
-                  <Link href={{ pathname: "/products/[species]/[cut]", params: c.href }} className="text-brand-700 underline-offset-2 hover:underline">
-                    {c.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-            <p className="mt-3 text-xs font-semibold tracking-wide text-ink-muted uppercase">{t("certifications")}</p>
-            <p className="mt-1 text-sm">{m.certifications.map((c) => c.name).join(" · ")}</p>
-            <Link
-              href={{ pathname: "/products", query: { market: m.id } }}
-              className="mt-3 inline-block text-sm font-semibold text-brand-700 underline underline-offset-2"
-            >
-              {t("catalogLink", { market: m.name })}
-            </Link>
-          </div>
-        )}
-      />
+        onFocus={(e) => {
+          const id = marketOf(e);
+          if (id) setActive(id);
+        }}
+        onClick={(e) => {
+          const id = marketOf(e);
+          if (id) open(id);
+        }}
+        onKeyDown={onMapKey}
+      >
+        {map}
+      </div>
+      <div
+        ref={panelRef}
+        id="market-panel"
+        role="region"
+        aria-label={panelLabel}
+        onKeyDown={onPanelKey}
+        data-panel={active ?? "intro"}
+        className="hidden self-start rounded-lg bg-surface p-6 shadow-card ring-1 ring-line lg:sticky lg:top-[calc(var(--spacing-header)+1.5rem)] lg:col-span-4 lg:block"
+      >
+        {(active && panels[active]) || intro}
+      </div>
     </div>
   );
 }

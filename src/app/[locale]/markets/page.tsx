@@ -1,14 +1,12 @@
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
-import { Suspense } from "react";
-import { MapFallback, MarketsMap, type MapMarket } from "@/components/markets/markets-map";
+import { WorldMap } from "@/components/markets/world-map";
 import { Section, SectionHeader } from "@/components/ui/section";
 import { company } from "@/data/company";
 import { Link } from "@/i18n/navigation";
 import { speciesSlugs } from "@/lib/catalog/species";
 import { getInstitutional } from "@/lib/data/institutional";
 import { formatFigure, formatShare } from "@/lib/format";
-import { mapTiles } from "@/lib/map-tiles";
 import { staticPageMetadata } from "@/lib/metadata";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -22,21 +20,10 @@ export default async function MarketsPage() {
   const t = await getTranslations("Markets");
   const { markets, certifications } = await getInstitutional(locale);
   const certName = new Map(certifications.map((c) => [c.id, c.name]));
-  const { figures, address } = company;
+  const { figures } = company;
   const sorted = [...markets].sort((a, b) => b.sharePct - a.sharePct);
   const othersPct = 100 - markets.reduce((sum, m) => sum + m.sharePct, 0);
   const maxPct = sorted[0]?.sharePct ?? 100;
-
-  const mapMarkets: MapMarket[] = sorted.map((m) => ({
-    id: m.id,
-    name: m.name,
-    lat: m.lat,
-    lng: m.lng,
-    sharePct: m.sharePct,
-    share: formatShare(m.sharePct, locale),
-    topCuts: m.topCuts.map((c) => ({ id: c.id, name: c.name, href: { species: speciesSlugs[c.species][locale], cut: c.slug } })),
-    certifications: m.certifications.map((id) => ({ id, name: certName.get(id) ?? id })),
-  }));
 
   return (
     <>
@@ -56,11 +43,9 @@ export default async function MarketsPage() {
           </h2>
         </div>
         <p className="mt-2 max-w-3xl text-ink-muted">{t("map.hint")}</p>
-        <div className="mt-6 overflow-hidden rounded-lg shadow-card ring-1 ring-line">
-          {/* Solo en el cliente (Leaflet usa window); la reserva tiene el mismo alto. */}
-          <Suspense fallback={<MapFallback />}>
-            <MarketsMap markets={mapMarkets} tiles={mapTiles()} origin={{ ...address.coordinates, label: t("map.origin") }} />
-          </Suspense>
+        <div className="mt-8">
+          {/* SVG renderizado en el servidor: sin reserva ni salto de layout; el cliente solo agrega la interacción. */}
+          <WorldMap markets={sorted} certifications={certifications} />
         </div>
       </Section>
 
@@ -69,7 +54,13 @@ export default async function MarketsPage() {
         <SectionHeader id="destinos" title={t("list.title")} lead={t("list.lead")} />
         <ol className="mt-10 grid gap-5 lg:grid-cols-2">
           {sorted.map((m) => (
-            <li key={m.id} data-market-row={m.id} className="rounded-lg bg-surface p-6 shadow-card ring-1 ring-line">
+            <li
+              key={m.id}
+              id={`market-${m.id}`}
+              tabIndex={-1}
+              data-market-row={m.id}
+              className="rounded-lg bg-surface p-6 shadow-card ring-1 ring-line outline-none focus-visible:ring-2 focus-visible:ring-brand-700"
+            >
               <div className="flex items-baseline justify-between gap-4">
                 <h3 className="text-xl font-semibold text-ink">{m.name}</h3>
                 <p className="font-serif text-3xl font-semibold text-brand-700 tabular-nums">

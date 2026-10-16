@@ -22,12 +22,12 @@ export async function MarketsPreview() {
             {t("cta")}
           </ButtonLink>
         </div>
-        <ol className="space-y-5 lg:col-span-7">
+        <ol data-market-preview className="space-y-5 lg:col-span-7">
           {top.map((m) => (
             <li key={m.id}>
               <div className="flex items-baseline justify-between gap-4">
                 <span className="font-semibold text-ink">{m.name}</span>
-                <span className="font-serif text-xl font-semibold text-brand-700 tabular-nums">{formatShare(m.sharePct, locale)}</span>
+                <span data-share className="font-serif text-xl font-semibold text-brand-700 tabular-nums">{formatShare(m.sharePct, locale)}</span>
               </div>
               <div aria-hidden="true" className="mt-2 h-3 rounded-full bg-earth-100">
                 <div className="h-3 rounded-full bg-brand-700" style={{ width: `${(m.sharePct / max) * 100}%` }} />

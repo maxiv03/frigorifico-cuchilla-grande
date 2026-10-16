@@ -222,7 +222,8 @@
     "whatsappMessage": "[Demo] Hola, los contacto desde el sitio web.",
     "disclaimer": "Sitio de demostración — empresa ficticia",
     "mgap": "Habilitación MGAP N.º {number} (número ficticio)",
-    "credit": "Diseño y desarrollo: <link>fourvexa.com</link>"
+    "credit": "Diseño y desarrollo: <link>fourvexa.com</link>",
+    "privacy": "Política de privacidad"
   },
   "NotFound": {
     "title": "No encontramos esta página",
@@ -239,8 +240,18 @@
     "certs": {
       "title": "Certificaciones y habilitaciones",
       "lead": "Distintivos ilustrativos de este sitio de demostración: no son logos oficiales ni sellos de las entidades certificadoras.",
-      "markets": "La exigen o la piden",
-      "marketLink": "Ver cortes para {market}"
+      "markets": "Mercados",
+      "marketLink": "Ver cortes para {market}",
+      "groups": {
+        "certification": {
+          "title": "Certificaciones",
+          "lead": "Normas de inocuidad y certificaciones religiosas, auditadas por entidades externas."
+        },
+        "approval": {
+          "title": "Habilitaciones sanitarias por mercado",
+          "lead": "Cada destino habilita la planta por separado, con sus propios controles y certificados sanitarios."
+        }
+      }
     },
     "trace": {
       "title": "Trazabilidad individual",
@@ -368,12 +379,24 @@
     "lead": "El {share} de nuestra producción se exporta. Estos son los principales destinos, con su participación en las ventas al exterior, los cortes que más compran y las certificaciones que exigen.",
     "map": {
       "title": "Mapa de destinos",
-      "hint": "El área de cada círculo es proporcional a la participación. Tocalo, o navegá con Tab y abrilo con Enter, para ver el detalle.",
+      "hint": "Pasá el cursor por un destino, o recorrelos con Tab, para ver el detalle al costado; con Enter, el foco pasa al panel. En el celular, tocá un destino para ir a su ficha en la lista.",
       "label": "Mapa de mercados de exportación",
       "marker": "{market}: {share} de las exportaciones",
-      "loading": "Cargando el mapa…",
       "ofExports": "de las exportaciones",
-      "origin": "Planta: Sarandí del Yí, Uruguay"
+      "originShort": "Uruguay (origen)",
+      "panelLabel": "Detalle del mercado",
+      "introTitle": "Elegí un destino",
+      "introText": "Pasá el cursor sobre un país pintado o recorré los mercados con Tab. Los países de un mismo mercado, como la Unión Europea o Medio Oriente, se resaltan juntos.",
+      "escHint": "Escape vuelve al mapa.",
+      "attribution": "Mapa: Natural Earth (dominio público), proyección Equal Earth.",
+      "legend": {
+        "title": "Participación en las exportaciones",
+        "atLeast": "{share} o más",
+        "range": "{from}–{to}",
+        "below": "Menos de {share}",
+        "origin": "Uruguay (origen)",
+        "others": "Otros países"
+      }
     },
     "list": {
       "title": "Destinos y participación",
@@ -386,5 +409,200 @@
     "topCuts": "Cortes principales",
     "certifications": "Certificaciones requeridas",
     "catalogLink": "Ver cortes para {market}"
+  },
+  "Forms": {
+    "optional": "opcional",
+    "honeypot": "No completar este campo",
+    "errors": {
+      "required": "Completá este campo.",
+      "tooShort": "Es demasiado corto.",
+      "tooLong": "Es demasiado largo.",
+      "email": "Ingresá un email válido, por ejemplo nombre@dominio.com.",
+      "phone": "Ingresá un teléfono válido: números, espacios, guiones o +.",
+      "integer": "Ingresá un número entero.",
+      "range": "Ingresá un valor entre {min} y {max}.",
+      "option": "Elegí una opción de la lista.",
+      "date": "Ingresá una fecha válida.",
+      "dateRange": "Elegí una fecha entre el {from} y el {to}.",
+      "privacy": "Para enviar, tenés que aceptar la política de privacidad."
+    }
+  },
+  "Producers": {
+    "metaTitle": "Portal de productores",
+    "metaDescription": "Pizarra semanal de precios de referencia, calculadora de lote y formulario para ofrecer ganado a Frigorífico Cuchilla Grande. Sitio de demostración con valores ficticios.",
+    "eyebrow": "Productores",
+    "title": "Vendé tu hacienda con precios claros",
+    "lead": "Pizarra semanal de referencia, una calculadora para estimar tu lote y compradores que recorren tu zona. Ofrecé tu ganado en un par de minutos.",
+    "sectionsLabel": "Secciones del portal",
+    "species": {
+      "beef": "Vacunos",
+      "lamb": "Ovinos"
+    },
+    "board": {
+      "title": "Pizarra de precios",
+      "lead": "Precios de compra de referencia de las seis categorías, vigentes durante la semana y con su variación respecto de la anterior.",
+      "unitTitle": "Cómo leer la pizarra",
+      "unitText": "Los valores están en dólares por kilo de carcasa (US$/kg carcasa): se pagan sobre el peso de la res después de la faena, no sobre el peso vivo.",
+      "finalPrice": "El precio final de cada lote depende de la tipificación de las reses, del rendimiento real en carcasa y de las bonificaciones que correspondan, por ejemplo por terminación o por programas certificados.",
+      "previous": "La variación compara con la pizarra de la semana anterior."
+    },
+    "chart": {
+      "heading": "Últimas 12 semanas",
+      "toggleLabel": "Especie del gráfico",
+      "species": {
+        "beef": "Vacunos",
+        "lamb": "Ovinos"
+      },
+      "title": "Precios de {species} en las últimas {weeks} semanas",
+      "summaryLine": "{category}: de {from} a {to} US$/kg.",
+      "caption": "US$/kg carcasa, valor vigente desde cada lunes. Valores ficticios.",
+      "showData": "Ver los datos del gráfico",
+      "week": "Semana del",
+      "empty": "Todavía no hay semanas suficientes para el gráfico."
+    },
+    "calculator": {
+      "title": "Calculadora de lote",
+      "lead": "Estimá los kilos de carcasa y el monto bruto de tu lote con el precio de la pizarra vigente.",
+      "category": "Categoría",
+      "heads": "Cantidad de cabezas",
+      "headsUnit": "cabezas",
+      "weight": "Peso vivo promedio",
+      "yield": "Rendimiento en carcasa",
+      "yieldHint": "Por defecto, el de la categoría ({value} %). Entre {min} y {max} %.",
+      "range": "Entre {min} y {max}.",
+      "price": "Precio de referencia",
+      "priceHint": "De la pizarra vigente desde el {date, date, long}.",
+      "priceValue": "US$ {price} por kg carcasa",
+      "result": "Estimación",
+      "carcassKg": "Kilos de carcasa estimados",
+      "kgValue": "{kg} kg",
+      "gross": "Monto bruto estimado",
+      "fixErrors": "Corregí los datos marcados para ver la estimación.",
+      "disclaimer": "Estimación orientativa con valores ficticios. El precio final depende de la tipificación, del rendimiento real y de las bonificaciones; no incluye fletes ni impuestos.",
+      "offer": "Ofrecer este lote"
+    },
+    "steps": {
+      "title": "Cómo venderle al frigorífico",
+      "lead": "Del primer contacto a la liquidación, en cinco pasos.",
+      "stepLabel": "Paso {n} de {total}",
+      "items": {
+        "offer": {
+          "title": "Oferta",
+          "text": "Nos contás categoría, cantidad, peso estimado y fecha disponible: por el formulario, por WhatsApp o con el comprador de tu zona."
+        },
+        "visit": {
+          "title": "Visita del comprador",
+          "text": "Un comprador de hacienda visita el establecimiento, revisa el lote y estima el rendimiento y la terminación."
+        },
+        "agreement": {
+          "title": "Acuerdo de precio y fecha",
+          "text": "Se acuerdan el precio por kilo de carcasa, las bonificaciones y el día de ingreso a planta."
+        },
+        "transport": {
+          "title": "Transporte",
+          "text": "El ganado viaja con la documentación habitual: guía de propiedad y tránsito, y número de DICOSE del productor."
+        },
+        "settlement": {
+          "title": "Faena, tipificación y liquidación",
+          "text": "Cada res se pesa y se tipifica. Recibís la liquidación detallada y el pago a 30 días (plazo ficticio)."
+        }
+      },
+      "note": "Proceso ilustrativo: este es un sitio de demostración de una empresa ficticia."
+    },
+    "buyers": {
+      "title": "Compradores de hacienda",
+      "lead": "Recorren el país y te atienden directamente, del primer llamado a la carga.",
+      "zone": "Zona",
+      "whatsapp": "Escribirle a {buyer}",
+      "whatsappHint": "(abre WhatsApp)",
+      "whatsappMessage": "[Demo] Hola, {buyer}: quiero ofrecer hacienda al frigorífico.",
+      "note": "Los botones abren WhatsApp con el número de contacto del equipo de demostración."
+    },
+    "form": {
+      "title": "Ofrecer ganado",
+      "lead": "Completá los datos del lote y te contactamos para coordinar la visita. Los campos sin la marca «opcional» son obligatorios.",
+      "lot": "El lote",
+      "contact": "Tus datos",
+      "category": "Categoría",
+      "choose": "Elegí una opción",
+      "headCount": "Cantidad de cabezas",
+      "headsUnit": "cabezas",
+      "avgWeight": "Peso vivo promedio estimado",
+      "avgWeightHint": "Por animal, en kilos.",
+      "breed": "Raza",
+      "breedHint": "Por ejemplo, Hereford o Corriedale.",
+      "department": "Departamento",
+      "availableFrom": "Fecha disponible",
+      "name": "Nombre y apellido",
+      "phone": "Teléfono",
+      "phoneHint": "Con código de área, por ejemplo 099 123 456.",
+      "email": "Correo electrónico",
+      "notes": "Comentarios",
+      "notesHint": "Estado del ganado, acceso al campo o lo que quieras contarnos.",
+      "privacy": "Leí y acepto la <link>política de privacidad</link>.",
+      "submit": "Enviar oferta",
+      "sending": "Enviando…",
+      "demoNote": "Sitio de demostración: la oferta se guarda solo para probar el formulario y se borra a los 90 días.",
+      "invalid": {
+        "title": "Revisá los datos marcados",
+        "text": "{count, plural, one {Hay un campo con errores.} other {Hay # campos con errores.}}"
+      },
+      "rateLimited": {
+        "title": "Recibimos demasiados envíos",
+        "text": "Por seguridad, limitamos los envíos desde una misma conexión. Probá de nuevo en unos minutos."
+      },
+      "error": {
+        "title": "No pudimos enviar la oferta",
+        "text": "Ocurrió un error inesperado. Probá de nuevo en un rato o escribinos por WhatsApp."
+      },
+      "success": {
+        "title": "¡Gracias! Recibimos tu oferta",
+        "text": "Un comprador de hacienda te va a contactar para coordinar la visita.",
+        "demo": "Recordá que este es un sitio de demostración: nadie te va a llamar de verdad."
+      }
+    }
+  },
+  "Privacy": {
+    "metaTitle": "Política de privacidad",
+    "metaDescription": "Qué datos guarda este sitio de demostración, para qué y durante cuánto tiempo.",
+    "eyebrow": "Privacidad",
+    "title": "Política de privacidad",
+    "lead": "Este es un sitio de demostración de una empresa ficticia, pero sus formularios guardan datos reales. Acá explicamos cuáles, para qué y durante cuánto tiempo.",
+    "updated": "Última actualización: 16 de octubre de 2026.",
+    "sections": {
+      "demo": {
+        "title": "Un sitio de demostración",
+        "text": "Frigorífico Cuchilla Grande no existe: es una empresa ficticia creada para mostrar el trabajo de diseño y desarrollo de fourvexa.com. Ninguna oferta ni consulta enviada desde este sitio genera una compra, una visita ni un contacto comercial real."
+      },
+      "what": {
+        "title": "Qué guardamos",
+        "text": "Cuando enviás un formulario guardamos:",
+        "items": {
+          "fields": "Los datos que escribiste: por ejemplo, categoría y cantidad de ganado, departamento, fecha disponible, nombre, teléfono, email (si lo dejaste) y comentarios.",
+          "technical": "La fecha y la hora del envío, el idioma del sitio y el entorno (producción o pruebas).",
+          "ip": "Una huella cifrada de tu conexión: un hash de la dirección IP con una clave secreta. No guardamos la IP; la huella solo sirve para limitar los envíos repetidos."
+        }
+      },
+      "why": {
+        "title": "Para qué",
+        "text": "Solo para que el formulario funcione de punta a punta y para evitar abusos. No usamos los datos para publicidad, no los vendemos ni los compartimos con terceros, y no te vamos a contactar."
+      },
+      "where": {
+        "title": "Dónde se guardan",
+        "text": "En una base de datos de Supabase, en la región de São Paulo (Brasil). El sitio está alojado en Vercel. Ambos proveedores tratan los datos solo para prestar ese servicio."
+      },
+      "retention": {
+        "title": "Durante cuánto tiempo",
+        "text": "Los envíos se borran automáticamente a los 90 días, con una tarea diaria del propio sitio."
+      },
+      "rights": {
+        "title": "Tus derechos",
+        "text": "Si querés que borremos antes un envío tuyo, o saber si tenemos datos tuyos, escribinos a <mail>{email}</mail> con el nombre y la fecha aproximada del envío."
+      },
+      "cookies": {
+        "title": "Cookies",
+        "text": "El sitio usa una sola cookie técnica (NEXT_LOCALE), que recuerda el idioma elegido. No hay cookies de publicidad ni de analítica."
+      }
+    }
   }
 }

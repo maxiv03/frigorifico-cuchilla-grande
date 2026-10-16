@@ -92,54 +92,33 @@
   }
 }
 
-/* ─── Mapa de mercados (Leaflet) ───────────────────────────────────────────── */
-.leaflet-container {
-  font-family: var(--font-sans);
-  background: var(--color-surface-muted);
+/* ─── Mapa de mercados (SVG propio) ────────────────────────────────────────── */
+/* Países sin mercado: gris cálido claro. Cada mercado es un <g> enfocable con sus países. */
+.market-map .country {
+  fill: var(--color-line);
+  stroke: var(--color-surface);
+  stroke-width: 0.5;
 }
-/* El preflight de Tailwind (img { max-width: 100%; height: auto }) desarma las teselas */
-.leaflet-container img.leaflet-tile {
-  max-width: none;
-  height: 256px;
+.market-map [data-market] {
+  cursor: pointer;
+  outline: none;
 }
-.leaflet-popup-content-wrapper {
-  border-radius: var(--radius-md);
+.market-map [data-market] path {
+  stroke: var(--color-surface);
+  stroke-width: 0.6;
+  transition: fill 120ms;
 }
-.leaflet-container a.leaflet-popup-close-button {
-  width: 2.25rem;
-  height: 2.25rem;
-  font-size: 1.25rem;
-  line-height: 2.25rem;
+/* Hover, foco o mercado mostrado en el panel: otro tono (tierra, 3,7:1 contra el gris) y contorno
+   grueso, para que se distinga en cualquier tramo de la escala de bordó (no solo por color). */
+.market-map [data-market]:hover path,
+.market-map [data-market][data-active] path {
+  fill: var(--color-earth-600);
+  stroke: var(--color-ink);
+  stroke-width: 1.2;
 }
-.leaflet-control-attribution {
-  font-size: 0.75rem;
-  color: var(--color-ink);
-}
-/* Círculo proporcional: bordó translúcido con borde sólido; foco de teclado bien visible */
-.market-marker span {
-  display: block;
-  border-radius: 9999px;
-  background: color-mix(in srgb, var(--color-brand-700) 55%, transparent);
-  border: 2px solid var(--color-brand-800);
-  box-shadow: 0 0 0 2px rgb(255 255 255 / 0.85);
-  transition: transform 150ms;
-}
-.market-marker:hover span,
-.market-marker:focus-visible span {
-  transform: scale(1.08);
-  background: color-mix(in srgb, var(--color-brand-700) 75%, transparent);
-}
-.market-marker:focus-visible {
-  outline: 3px dashed var(--color-ink);
-  outline-offset: 4px;
-  border-radius: 9999px;
-}
-.origin-marker span {
-  display: block;
-  width: 14px;
-  height: 14px;
-  border-radius: 3px;
-  background: var(--color-earth-700);
-  border: 2px solid white;
-  transform: rotate(45deg);
+.market-map [data-market]:focus-visible path {
+  fill: var(--color-earth-600);
+  stroke: var(--color-ink);
+  stroke-width: 2.4;
+  stroke-dasharray: 4 2;
 }

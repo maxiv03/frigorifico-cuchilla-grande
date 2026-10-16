@@ -179,3 +179,38 @@ export const IconThermometer = (p: SVGProps<SVGSVGElement>) => (
     <path d="M12 9v7" />
   </Icon>
 );
+export const IconCalendar = (p: SVGProps<SVGSVGElement>) => (
+  <Icon {...p}>
+    <path d="M5 5.5h14a1 1 0 0 1 1 1V19a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6.5a1 1 0 0 1 1-1zM4 10h16M8 3.5v4M16 3.5v4" />
+  </Icon>
+);
+export const IconDocument = (p: SVGProps<SVGSVGElement>) => (
+  <Icon {...p}>
+    <path d="M14 3.5H7A1.5 1.5 0 0 0 5.5 5v14A1.5 1.5 0 0 0 7 20.5h10a1.5 1.5 0 0 0 1.5-1.5V8z" />
+    <path d="M14 3.5V8h4.5M8.5 12.5h7M8.5 16h5" />
+  </Icon>
+);
+export const IconHandshake = (p: SVGProps<SVGSVGElement>) => (
+  <Icon {...p}>
+    <path d="M2.5 8.5 6 6l4 1.5M21.5 8.5 18 6l-5.5 2-3 2.5a1.4 1.4 0 0 0 2 2l2-1.5 4.5 4" />
+    <path d="M2.5 14.5 6 17l2.5 2a1.3 1.3 0 0 0 1.9-1.7M10.4 17.3l1.3 1.2a1.3 1.3 0 0 0 1.9-1.7M13.6 16.8l.7.6a1.3 1.3 0 0 0 1.8-1.8L18 17l3.5-2.5" />
+  </Icon>
+);
+export const IconUserCheck = (p: SVGProps<SVGSVGElement>) => (
+  <Icon {...p}>
+    <circle cx="9.5" cy="8" r="3.5" />
+    <path d="M3 20c.6-3.5 3.2-5.5 6.5-5.5 1.4 0 2.6.3 3.6 1M15 18l2 2 4-4.5" />
+  </Icon>
+);
+export const IconCalculator = (p: SVGProps<SVGSVGElement>) => (
+  <Icon {...p}>
+    <path d="M7 3h10a1.5 1.5 0 0 1 1.5 1.5v15A1.5 1.5 0 0 1 17 21H7a1.5 1.5 0 0 1-1.5-1.5v-15A1.5 1.5 0 0 1 7 3z" />
+    <path d="M8.5 6.5h7v3h-7zM8.5 13h.01M12 13h.01M15.5 13h.01M8.5 17h.01M12 17h.01M15.5 17h.01" />
+  </Icon>
+);
+export const IconAlert = (p: SVGProps<SVGSVGElement>) => (
+  <Icon {...p}>
+    <path d="M12 3.5 21.5 20h-19z" />
+    <path d="M12 10v4.5M12 17.5h.01" />
+  </Icon>
+);

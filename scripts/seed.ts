@@ -82,7 +82,7 @@ async function seedCatalog() {
   );
   await upsert(
     "certifications",
-    certifications.map((c) => ({ id: c.id, icon: c.icon, sort: c.sort })),
+    certifications.map((c) => ({ id: c.id, kind: c.kind, icon: c.icon, sort: c.sort })),
     "id",
   );
   await upsert(

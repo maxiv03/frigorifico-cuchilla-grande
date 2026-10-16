@@ -21,7 +21,7 @@ const CONTENT_TABLES = [
 
 // Hash único por corrida: así las filas de prueba se borran sin tocar otras.
 const testIp = createHash("sha256").update(randomBytes(16)).digest("hex");
-const base = { env: "development", locale: "es", ip_hash: testIp };
+const base = { env: "development", locale: "es", ip_hash: testIp, privacy_accepted: true };
 
 const FORMS: Record<string, Record<string, unknown>> = {
   quote_requests: {
@@ -44,6 +44,7 @@ const FORMS: Record<string, Record<string, unknown>> = {
     available_from: "2030-01-01",
     name: "Test",
     phone: "099000000",
+    breed: "Hereford",
   },
 };
 
@@ -98,6 +99,12 @@ async function main() {
 
     const forged = await anon.from(t).insert({ ...row, created_at: "2000-01-01T00:00:00Z" });
     check(denied(forged.error), `INSERT ${t} con created_at forjado rechazado`, forged.error?.message ?? "se aceptó");
+  }
+
+  console.log("Aceptación de privacidad obligatoria:");
+  for (const [t, row] of Object.entries(FORMS)) {
+    const noConsent = await anon.from(t).insert({ ...row, privacy_accepted: false });
+    check(noConsent.error?.code === "23514", `INSERT ${t} sin aceptar privacidad rechazado`, noConsent.error?.message ?? "se aceptó");
   }
 
   console.log("Límite de envíos (5 por IP cada 10 min):");

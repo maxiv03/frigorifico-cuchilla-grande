@@ -64,6 +64,8 @@ export const company = {
       {
         name: "Andrés Píriz",
         role: { es: "Comprador de hacienda", en: "Livestock buyer" },
+        /** Zona que recorre (portal de productores). */
+        zone: { es: "Durazno, Florida y Tacuarembó · vacunos", en: "Durazno, Florida and Tacuarembó · cattle" },
         bio: {
           es: "Recorre establecimientos de Durazno, Florida y Tacuarembó para comprar vacunos.",
           en: "Visits farms in Durazno, Florida and Tacuarembó to buy cattle.",
@@ -72,6 +74,7 @@ export const company = {
       {
         name: "Carolina Fagúndez",
         role: { es: "Compradora de hacienda", en: "Livestock buyer" },
+        zone: { es: "Flores, Soriano, Paysandú y Salto · ovinos", en: "Flores, Soriano, Paysandú and Salto · sheep" },
         bio: {
           es: "Coordina la compra de ovinos y los turnos de ingreso a planta con los productores.",
           en: "Coordinates sheep purchasing and delivery slots at the plant with producers.",

@@ -9,7 +9,7 @@ export const markets: MarketSeed[] = [
     id: "cn",
     lat: 35.86,
     lng: 104.19,
-    sharePct: 38,
+    sharePct: 36,
     sort: 1,
     name: { es: "China", en: "China" },
     description: {
@@ -57,7 +57,7 @@ export const markets: MarketSeed[] = [
     id: "br",
     lat: -14.24,
     lng: -51.93,
-    sharePct: 7,
+    sharePct: 5,
     sort: 5,
     name: { es: "Brasil", en: "Brazil" },
     description: {
@@ -90,11 +90,23 @@ export const markets: MarketSeed[] = [
     },
   },
   {
+    id: "me",
+    lat: 24.47,
+    lng: 47.5,
+    sharePct: 4,
+    sort: 8,
+    name: { es: "Medio Oriente", en: "Middle East" },
+    description: {
+      es: "Arabia Saudita, Emiratos Árabes Unidos, Jordania y Kuwait: sobre todo cordero y carne ovina con certificación Halal, y cortes vacunos del cuarto delantero.",
+      en: "Saudi Arabia, the United Arab Emirates, Jordan and Kuwait: mainly Halal-certified lamb and mutton, plus beef forequarter cuts.",
+    },
+  },
+  {
     id: "jp",
     lat: 36.2,
     lng: 138.25,
     sharePct: 3,
-    sort: 8,
+    sort: 9,
     name: { es: "Japón", en: "Japan" },
     description: {
       es: "Entrañas, asado y cortes del cuarto delantero con especificaciones de corte a medida.",

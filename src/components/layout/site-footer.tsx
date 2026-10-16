@@ -81,6 +81,11 @@ export async function SiteFooter() {
           <div className="space-y-1">
             <p className="font-semibold text-white">{t("disclaimer")}</p>
             <p>{t("mgap", { number: company.mgapNumber })}</p>
+            <p>
+              <Link href="/privacy" className="underline decoration-earth-500 underline-offset-4 hover:text-white hover:decoration-white">
+                {t("privacy")}
+              </Link>
+            </p>
           </div>
           <p>
             {t.rich("credit", {

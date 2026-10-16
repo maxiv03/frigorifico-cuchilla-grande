@@ -222,7 +222,8 @@
     "whatsappMessage": "[Demo] Hello, I'm contacting you from your website.",
     "disclaimer": "Demo website — fictitious company",
     "mgap": "MGAP approval No. {number} (fictitious number)",
-    "credit": "Design and development: <link>fourvexa.com</link>"
+    "credit": "Design and development: <link>fourvexa.com</link>",
+    "privacy": "Privacy policy"
   },
   "NotFound": {
     "title": "We couldn't find this page",
@@ -239,8 +240,18 @@
     "certs": {
       "title": "Certifications and approvals",
       "lead": "Illustrative badges for this demo site: they are not official logos or seals of the certification bodies.",
-      "markets": "Required or requested by",
-      "marketLink": "See cuts for {market}"
+      "markets": "Markets",
+      "marketLink": "See cuts for {market}",
+      "groups": {
+        "certification": {
+          "title": "Certifications",
+          "lead": "Food safety standards and religious certifications, audited by external bodies."
+        },
+        "approval": {
+          "title": "Market health approvals",
+          "lead": "Each destination approves the plant separately, with its own health controls and certificates."
+        }
+      }
     },
     "trace": {
       "title": "Individual traceability",
@@ -368,12 +379,24 @@
     "lead": "{share} of our production is exported. These are our main destinations, with their share of export sales, the cuts they buy most and the certifications they require.",
     "map": {
       "title": "Destination map",
-      "hint": "The area of each circle is proportional to its share. Tap it, or move with Tab and open it with Enter, to see the details.",
+      "hint": "Hover over a destination, or move through them with Tab, to see its details alongside; Enter moves focus to the panel. On a phone, tap a destination to jump to its entry in the list.",
       "label": "Map of export markets",
       "marker": "{market}: {share} of exports",
-      "loading": "Loading the map…",
       "ofExports": "of exports",
-      "origin": "Plant: Sarandí del Yí, Uruguay"
+      "originShort": "Uruguay (origin)",
+      "panelLabel": "Market details",
+      "introTitle": "Choose a destination",
+      "introText": "Hover over a shaded country or move through the markets with Tab. Countries in the same market, such as the European Union or the Middle East, are highlighted together.",
+      "escHint": "Escape returns to the map.",
+      "attribution": "Map: Natural Earth (public domain), Equal Earth projection.",
+      "legend": {
+        "title": "Share of exports",
+        "atLeast": "{share} or more",
+        "range": "{from}–{to}",
+        "below": "Under {share}",
+        "origin": "Uruguay (origin)",
+        "others": "Other countries"
+      }
     },
     "list": {
       "title": "Destinations and share",
@@ -386,5 +409,200 @@
     "topCuts": "Main cuts",
     "certifications": "Required certifications",
     "catalogLink": "See cuts for {market}"
+  },
+  "Forms": {
+    "optional": "optional",
+    "honeypot": "Leave this field empty",
+    "errors": {
+      "required": "Please fill in this field.",
+      "tooShort": "This is too short.",
+      "tooLong": "This is too long.",
+      "email": "Enter a valid email address, for example name@domain.com.",
+      "phone": "Enter a valid phone number: digits, spaces, hyphens or +.",
+      "integer": "Enter a whole number.",
+      "range": "Enter a value between {min} and {max}.",
+      "option": "Choose an option from the list.",
+      "date": "Enter a valid date.",
+      "dateRange": "Choose a date between {from} and {to}.",
+      "privacy": "You need to accept the privacy policy to send the form."
+    }
+  },
+  "Producers": {
+    "metaTitle": "Producer portal",
+    "metaDescription": "Weekly reference price board, lot calculator and a form to offer livestock to Frigorífico Cuchilla Grande. Demo site with fictitious values.",
+    "eyebrow": "Producers",
+    "title": "Sell your livestock at clear prices",
+    "lead": "A weekly reference price board, a calculator to estimate your lot and buyers who cover your area. Offer your livestock in a couple of minutes.",
+    "sectionsLabel": "Portal sections",
+    "species": {
+      "beef": "Cattle",
+      "lamb": "Sheep"
+    },
+    "board": {
+      "title": "Price board",
+      "lead": "Reference purchase prices for the six categories, valid for the week, with the change from the previous week.",
+      "unitTitle": "How to read the board",
+      "unitText": "Prices are in US dollars per kilo of carcass weight (US$/kg carcass): they are paid on the weight of the carcass after slaughter, not on live weight.",
+      "finalPrice": "The final price of each lot depends on carcass grading, the actual carcass yield and any applicable premiums, for example for finishing or certified programmes.",
+      "previous": "The change is measured against the previous week's board."
+    },
+    "chart": {
+      "heading": "Last 12 weeks",
+      "toggleLabel": "Chart species",
+      "species": {
+        "beef": "Cattle",
+        "lamb": "Sheep"
+      },
+      "title": "{species} prices over the last {weeks} weeks",
+      "summaryLine": "{category}: from {from} to {to} US$/kg.",
+      "caption": "US$/kg carcass, price valid from each Monday. Fictitious values.",
+      "showData": "Show the chart data",
+      "week": "Week of",
+      "empty": "There are not enough weeks for the chart yet."
+    },
+    "calculator": {
+      "title": "Lot calculator",
+      "lead": "Estimate the carcass kilos and gross amount of your lot with the current board price.",
+      "category": "Category",
+      "heads": "Number of head",
+      "headsUnit": "head",
+      "weight": "Average live weight",
+      "yield": "Carcass yield",
+      "yieldHint": "Defaults to the category's ({value}%). Between {min} and {max}%.",
+      "range": "Between {min} and {max}.",
+      "price": "Reference price",
+      "priceHint": "From the board valid since {date, date, long}.",
+      "priceValue": "US$ {price} per kg carcass",
+      "result": "Estimate",
+      "carcassKg": "Estimated carcass kilos",
+      "kgValue": "{kg} kg",
+      "gross": "Estimated gross amount",
+      "fixErrors": "Correct the highlighted values to see the estimate.",
+      "disclaimer": "Indicative estimate with fictitious values. The final price depends on grading, actual yield and premiums; freight and taxes are not included.",
+      "offer": "Offer this lot"
+    },
+    "steps": {
+      "title": "How to sell to the plant",
+      "lead": "From first contact to settlement, in five steps.",
+      "stepLabel": "Step {n} of {total}",
+      "items": {
+        "offer": {
+          "title": "Offer",
+          "text": "Tell us the category, number of head, estimated weight and availability date: through the form, on WhatsApp or with the buyer for your area."
+        },
+        "visit": {
+          "title": "Buyer visit",
+          "text": "A livestock buyer visits the farm, inspects the lot and estimates yield and finishing."
+        },
+        "agreement": {
+          "title": "Price and date agreed",
+          "text": "The price per kilo of carcass, the premiums and the delivery date at the plant are agreed."
+        },
+        "transport": {
+          "title": "Transport",
+          "text": "The livestock travels with the usual paperwork: the ownership and transit permit (guía de propiedad y tránsito) and the producer's DICOSE number."
+        },
+        "settlement": {
+          "title": "Slaughter, grading and settlement",
+          "text": "Each carcass is weighed and graded. You receive a detailed settlement and payment within 30 days (fictitious term)."
+        }
+      },
+      "note": "Illustrative process: this is a demo site for a fictitious company."
+    },
+    "buyers": {
+      "title": "Livestock buyers",
+      "lead": "They travel the country and deal with you directly, from the first call to loading.",
+      "zone": "Area",
+      "whatsapp": "Message {buyer}",
+      "whatsappHint": "(opens WhatsApp)",
+      "whatsappMessage": "[Demo] Hello {buyer}, I would like to offer livestock to the plant.",
+      "note": "The buttons open WhatsApp with the demo team's contact number."
+    },
+    "form": {
+      "title": "Offer livestock",
+      "lead": "Fill in the details of the lot and we will contact you to arrange a visit. Fields not marked “optional” are required.",
+      "lot": "The lot",
+      "contact": "Your details",
+      "category": "Category",
+      "choose": "Choose an option",
+      "headCount": "Number of head",
+      "headsUnit": "head",
+      "avgWeight": "Estimated average live weight",
+      "avgWeightHint": "Per animal, in kilos.",
+      "breed": "Breed",
+      "breedHint": "For example, Hereford or Corriedale.",
+      "department": "Department",
+      "availableFrom": "Available from",
+      "name": "Full name",
+      "phone": "Phone",
+      "phoneHint": "Including the area code, for example 099 123 456.",
+      "email": "Email",
+      "notes": "Comments",
+      "notesHint": "Condition of the livestock, farm access or anything else you want to tell us.",
+      "privacy": "I have read and accept the <link>privacy policy</link>.",
+      "submit": "Send offer",
+      "sending": "Sending…",
+      "demoNote": "Demo site: the offer is stored only to test the form and is deleted after 90 days.",
+      "invalid": {
+        "title": "Check the highlighted fields",
+        "text": "{count, plural, one {One field has an error.} other {# fields have errors.}}"
+      },
+      "rateLimited": {
+        "title": "Too many submissions",
+        "text": "For security, we limit submissions from the same connection. Please try again in a few minutes."
+      },
+      "error": {
+        "title": "We could not send your offer",
+        "text": "An unexpected error occurred. Please try again later or message us on WhatsApp."
+      },
+      "success": {
+        "title": "Thank you! We received your offer",
+        "text": "A livestock buyer will contact you to arrange a visit.",
+        "demo": "Remember this is a demo site: nobody will actually call you."
+      }
+    }
+  },
+  "Privacy": {
+    "metaTitle": "Privacy policy",
+    "metaDescription": "What data this demo site stores, why and for how long.",
+    "eyebrow": "Privacy",
+    "title": "Privacy policy",
+    "lead": "This is a demo site for a fictitious company, but its forms store real data. Here we explain which data, why and for how long.",
+    "updated": "Last updated: 16 October 2026.",
+    "sections": {
+      "demo": {
+        "title": "A demo site",
+        "text": "Frigorífico Cuchilla Grande does not exist: it is a fictitious company created to showcase the design and development work of fourvexa.com. No offer or enquiry sent from this site leads to a real purchase, visit or business contact."
+      },
+      "what": {
+        "title": "What we store",
+        "text": "When you send a form we store:",
+        "items": {
+          "fields": "The details you entered: for example, livestock category and number of head, department, availability date, name, phone, email (if provided) and comments.",
+          "technical": "The date and time of the submission, the site language and the environment (production or testing).",
+          "ip": "An encrypted fingerprint of your connection: a hash of your IP address with a secret key. We do not store the IP; the fingerprint is only used to limit repeated submissions."
+        }
+      },
+      "why": {
+        "title": "Why",
+        "text": "Only so the form works end to end and to prevent abuse. We do not use the data for advertising, we do not sell or share it with third parties, and we will not contact you."
+      },
+      "where": {
+        "title": "Where it is stored",
+        "text": "In a Supabase database in the São Paulo region (Brazil). The site is hosted on Vercel. Both providers process the data only to deliver that service."
+      },
+      "retention": {
+        "title": "For how long",
+        "text": "Submissions are deleted automatically after 90 days by a daily task run by the site itself."
+      },
+      "rights": {
+        "title": "Your rights",
+        "text": "If you want us to delete a submission sooner, or to know whether we hold any of your data, write to <mail>{email}</mail> with your name and the approximate date of the submission."
+      },
+      "cookies": {
+        "title": "Cookies",
+        "text": "The site uses a single technical cookie (NEXT_LOCALE) to remember your chosen language. There are no advertising or analytics cookies."
+      }
+    }
   }
 }

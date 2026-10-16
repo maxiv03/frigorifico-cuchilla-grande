@@ -306,7 +306,7 @@ export const cuts: CutSeed[] = [
     zone: "chuck",
     bone: "boneless",
     presentations: ["frozen", "chilled"],
-    markets: ["cn", "il", "us", "jp"],
+    markets: ["cn", "il", "us", "jp", "me"],
     name: { es: "Aguja", en: "Chuck Roll" },
     description: {
       es: "Pieza grande del cuarto delantero, con buen sabor y algo de grasa intramuscular. Para hot pot, guisos y bifes de aguja. Congelada o enfriada, una pieza por caja.",
@@ -361,7 +361,7 @@ export const cuts: CutSeed[] = [
     zone: "brisket",
     bone: "boneless",
     presentations: ["frozen", "chilled"],
-    markets: ["cn", "il", "us"],
+    markets: ["cn", "il", "us", "me"],
     name: { es: "Pecho", en: "Brisket" },
     description: {
       es: "Corte del pecho con grasa de cobertura, para ahumado, pastrami y cocción lenta. Clásico del mercado kosher. Piezas enteras al vacío, enfriadas o congeladas.",
@@ -389,7 +389,7 @@ export const cuts: CutSeed[] = [
     zone: "rack",
     bone: "bone_in",
     presentations: ["chilled", "frozen"],
-    markets: ["eu", "uk", "us", "br", "ca"],
+    markets: ["eu", "uk", "us", "br", "ca", "me"],
     image: "lamb-rack",
     featured: true,
     name: { es: "Carré francés", en: "Frenched Rack" },
@@ -405,7 +405,7 @@ export const cuts: CutSeed[] = [
     zone: "leg",
     bone: "bone_in",
     presentations: ["chilled", "frozen"],
-    markets: ["eu", "uk", "br", "us"],
+    markets: ["eu", "uk", "br", "us", "me"],
     image: "lamb-leg",
     featured: true,
     name: { es: "Pierna", en: "Leg" },
@@ -475,7 +475,7 @@ export const cuts: CutSeed[] = [
     zone: "shoulder",
     bone: "bone_in",
     presentations: ["frozen", "chilled"],
-    markets: ["cn", "br", "eu"],
+    markets: ["cn", "br", "eu", "me"],
     name: { es: "Paleta", en: "Shoulder" },
     description: {
       es: "Paleta entera con hueso, para asar lento o despiezar. Sabrosa y con buena relación precio-rendimiento. Congelada o enfriada, al vacío.",
@@ -488,7 +488,7 @@ export const cuts: CutSeed[] = [
     zone: "shank",
     bone: "bone_in",
     presentations: ["frozen"],
-    markets: ["cn", "us", "eu"],
+    markets: ["cn", "us", "eu", "me"],
     name: { es: "Garrón", en: "Shank" },
     description: {
       es: "Garrón de cordero con hueso, para braseados y cocción lenta. Un clásico de las cartas de bistró. Congelado, en piezas individuales al vacío.",
@@ -501,7 +501,7 @@ export const cuts: CutSeed[] = [
     zone: "neck",
     bone: "bone_in",
     presentations: ["frozen"],
-    markets: ["cn", "uk"],
+    markets: ["cn", "uk", "me"],
     name: { es: "Cogote", en: "Neck" },
     description: {
       es: "Cuello de cordero con hueso, entero o en rodajas, para guisos y currys. Formato de buen precio para procesadores y gastronomía. Congelado.",
@@ -514,7 +514,7 @@ export const cuts: CutSeed[] = [
     zone: "breast",
     bone: "boneless",
     presentations: ["frozen"],
-    markets: ["cn"],
+    markets: ["cn", "me"],
     name: { es: "Pecho", en: "Flap" },
     alias: { en: "Breast" },
     description: {

@@ -32,7 +32,7 @@ export const mainNav: NavItem[] = [
   { key: "markets", href: "/markets", enabled: true }, // fase 3
   { key: "quality", href: "/quality", enabled: true }, // fase 3
   { key: "company", href: "/company", enabled: true }, // fase 3
-  { key: "producers", href: "/producers", enabled: false, highlight: true }, // fase 4
+  { key: "producers", href: "/producers", enabled: true, highlight: true }, // fase 4
   { key: "contact", href: "/contact", enabled: false }, // fase 5
 ];
 

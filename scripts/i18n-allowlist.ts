@@ -11,6 +11,9 @@ export const allowedMessageKeys: string[] = [
   "LocaleSwitcher.en",
   "Products.detail.metaTitle", // solo placeholders
   "Markets.list.volumeValue", // placeholder + unidad (t)
+  "Markets.map.legend.range", // solo placeholders
+  "Producers.calculator.kgValue", // placeholder + unidad (kg)
+  "Privacy.sections.cookies.title", // préstamo aceptado en español
 ];
 
 /** Valores de contenido (seed y company.ts) que pueden repetirse entre idiomas. */

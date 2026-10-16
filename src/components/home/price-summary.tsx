@@ -1,14 +1,14 @@
 import { getLocale, getTranslations } from "next-intl/server";
-import { IconArrowRight, IconMinus, IconTrendDown, IconTrendUp } from "@/components/icons";
+import { IconArrowRight } from "@/components/icons";
+import { PriceChange } from "@/components/prices/price-change";
 import { Badge } from "@/components/ui/badge";
 import { ButtonLink } from "@/components/ui/button";
-import { cn } from "@/components/ui/cn";
 import { Section, SectionHeader } from "@/components/ui/section";
 import { isEnabled } from "@/config/navigation";
 import { getPriceBoard, type PriceRow } from "@/lib/data/prices";
-import { formatChange, formatPrice } from "@/lib/format";
+import { formatPrice } from "@/lib/format";
 
-/** Categorías que muestra el resumen de la home (la pizarra completa llega en la fase 4). */
+/** Categorías que muestra el resumen de la home (la pizarra completa está en el portal de productores). */
 const HOME_CATEGORIES = ["steer", "heifer", "cow", "heavy_lamb"];
 
 export async function PriceSummary() {
@@ -57,37 +57,17 @@ async function Board() {
               <span className="font-serif text-4xl font-semibold text-ink tabular-nums">{formatPrice(r.price, locale)}</span>
               <span className="text-sm text-ink-muted">{t("unit")}</span>
             </p>
-            <Change row={r} locale={locale} />
+            <PriceChange row={r} className="mt-3" />
           </li>
         ))}
       </ul>
       {isEnabled("producers") && (
         <div className="mt-8">
-          <ButtonLink href="/producers" variant="secondary" icon={<IconArrowRight />}>
+          <ButtonLink href={{ pathname: "/producers", hash: "board" }} variant="secondary" icon={<IconArrowRight />}>
             {t("seeFull")}
           </ButtonLink>
         </div>
       )}
     </div>
-  );
-}
-
-async function Change({ row, locale }: { row: PriceRow; locale: Parameters<typeof formatChange>[1] }) {
-  const t = await getTranslations("Home.prices");
-  if (row.changePct === null || row.changePct === 0) {
-    return (
-      <p className="mt-3 flex items-center gap-1.5 text-sm text-ink-muted">
-        <IconMinus width={16} height={16} />
-        {t("noChange")}
-      </p>
-    );
-  }
-  const up = row.changePct > 0;
-  return (
-    <p className={cn("mt-3 flex items-center gap-1.5 text-sm font-semibold", up ? "text-up" : "text-down")}>
-      {up ? <IconTrendUp width={16} height={16} /> : <IconTrendDown width={16} height={16} />}
-      <span className="sr-only">{up ? t("up") : t("down")}</span>
-      {t("change", { change: formatChange(row.changePct, locale) })}
-    </p>
   );
 }

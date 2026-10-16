@@ -66,9 +66,10 @@ Isotipo, favicon, íconos de interfaz y badges: diseño propio para este proyect
 
 ## Mapas
 
-- Datos del mapa base: © [OpenStreetMap](https://www.openstreetmap.org/copyright) contributors
-  (ODbL). Atribución visible en el control del mapa.
-- Teselas: [CARTO Basemaps](https://carto.com/attributions) (estilo Positron) cuando está
-  configurada `CARTO_BASEMAPS_KEY` (© CARTO en la atribución). Sin clave, teselas estándar de
-  OpenStreetMap según su [política de uso](https://operations.osmfoundation.org/policies/tiles/).
-- Biblioteca: [Leaflet](https://leafletjs.com) (BSD-2-Clause) y react-leaflet (Hippocratic License 2.1).
+- Países: [Natural Earth](https://www.naturalearthdata.com/) 1:110m (dominio público), en
+  TopoJSON vía [world-atlas](https://github.com/topojson/world-atlas) 2.0.2 (ISC). Crédito visible
+  debajo del mapa. Malta no figura en esa escala.
+- Proyección y trazado: [d3-geo](https://github.com/d3/d3-geo) 3.1.1 (ISC), proyección Equal Earth
+  (Šavrič, Patterson y Jenny, 2018). Conversión TopoJSON → GeoJSON con
+  [topojson-client](https://github.com/topojson/topojson-client) 3.1.0 (ISC).
+- Sin teselas ni servicios externos: el SVG se genera en el servidor.

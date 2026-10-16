@@ -5,10 +5,12 @@ import { getCatalog } from "./catalog";
 
 export type Certification = {
   id: string;
+  /** Certificación (norma o rito) o habilitación sanitaria de un mercado. */
+  kind: "certification" | "approval";
   icon: string;
   name: string;
   summary: string;
-  /** Mercados que la exigen o la piden, en el orden de los mercados. */
+  /** Mercados donde se usa, en el orden de los mercados. */
   markets: string[];
 };
 
@@ -37,7 +39,7 @@ export async function getInstitutional(locale: Locale): Promise<{ certifications
 
   const db = publicDb();
   const [certs, markets, links, catalog] = await Promise.all([
-    db.from("certifications").select("id, icon, sort, certification_translations(name, summary)").eq("certification_translations.locale", locale).order("sort"),
+    db.from("certifications").select("id, kind, icon, sort, certification_translations(name, summary)").eq("certification_translations.locale", locale).order("sort"),
     db
       .from("markets")
       .select("id, lat, lng, share_pct, volume_tonnes, sort, market_translations(name, description)")
@@ -57,6 +59,7 @@ export async function getInstitutional(locale: Locale): Promise<{ certifications
   return {
     certifications: certs.data.map((c) => ({
       id: c.id,
+      kind: c.kind === "approval" ? "approval" : "certification",
       icon: c.icon,
       name: c.certification_translations[0]?.name ?? c.id,
       summary: c.certification_translations[0]?.summary ?? "",

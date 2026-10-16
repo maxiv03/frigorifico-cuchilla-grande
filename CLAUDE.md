@@ -17,7 +17,7 @@ Planta ficticia: Sarandí del Yí (departamento de Durazno), sobre ruta 6.
 | next-intl | 4.14.9 | locale vía `next/root-params` |
 | Supabase (`@supabase/supabase-js`) | 2.117.3 | proyecto cloud gratuito, región São Paulo |
 | zod | 4.6.7 | validación de formularios y env |
-| Leaflet + react-leaflet | 1.9.4 / 5.0.0 | solo cliente; teselas CARTO Positron (clave) u OSM |
+| d3-geo + topojson-client + world-atlas | 3.1.1 / 3.1.0 / 2.0.2 | mapa de mercados en SVG, generado en el servidor (Natural Earth 110m) |
 | Playwright | 1.64.1 | solo para capturas de QA |
 | Node | 24 LTS | |
 
@@ -39,13 +39,17 @@ src/
   components/brand/      Logo e Isotype
   components/home/       secciones de la home
   components/cuts/       catálogo: diagrama SVG (geometría + componente), tarjeta, filtros
-  components/markets/    mapa Leaflet (solo cliente) y su envoltorio con reserva del mismo alto
+  components/markets/    mapa SVG (world-map, servidor) + interacción (markets-map, cliente)
+  components/forms/      campos, honeypot, botón de envío y avisos reutilizables (fase 4 en adelante)
+  components/producers/  portal de productores: pizarra, gráfico, calculadora, formulario
   components/quality/    badges genéricos propios de certificaciones
   lib/supabase/          public.ts (clave publicable) y admin.ts (clave secreta)
   lib/prices/            lógica determinista de la pizarra (compartida por seed y cron)
   lib/catalog/           tipos y claves neutras, filtros de URL, slugs de especie, fotos por categoría
   lib/data/              lecturas cacheadas ('use cache'): pizarra, catálogo, certificaciones y mercados
-  lib/map-tiles.ts       teselas del mapa (CARTO con CARTO_BASEMAPS_KEY; sin clave, OSM)
+  lib/markets/           países por mercado, escala de color y geometría proyectada (server-only)
+  lib/forms/             tipos de estado/errores y helpers de Server Actions (insert anon, honeypot, ip_hash)
+  lib/producers/         categorías, rangos, departamentos y cálculo del lote (cliente y servidor)
   lib/metadata.ts        metadata de páginas estáticas (canonical + hreflang + x-default)
   lib/contact.ts         teléfono/WhatsApp/mail desde env + links con "[Demo]"
   lib/format.ts          formatFigure / formatPrice / formatChange
@@ -142,14 +146,40 @@ hex sueltos.
   números de certificado. Ancla por certificación en /calidad: `#cert-<id>`.
 - Mercados: participación, coordenadas y descripción en el seed; cortes principales derivados
   de `cut_markets` (destacados primero). `getInstitutional(locale)` arma todo.
-- Mapa: Leaflet solo en el cliente (`next/dynamic` con `ssr: false`) dentro de `<Suspense>`, con
-  reserva del mismo alto (`MAP_BOX`). Marcadores = `Marker` con `divIcon` (área ∝ porcentaje):
-  enfocables con Tab, Enter abre el popup, el foco entra al popup y Escape lo devuelve al
-  marcador. Debajo, la lista equivalente es la vía accesible principal.
-- Teselas: CARTO Positron exige clave desde 2026 (`CARTO_BASEMAPS_KEY`, pública: viaja en la URL;
-  se lee en el build). Sin clave se usan las teselas estándar de OSM. Atribución siempre visible.
+- Certificaciones en dos grupos (`certifications.kind`): `certification` (HACCP, BRCGS, Halal,
+  Kosher) y `approval` (habilitaciones sanitarias por mercado: UE, Reino Unido, USDA, China). El
+  Reino Unido tiene habilitación propia, no la de la UE. En /calidad el rótulo es "Mercados".
+- Mapa: SVG propio generado en el servidor (Natural Earth 110m vía world-atlas, d3-geo, proyección
+  Equal Earth; `lib/markets/world-geometry.ts`). Sin teselas, sin Leaflet, sin reserva de alto.
+  Países por mercado en `lib/markets/countries.ts` (geometría, no contenido); escala de bordó por
+  participación (`SHARE_BINS`, misma que la leyenda), resto en gris cálido, Uruguay como origen.
+  Un `<g role="button" tabindex=0>` por MERCADO agrupa sus países: hover/foco resalta todos
+  (tono tierra + contorno; foco con trazo punteado) y muestra el panel lateral (escritorio).
+  Enter pasa el foco al panel; Escape lo devuelve. En móvil no hay panel: tocar un mercado lleva a
+  su fila de la lista (`#market-<id>`), que es la vía accesible principal.
+- Participaciones (seed): China 36, UE 17, EE. UU. 14, Israel 8, Brasil 5, Reino Unido 5, Canadá 4,
+  Medio Oriente 4 (Arabia Saudita, EAU, Jordania, Kuwait), Japón 3; otros 4. Volumen = participación
+  × `exportTonnesPerYear` (seed). Home, empresa y mercados leen lo mismo.
 - Contenido institucional (pasos de trazabilidad, bienestar, control, etapas de planta) en los
   mensajes; personas, cifras e historia en `company.ts`.
+
+## Portal de productores y formularios (fase 4)
+- /productores ↔ /producers. Pizarra completa (6 categorías) y gráfico SVG propio de 12 semanas
+  (`getPriceHistory`, mismo caché que la pizarra) en el HTML estático; selector Vacunos/Ovinos en
+  el cliente. Gráfico: color + patrón de línea + etiqueta directa; tabla con los datos debajo.
+- Calculadora (cliente): kg carcasa = cabezas × peso vivo × rendimiento; monto = kg × precio de la
+  pizarra vigente. Rendimiento por defecto el de la categoría (`price_categories.yield_pct`),
+  editable en `LIMITS` (vacunos 45–62 %, ovinos 38–55 %). "Ofrecer este lote" precarga el
+  formulario vía `<OfferProvider>` (remonta el formulario con `key`).
+- Formularios (base reutilizable): Server Action con `useActionState`, zod, errores como códigos
+  traducidos en el cliente (`Forms.errors.*`), honeypot (`website`: responde éxito sin guardar),
+  insert con la clave publicable sin `.select()` (`insertSubmission`), `env`, `ip_hash` y límite de la
+  base (aviso "rate_limited"). Validaciones que dependen de otro campo (peso según especie) van
+  fuera del schema: zod no corre los refinamientos del objeto si otro campo falló.
+- Aceptación de privacidad obligatoria en los tres formularios (`privacy_accepted`, check en la
+  base). /privacidad ↔ /privacy explica qué se guarda, para qué, dónde y la purga a 90 días.
+- Fechas "de hoy" en componentes cliente: solo en el cliente (`useSyncExternalStore` con snapshot de
+  servidor `null`); en el prerender serían las del build y Cache Components lo marca como error.
 
 ## Reglas
 
@@ -260,6 +290,8 @@ npm run check:links -- <url-base>  # links internos y anclas sin errores (cuenta
 npm run qa:layout -- <url-base>    # skip link, menú móvil, idioma, imágenes, overflow
 npm run qa:catalog -- <url-base>   # diagrama por teclado, filtros en URL, idioma, vacío, detalle
 npm run qa:institutional -- <url-base>  # lista = mapa, links a catálogo filtrado, popups con teclado, CLS, 375 px
+npm run qa:producers -- <url-base> [--rate-limit] [--real-submit]  # calculadora, precarga, validación, honeypot,
+                                   # límite (local) y envío real (se borra con la clave secreta; registro en screenshots/producers)
 npm run qa:fixes -- <url-base>     # menú a 375×667, catálogo móvil (tarjetas compactas, vacuno completo a 375), drawer,
                                    # garrón seleccionado, foto de origen cargada (capturas en screenshots/fixes)
 npm run diagram:preview            # PNG de las siluetas en screenshots/diagram
@@ -267,7 +299,7 @@ npm run diagram:preview            # PNG de las siluetas en screenshots/diagram
 
 ## Cierre de cada fase
 typecheck, lint, build, i18n:check (y db:test-permissions si se tocó la base),
-check:links, qa:layout, qa:catalog y qa:institutional contra producción,
+check:links, qa:layout, qa:catalog, qa:institutional, qa:fixes y qa:producers contra producción,
 capturas en escritorio y 375 px de las páginas tocadas en ES y EN (más el catálogo vacuno
 completo a 375 px). Toda captura de página completa pasa por `settlePage` (sin fotos a medio cargar). Esperar revisión
 del usuario antes de pasar a la siguiente fase.
