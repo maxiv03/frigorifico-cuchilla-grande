@@ -84,3 +84,34 @@ export type CertificationSeed = {
   /** Mercados del seed donde se usa (market_certifications); en /calidad, "Mercados". */
   markets: string[];
 };
+
+/** Meta de sostenibilidad (/sostenibilidad): una pestaña por tema. Cifras de una planta mediana. */
+export type SustainabilityGoalSeed = {
+  id: string;
+  topic: "energy" | "water" | "emissions" | "animal_welfare" | "community";
+  pillar: "environment" | "animal_welfare" | "people" | "community";
+  /** Unidad neutra (símbolos): "%", "m³/t", "kWh/t", "kg CO₂e/t", "h". */
+  unit: string;
+  baseline: number;
+  baselineYear: number;
+  target: number;
+  targetYear: number;
+  current: number;
+  status: "achieved" | "on_track" | "in_progress" | "at_risk";
+  sort: number;
+  title: Localized;
+  description: Localized;
+};
+
+/** Noticia ficticia. `slug` se deriva del título con slugify() en el seed. */
+export type NewsSeed = {
+  id: string;
+  publishedAt: string;
+  /** Archivo en public/images/news (crédito en CREDITS.md). */
+  image: string;
+  featured?: boolean;
+  title: Localized;
+  excerpt: Localized;
+  /** Markdown mínimo: párrafos, "## subtítulo" y listas con "- ". */
+  body: Localized;
+};

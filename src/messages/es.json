@@ -59,7 +59,6 @@
         "benefit2": "Habilitada para China, Estados Unidos, Unión Europea e Israel",
         "benefit3": "Trazabilidad individual desde el campo hasta el contenedor",
         "cta": "Pedir cotización",
-        "mailSubject": "[Demo] Pedido de cotización",
         "imageAlt": "Buque portacontenedores navegando, visto desde arriba"
       },
       "producers": {
@@ -103,6 +102,11 @@
       "title": "Dónde se consume nuestra carne",
       "lead": "Principales destinos por participación en las exportaciones.",
       "cta": "Ver el mapa de mercados"
+    },
+    "news": {
+      "eyebrow": "Noticias",
+      "title": "Novedades de la planta",
+      "cta": "Ver todas las noticias"
     }
   },
   "Products": {
@@ -167,7 +171,6 @@
     "card": {
       "quote": "Pedir cotización",
       "quoteFor": "Pedir cotización de {cut}",
-      "quoteSubject": "[Demo] Cotización: {cut} ({species})",
       "zone": "Zona: {zone}"
     },
     "specs": {
@@ -424,7 +427,23 @@
       "option": "Elegí una opción de la lista.",
       "date": "Ingresá una fecha válida.",
       "dateRange": "Elegí una fecha entre el {from} y el {to}.",
-      "privacy": "Para enviar, tenés que aceptar la política de privacidad."
+      "privacy": "Para enviar, tenés que aceptar la política de privacidad.",
+      "selectOne": "Elegí al menos una opción.",
+      "tooMany": "Podés elegir hasta {max}."
+    },
+    "status": {
+      "invalid": {
+        "title": "Revisá los datos marcados",
+        "text": "{count, plural, one {Hay un campo con errores.} other {Hay # campos con errores.}}"
+      },
+      "rateLimited": {
+        "title": "Recibimos demasiados envíos",
+        "text": "Por seguridad, limitamos los envíos desde una misma conexión. Probá de nuevo en unos minutos."
+      },
+      "error": {
+        "title": "No pudimos enviar el formulario",
+        "text": "Ocurrió un error inesperado. Probá de nuevo en un rato o escribinos por WhatsApp."
+      }
     }
   },
   "Producers": {
@@ -578,7 +597,7 @@
         "title": "Qué guardamos",
         "text": "Cuando enviás un formulario guardamos:",
         "items": {
-          "fields": "Los datos que escribiste: por ejemplo, categoría y cantidad de ganado, departamento, fecha disponible, nombre, teléfono, email (si lo dejaste) y comentarios.",
+          "fields": "Los datos que escribiste: por ejemplo, empresa, país, cortes y volumen de un pedido de cotización; categoría y cantidad de ganado de una oferta; nombre, teléfono, email (si lo dejaste), departamento y mensaje.",
           "technical": "La fecha y la hora del envío, el idioma del sitio y el entorno (producción o pruebas).",
           "ip": "Una huella cifrada de tu conexión: un hash de la dirección IP con una clave secreta. No guardamos la IP; la huella solo sirve para limitar los envíos repetidos."
         }
@@ -603,6 +622,293 @@
         "title": "Cookies",
         "text": "El sitio usa una sola cookie técnica (NEXT_LOCALE), que recuerda el idioma elegido. No hay cookies de publicidad ni de analítica."
       }
+    }
+  },
+  "Contact": {
+    "metaTitle": "Contacto",
+    "metaDescription": "Pedí una cotización de cortes vacunos y ovinos o hacé una consulta como productor. Planta en Sarandí del Yí, Durazno.",
+    "eyebrow": "Contacto",
+    "title": "Hablemos",
+    "lead": "Importadores y distribuidores: pedí una cotización con los cortes que te interesan. Productores: consultanos por ventas de hacienda o por tu liquidación.",
+    "tabs": {
+      "label": "Tipo de consulta",
+      "quote": "Pedido de cotización",
+      "producer": "Productores"
+    },
+    "form": {
+      "choose": "Elegí una opción",
+      "sending": "Enviando…",
+      "privacy": "Leí y acepto la <link>política de privacidad</link>.",
+      "demoNote": "Sitio de demostración: el envío se guarda solo para probar el formulario y se borra a los 90 días.",
+      "successDemo": "Este es un sitio de demostración de una empresa ficticia: el pedido no llega a ningún vendedor y nadie te va a contactar. Los datos se borran a los 90 días."
+    },
+    "quote": {
+      "intro": "Contanos qué cortes buscás, en qué presentación y qué volumen estimás. El equipo comercial responde con precio y disponibilidad por embarque.",
+      "submit": "Enviar pedido de cotización",
+      "success": {
+        "title": "¡Gracias! Recibimos tu pedido de cotización",
+        "text": "En un sitio real, el equipo comercial te respondería por email con precio y disponibilidad."
+      },
+      "company": {
+        "legend": "Empresa y contacto",
+        "company": "Empresa",
+        "country": "País",
+        "contactName": "Nombre y apellido",
+        "email": "Email",
+        "phone": "Teléfono",
+        "phoneHint": "Con código de país, por ejemplo +31 20 123 4567."
+      },
+      "order": {
+        "legend": "Pedido",
+        "presentation": "Presentación",
+        "presentationHint": "Enfriado al vacío o congelado.",
+        "presentations": {
+          "chilled": "Enfriado",
+          "frozen": "Congelado",
+          "both": "Enfriado y congelado"
+        },
+        "incoterm": "Incoterm",
+        "incotermHint": "Si ya sabés cómo querés comprar.",
+        "incotermNone": "Sin definir",
+        "incoterms": {
+          "FOB": "FOB — libre a bordo, Montevideo",
+          "CFR": "CFR — costo y flete",
+          "CIF": "CIF — costo, seguro y flete"
+        },
+        "port": "Puerto de destino",
+        "portHint": "Por ejemplo, Róterdam o Qingdao.",
+        "message": "Mensaje",
+        "messageHint": "Calibres, frecuencia de embarques, certificaciones que necesitás…"
+      },
+      "volume": {
+        "label": "Volumen estimado por mes",
+        "unit": "Unidad",
+        "unitHint": "Número entero por mes. Toneladas: {tonnes}; contenedores: {containers}.",
+        "range": "entre {min} y {max}",
+        "units": {
+          "tonnes_month": "toneladas por mes",
+          "containers_month": "contenedores por mes"
+        }
+      },
+      "cuts": {
+        "label": "Cortes de interés",
+        "hint": "Elegí uno o más del catálogo (hasta {max}). Podés buscar por nombre.",
+        "chosen": "{count, plural, one {# corte elegido} other {# cortes elegidos}}",
+        "remove": "Quitar {cut}",
+        "search": "Buscar cortes",
+        "searchPlaceholder": "Buscar por nombre, por ejemplo lomo",
+        "matches": "{count, plural, =0 {Ningún corte coincide} one {# corte coincide} other {# cortes coinciden}}",
+        "total": "{count} cortes en el catálogo",
+        "none": "No hay cortes con ese nombre."
+      }
+    },
+    "producer": {
+      "offerText": "¿Querés ofrecer un lote? Usá el formulario del portal de productores, con categoría, cabezas y peso.",
+      "offerLink": "Ir a “Ofrecer ganado”",
+      "legend": "Tu consulta",
+      "name": "Nombre y apellido",
+      "phone": "Teléfono",
+      "phoneHint": "Con código de área, por ejemplo 099 123 456.",
+      "department": "Departamento",
+      "reason": "Motivo",
+      "reasons": {
+        "sell": "Vender hacienda",
+        "settlement": "Consulta de liquidación",
+        "other": "Otro"
+      },
+      "message": "Mensaje",
+      "messageHint": "Contanos en qué te podemos ayudar.",
+      "submit": "Enviar consulta",
+      "success": {
+        "title": "¡Gracias! Recibimos tu consulta",
+        "text": "En un sitio real, el equipo de compras de hacienda te llamaría al teléfono que dejaste."
+      }
+    },
+    "aside": {
+      "title": "Datos de contacto",
+      "plant": "Planta y oficinas",
+      "team": "Equipo",
+      "whatsapp": "WhatsApp del equipo comercial",
+      "whatsappMessage": "[Demo] Hola, los contacto desde la página de contacto.",
+      "mail": "Mail del equipo",
+      "mailSubject": "[Demo] Consulta desde el sitio",
+      "hours": {
+        "title": "Horario",
+        "fictitious": "Ficticio",
+        "office": {
+          "label": "Oficina comercial",
+          "value": "Lunes a viernes, de 8:00 a 17:00"
+        },
+        "livestock": {
+          "label": "Recepción de hacienda",
+          "value": "Domingo a viernes, con turno previo"
+        },
+        "dispatch": {
+          "label": "Expedición",
+          "value": "Lunes a sábado, de 6:00 a 22:00"
+        }
+      }
+    },
+    "location": {
+      "mapTitle": "Ubicación de la planta",
+      "mapDesc": "Mapa de Uruguay con la planta en Sarandí del Yí, departamento de Durazno, sobre ruta 6, y el puerto de Montevideo al sur.",
+      "port": "Montevideo (puerto)",
+      "plant": "Planta",
+      "plantPlace": "Sarandí del Yí",
+      "attribution": "Mapa: Natural Earth (dominio público). Ubicación aproximada; empresa ficticia."
+    }
+  },
+  "Sustainability": {
+    "metaTitle": "Sostenibilidad",
+    "metaDescription": "Metas de energía, agua, emisiones, bienestar animal y comunidad, con línea de base, objetivo y avance.",
+    "eyebrow": "Sostenibilidad",
+    "title": "Metas medibles, avances reales",
+    "lead": "Publicamos nuestras metas con su línea de base, el objetivo y el año comprometido, y cómo vamos. Algunas ya se cumplieron; otras van atrasadas, y también lo contamos.",
+    "tabsLabel": "Temas",
+    "topics": {
+      "energy": {
+        "tab": "Energía",
+        "title": "Energía",
+        "text": "La refrigeración es el mayor consumo de la planta. El parque solar propio y la eficiencia de los equipos de frío son las dos palancas."
+      },
+      "water": {
+        "tab": "Agua",
+        "title": "Agua",
+        "text": "Medimos el agua por sector y tratamos todo el efluente antes de devolverlo al ambiente. Parte del agua tratada se reutiliza fuera del área de producto."
+      },
+      "emissions": {
+        "tab": "Emisiones",
+        "title": "Emisiones",
+        "text": "Medimos las emisiones directas y las de la energía comprada por tonelada procesada. Las de la producción ganadera quedan fuera de estas metas."
+      },
+      "animal_welfare": {
+        "tab": "Bienestar animal",
+        "title": "Bienestar animal",
+        "text": "Viajes cortos, manejo tranquilo en los corrales y un indicador compartido con cada productor."
+      },
+      "community": {
+        "tab": "Comunidad",
+        "title": "Comunidad",
+        "text": "La planta es uno de los principales empleadores de la zona: priorizamos el empleo local y la formación dentro del horario de trabajo."
+      }
+    },
+    "status": {
+      "achieved": "Cumplida",
+      "on_track": "En camino",
+      "in_progress": "En curso",
+      "at_risk": "Atrasada"
+    },
+    "baseline": "Línea de base ({year})",
+    "current": "Actual",
+    "target": "Objetivo ({year})",
+    "progress": "Avance",
+    "progressText": "{pct} % del camino hacia el objetivo de {year}",
+    "percent": "{value} %",
+    "withUnit": "{value} {unit}",
+    "method": {
+      "title": "Cómo medimos",
+      "text": "Cifras ficticias de una planta mediana, con unidades por tonelada de carcasa procesada. No usamos sellos ni certificaciones ambientales: mostramos los números y su evolución.",
+      "news": "Leé las noticias sobre el parque solar y la ampliación de frío"
+    }
+  },
+  "News": {
+    "metaTitle": "Noticias",
+    "metaDescription": "Novedades del Frigorífico Cuchilla Grande: inversiones, mercados, productores y nuevas líneas de productos.",
+    "eyebrow": "Noticias",
+    "title": "Novedades de la planta",
+    "lead": "Inversiones, mercados, productores y nuevos productos. Noticias ficticias de una empresa ficticia.",
+    "readMore": "Leer la noticia",
+    "breadcrumb": "Ruta de navegación",
+    "back": "← Volver a noticias",
+    "more": "Más noticias",
+    "fictitious": "Noticia ficticia",
+    "metaDetail": "{title} · Noticias",
+    "images": {
+      "parque-solar": "Filas de paneles solares sobre pasto verde bajo un cielo con nubes",
+      "ampliacion-frio": "Nave industrial nueva y vacía, con estructura de acero y piso de hormigón",
+      "jornada-productores": "Jinetes arreando ganado en un campo de pasto alto",
+      "feria-alimentos": "Visitantes recorriendo los pasillos de una feria comercial",
+      "porcionados-vacunos": "Dos bifes anchos crudos sobre una tabla de madera, junto a una cuchilla",
+      "puerto-contenedores": "Puerto de contenedores con grúas y un buque en el muelle al atardecer"
+    }
+  },
+  "Careers": {
+    "metaTitle": "Trabajá con nosotros",
+    "metaDescription": "Áreas de trabajo, beneficios y cómo postularte al Frigorífico Cuchilla Grande, en Sarandí del Yí.",
+    "eyebrow": "Trabajá con nosotros",
+    "title": "Un trabajo con oficio, cerca de casa",
+    "lead": "Somos {employees} personas en Sarandí del Yí. Buscamos gente con ganas de aprender un oficio y crecer en una planta que exporta a más de 30 países.",
+    "areas": {
+      "title": "Áreas de trabajo",
+      "lead": "Hay lugar para perfiles con y sin experiencia: la mayoría de los oficios se aprenden en la planta.",
+      "items": {
+        "production": {
+          "title": "Producción",
+          "text": "Desosado, cortes, envasado y armado de cajas, con capacitación en cada puesto."
+        },
+        "quality": {
+          "title": "Calidad e inocuidad",
+          "text": "Controles en línea, laboratorio, auditorías y documentación para cada mercado."
+        },
+        "maintenance": {
+          "title": "Mantenimiento y frío",
+          "text": "Electricistas, mecánicos y técnicos en refrigeración industrial."
+        },
+        "livestock": {
+          "title": "Hacienda y corrales",
+          "text": "Recepción de animales, manejo en corrales y bienestar animal."
+        },
+        "logistics": {
+          "title": "Logística y expedición",
+          "text": "Cámaras, armado de contenedores, documentación de embarque y transporte."
+        },
+        "office": {
+          "title": "Administración y comercio exterior",
+          "text": "Ventas, compras, finanzas, recursos humanos y sistemas."
+        }
+      }
+    },
+    "benefits": {
+      "title": "Beneficios",
+      "lead": "Además del salario y los beneficios de ley, en la planta tenés:",
+      "items": {
+        "transport": {
+          "title": "Transporte",
+          "text": "Ómnibus desde Sarandí del Yí y Durazno en todos los turnos."
+        },
+        "canteen": {
+          "title": "Comedor",
+          "text": "Almuerzo y cena en el comedor de la planta."
+        },
+        "training": {
+          "title": "Formación",
+          "text": "24 horas de formación por persona al año, dentro del horario."
+        },
+        "health": {
+          "title": "Salud",
+          "text": "Servicio médico en planta y cobertura complementaria."
+        },
+        "uniform": {
+          "title": "Equipo de trabajo",
+          "text": "Ropa térmica y equipo de protección entregados por la empresa."
+        },
+        "internal": {
+          "title": "Búsquedas internas",
+          "text": "Las vacantes se ofrecen primero al personal de la planta."
+        }
+      }
+    },
+    "apply": {
+      "title": "Postulate",
+      "text": "Mandanos tu currículum por mail. No hace falta que haya una búsqueda abierta: lo guardamos para las próximas.",
+      "steps": {
+        "one": "Adjuntá tu currículum en PDF.",
+        "two": "Contanos en qué área te gustaría trabajar.",
+        "three": "Indicá tu localidad y un teléfono de contacto."
+      },
+      "demo": "Sitio de demostración: el mail va al equipo del proyecto, no a una empresa real. No envíes datos personales.",
+      "cta": "Postularme por mail",
+      "subject": "[Demo] Postulación"
     }
   }
 }

@@ -5,9 +5,10 @@
  */
 import { company } from "@/data/company";
 import type { Locale } from "@/i18n/routing";
-import { initialHistory, mondayOf } from "@/lib/prices/rotation";
+import { addWeeks, mondayOf, orderViolations, quotesBetween } from "@/lib/prices/rotation";
 import { slugify } from "@/lib/catalog/slug";
-import { certifications, cutZones, cuts, locales, markets, priceCategories } from "../supabase/seed";
+import { LIMITS } from "@/lib/producers/livestock";
+import { certifications, cutZones, cuts, locales, markets, news, priceCategories, sustainabilityGoals } from "../supabase/seed";
 import { adminClient } from "./lib/db";
 
 const HISTORY_WEEKS = 12;
@@ -22,6 +23,12 @@ async function upsert(table: string, rows: object[], onConflict: string) {
 }
 
 async function seedPrices() {
+  // El rendimiento por defecto de cada categoría tiene que estar dentro del rango de su especie
+  // (la calculadora lo usa como valor inicial y valida contra ese rango).
+  for (const c of priceCategories) {
+    const { min, max } = LIMITS[c.species].yield;
+    if (c.yieldPct < min || c.yieldPct > max) throw new Error(`${c.id}: rendimiento ${c.yieldPct} fuera de ${min}–${max}`);
+  }
   await upsert(
     "price_categories",
     priceCategories.map((c) => ({
@@ -39,23 +46,24 @@ async function seedPrices() {
     "category_id,locale",
   );
 
-  // El historial solo se genera la primera vez; después lo mantiene el cron.
-  const { count, error } = await db.from("price_quotes").select("*", { count: "exact", head: true });
+  // El precio es función de (categoría, lunes), así que regenerar es idempotente: se reescriben
+  // todas las semanas desde la más antigua cargada (como mínimo las últimas 12) hasta la vigente.
+  const { data: first, error } = await db
+    .from("price_quotes")
+    .select("week_start")
+    .order("week_start", { ascending: true })
+    .limit(1)
+    .maybeSingle();
   if (error) throw new Error(`price_quotes: ${error.message}`);
-  if (count && count > 0) {
-    console.log(`  · price_quotes ya tiene ${count} filas (lo mantiene el cron)`);
-    return;
-  }
   const current = mondayOf(new Date());
+  const window = addWeeks(current, -(HISTORY_WEEKS - 1));
+  const from = first && first.week_start < window ? first.week_start : window;
+  const quotes = quotesBetween(priceCategories, from, current);
+  const violations = orderViolations(priceCategories, quotes);
+  if (violations.length) throw new Error(`orden de la pizarra: ${violations.join("; ")}`);
   await upsert(
     "price_quotes",
-    priceCategories.flatMap((c) =>
-      initialHistory(c.id, c.basePrice, current, HISTORY_WEEKS).map((q) => ({
-        category_id: q.categoryId,
-        week_start: q.weekStart,
-        price_usd_kg: q.price,
-      })),
-    ),
+    quotes.map((q) => ({ category_id: q.categoryId, week_start: q.weekStart, price_usd_kg: q.price })),
     "category_id,week_start",
   );
 }
@@ -150,6 +158,52 @@ async function seedCatalog() {
   );
 }
 
+async function seedEditorial() {
+  await upsert(
+    "sustainability_goals",
+    sustainabilityGoals.map((g) => ({
+      id: g.id,
+      topic: g.topic,
+      pillar: g.pillar,
+      unit: g.unit,
+      baseline: g.baseline,
+      baseline_year: g.baselineYear,
+      target: g.target,
+      current: g.current,
+      target_year: g.targetYear,
+      status: g.status,
+      sort: g.sort,
+    })),
+    "id",
+  );
+  await upsert(
+    "sustainability_goal_translations",
+    sustainabilityGoals.flatMap((g) =>
+      localeCodes.map((locale) => ({ goal_id: g.id, locale, title: g.title[locale], description: g.description[locale] })),
+    ),
+    "goal_id,locale",
+  );
+  await upsert(
+    "news_posts",
+    news.map((n) => ({ id: n.id, published_at: n.publishedAt, image: n.image, featured: n.featured ?? false })),
+    "id",
+  );
+  await upsert(
+    "news_translations",
+    news.flatMap((n) =>
+      localeCodes.map((locale) => ({
+        post_id: n.id,
+        locale,
+        slug: slugify(n.title[locale]),
+        title: n.title[locale],
+        excerpt: n.excerpt[locale],
+        body_md: n.body[locale],
+      })),
+    ),
+    "post_id,locale",
+  );
+}
+
 async function main() {
   console.log("Seed →", process.env.SUPABASE_URL);
   await upsert(
@@ -159,6 +213,7 @@ async function main() {
   );
   await seedPrices();
   await seedCatalog();
+  await seedEditorial();
   console.log("Seed completo.");
 }
 

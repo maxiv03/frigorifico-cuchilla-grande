@@ -139,11 +139,11 @@ async function main() {
   check("detalle: breadcrumb", (await page.locator('nav[aria-label="Ruta de navegación"] [aria-current=page]').count()) === 1);
   const mini = await page.locator('svg[role=img] g[data-zone="rump"] path').first().getAttribute("fill");
   check("detalle: mini-diagrama resalta la zona", !!mini?.startsWith("url(#hatch"), String(mini));
-  const mailto = await page.locator('a[href^="mailto:"]', { hasText: "Pedir cotización" }).first().getAttribute("href");
+  const quote = await page.locator('[data-quote-link="beef_rump_cap"]', { hasText: "Pedir cotización" }).first().getAttribute("href");
   check(
-    "detalle: cotización por mail con [Demo] y el corte",
-    !!mailto && decodeURIComponent(mailto).includes("[Demo] Cotización: Tapa de cuadril"),
-    mailto ? decodeURIComponent(mailto) : "",
+    "detalle: cotización → /contacto con el corte precargado (id neutro)",
+    quote === "/es/contacto?tab=quote&cut=beef_rump_cap",
+    String(quote),
   );
   // Con Cache Components no existe dynamicParams=false: el primer pedido a un slug desconocido
   // sale del shell genérico de la ruta (200) con la página 404 y noindex; los siguientes, 404.

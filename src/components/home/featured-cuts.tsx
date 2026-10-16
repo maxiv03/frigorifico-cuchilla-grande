@@ -3,7 +3,6 @@ import { CutCard } from "@/components/cuts/cut-card";
 import { IconArrowRight } from "@/components/icons";
 import { ButtonLink } from "@/components/ui/button";
 import { Section, SectionHeader } from "@/components/ui/section";
-import { contactInfo } from "@/lib/contact";
 import { getCatalog } from "@/lib/data/catalog";
 
 /** Cortes destacados (flag `featured` en el seed) con link al catálogo. */
@@ -13,7 +12,6 @@ export async function FeaturedCuts() {
   const catalog = await getCatalog(locale);
   const zoneNames = new Map(catalog.zones.map((z) => [`${z.species}:${z.key}`, z.name]));
   const featured = catalog.cuts.filter((c) => c.featured).slice(0, 6);
-  const { email } = contactInfo();
   if (featured.length === 0) return null;
 
   return (
@@ -29,7 +27,6 @@ export async function FeaturedCuts() {
           <li key={c.id} className="flex">
             <CutCard
               cut={{ ...c, zoneName: zoneNames.get(`${c.species}:${c.zone}`) ?? c.zone }}
-              email={email}
               visual="photo"
               className="w-full"
             />

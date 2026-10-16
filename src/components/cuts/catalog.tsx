@@ -24,7 +24,6 @@ export type CatalogProps = {
   cuts: CatalogCutLite[];
   zones: { key: string; species: Species; name: string }[];
   markets: { id: string; name: string }[];
-  email: string;
   /** Contenido estático (datos de presentación): junto a los filtros desde lg. */
   aside?: ReactNode;
   /** Versión plegable del mismo contenido, debajo de los resultados en pantallas chicas. */
@@ -49,7 +48,6 @@ function Catalog({
   cuts,
   zones,
   markets,
-  email,
   aside,
   asideCollapsed,
   urlQuery,
@@ -373,7 +371,7 @@ function Catalog({
           <ul className="mt-6 grid gap-3 sm:mt-8 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4">
             {results.map((c, i) => (
               <li key={c.id} className="flex">
-                <CutCard cut={c} email={email} eager={eager && i < 4} className="w-full" />
+                <CutCard cut={c} eager={eager && i < 4} className="w-full" />
               </li>
             ))}
           </ul>

@@ -5,6 +5,8 @@
  * Recorrido en anchura hasta 4 niveles (cada página se explora desde su menor profundidad, así
  * la cobertura no depende del orden de los links). Las anclas se validan contra los ids de la
  * página de destino, también entre páginas (/es/calidad#cert-halal).
+ * Cotizaciones: falla si queda algún mailto de "Pedir cotización" (asunto con cotización/quote) y
+ * verifica los links "Pedir cotización" (data-quote-link) a /contacto?tab=quote&cut=<id>.
  */
 import { routing } from "@/i18n/routing";
 
@@ -19,6 +21,9 @@ const seen = new Map<string, number>();
 const idsByPage = new Map<string, Set<string>>();
 const anchors: { page: string; id: string; from: string }[] = [];
 const failures: string[] = [];
+const QUOTE_MAILTO = /cotizaci|quot/i;
+let quoteLinks = 0;
+let mailtos = 0;
 
 /** Visita una página; devuelve los links internos encontrados. */
 async function visit(key: string, from: string): Promise<string[]> {
@@ -39,8 +44,23 @@ async function visit(key: string, from: string): Promise<string[]> {
   }
   idsByPage.set(key, new Set([...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1])));
   const links: string[] = [];
+  for (const [tag] of html.matchAll(/<a\s[^>]*>/g)) {
+    const quoteCut = tag.match(/data-quote-link="([^"]+)"/)?.[1];
+    if (!quoteCut) continue;
+    const href = (tag.match(/href="([^"]+)"/)?.[1] ?? "").replace(/&amp;/g, "&");
+    const url = new URL(href, origin);
+    quoteLinks++;
+    if (!/^\/(es\/contacto|en\/contact)$/.test(url.pathname) || url.searchParams.get("tab") !== "quote" || url.searchParams.get("cut") !== quoteCut) {
+      failures.push(`link de cotización mal formado ${href}  (en ${key})`);
+    }
+  }
   for (const [, href] of html.matchAll(/<a[^>]+href="([^"]+)"/g)) {
     const h = href.replace(/&amp;/g, "&");
+    if (h.startsWith("mailto:")) {
+      mailtos++;
+      const subject = new URL(h).searchParams.get("subject") ?? "";
+      if (QUOTE_MAILTO.test(subject)) failures.push(`mailto de cotización (debe ir a /contacto) "${subject}"  (en ${key})`);
+    }
     if (/^(mailto:|tel:|https?:\/\/(?!localhost))/.test(h) && !h.startsWith(origin)) continue;
     const next = new URL(h, new URL(key, origin));
     if (next.origin !== origin || next.pathname.startsWith("/_next")) continue;
@@ -73,6 +93,7 @@ async function main() {
     process.exit(1);
   }
   console.log(`\n✓ ${seen.size} URLs internas y ${new Set(anchors.map((a) => `${a.page}#${a.id}`)).size} anclas sin errores.`);
+  console.log(`✓ Ningún mailto de cotización (${mailtos} mailto revisados); ${quoteLinks} links "Pedir cotización" a /contacto con el corte.`);
 }
 
 main().catch((e) => {

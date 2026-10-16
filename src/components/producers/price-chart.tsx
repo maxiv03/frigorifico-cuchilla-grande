@@ -131,14 +131,14 @@ export async function PriceChart({ species, rows, history }: { species: "beef" |
             </thead>
             <tbody>
               {weeks.map((w, i) => (
-                <tr key={w} className="border-b border-line/60">
+                <tr key={w} data-week={w} className="border-b border-line/60">
                   <th scope="row" className="py-1.5 pr-4 font-normal">
                     {long.format(date(w))}
                   </th>
                   {cats.map((c) => {
                     const v = history.series[c.categoryId]?.[i];
                     return (
-                      <td key={c.categoryId} className="py-1.5 pr-4">
+                      <td key={c.categoryId} data-series={c.categoryId} data-value={v ?? undefined} className="py-1.5 pr-4">
                         {v == null ? "—" : formatPrice(v, locale)}
                       </td>
                     );

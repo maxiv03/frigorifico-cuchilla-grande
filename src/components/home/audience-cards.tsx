@@ -5,8 +5,7 @@ import { IconArrowRight, IconCheck, IconWhatsApp } from "@/components/icons";
 import { ButtonAnchor, ButtonLink } from "@/components/ui/button";
 import { Card, CardBody } from "@/components/ui/card";
 import { Section, SectionHeader } from "@/components/ui/section";
-import { isEnabled } from "@/config/navigation";
-import { mailtoUrl, whatsappUrl } from "@/lib/contact";
+import { whatsappUrl } from "@/lib/contact";
 import buyersImg from "../../../public/images/home/compradores-buque.jpg";
 import producersImg from "../../../public/images/home/productores-hereford.jpg";
 
@@ -26,15 +25,9 @@ export async function AudienceCards() {
           text={t("buyers.text")}
           benefits={[t("buyers.benefit1"), t("buyers.benefit2"), t("buyers.benefit3")]}
           cta={
-            isEnabled("contact") ? (
-              <ButtonLink href={{ pathname: "/contact", query: { tab: "quote" } }} icon={<IconArrowRight />}>
-                {t("buyers.cta")}
-              </ButtonLink>
-            ) : (
-              <ButtonAnchor href={mailtoUrl(t("buyers.mailSubject"))} icon={<IconArrowRight />}>
-                {t("buyers.cta")}
-              </ButtonAnchor>
-            )
+            <ButtonLink href={{ pathname: "/contact", query: { tab: "quote" } }} icon={<IconArrowRight />}>
+              {t("buyers.cta")}
+            </ButtonLink>
           }
         />
         <AudienceCard

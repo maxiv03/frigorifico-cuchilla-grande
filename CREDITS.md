@@ -39,6 +39,20 @@ Carne cruda, sin faena ni marcas. Recorte 4:3 a 1200×900.
 
 [Pexels License](https://www.pexels.com/license/): uso gratuito, sin atribución obligatoria.
 
+### Fotos de noticias
+
+Recorte 16:10 a 1600×1000. Escenas genéricas sin marcas legibles de empresas reales; la feria no
+es ninguna feria identificable. Todas bajo la Unsplash License.
+
+| Archivo | Noticia | Autor | Fuente |
+|---|---|---|---|
+| `public/images/news/parque-solar.jpg` | Parque solar | American Public Power Association ([@publicpowerorg](https://unsplash.com/@publicpowerorg)) | [unsplash.com/photos/513dBrMJ_5w](https://unsplash.com/photos/513dBrMJ_5w) |
+| `public/images/news/jornada-productores.jpg` | Jornada con productores | Bailey Alexander ([@baileyal3xander](https://unsplash.com/@baileyal3xander)) | [unsplash.com/photos/UsIH5HIHvbE](https://unsplash.com/photos/UsIH5HIHvbE) |
+| `public/images/news/feria-alimentos.jpg` | Feria internacional de alimentos | Jonny Gios ([@supergios](https://unsplash.com/@supergios)) | [unsplash.com/photos/-fPcLPByFm0](https://unsplash.com/photos/-fPcLPByFm0) |
+| `public/images/news/ampliacion-frio.jpg` | Ampliación de frío (nave en obra) | Brian Wangenheim ([@brianwangenheim](https://unsplash.com/@brianwangenheim)) | [unsplash.com/photos/D7A6CiIFVk8](https://unsplash.com/photos/D7A6CiIFVk8) |
+| `public/images/news/porcionados-vacunos.jpg` | Porcionados vacunos (bife ancho, vacuno) | Sergey Kotenev ([@sergeykotenev](https://unsplash.com/@sergeykotenev)) | [unsplash.com/photos/VpSwmt0-FMQ](https://unsplash.com/photos/VpSwmt0-FMQ) |
+| `public/images/news/puerto-contenedores.jpg` | Embarque a Medio Oriente | Timelab ([@timelabpro](https://unsplash.com/@timelabpro)) | [unsplash.com/photos/yx20mpDyr2I](https://unsplash.com/photos/yx20mpDyr2I) |
+
 ## Tipografías
 
 - [Source Serif 4](https://fonts.google.com/specimen/Source+Serif+4) y
@@ -73,3 +87,5 @@ Isotipo, favicon, íconos de interfaz y badges: diseño propio para este proyect
   (Šavrič, Patterson y Jenny, 2018). Conversión TopoJSON → GeoJSON con
   [topojson-client](https://github.com/topojson/topojson-client) 3.1.0 (ISC).
 - Sin teselas ni servicios externos: el SVG se genera en el servidor.
+- Mapa de ubicación (contacto): Uruguay, Argentina y Brasil de Natural Earth 1:50m (world-atlas),
+  proyección Mercator, generado en el servidor. Ubicación de la planta aproximada (ficticia).

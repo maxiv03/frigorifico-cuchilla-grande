@@ -34,7 +34,7 @@ src/
   messages/{es,en}.json  textos de interfaz
   data/company.ts        ÚNICA fuente de verdad de cifras y datos de la empresa
   config/navigation.ts   ítems de menú con flag `enabled` por sección
-  components/ui/         Button, Section, Container, Card, Badge (+ cn)
+  components/ui/         Button, Section, Container, Card, Badge, Tabs (+ cn)
   components/layout/     header, footer, menú móvil, selector de idioma
   components/brand/      Logo e Isotype
   components/home/       secciones de la home
@@ -42,13 +42,19 @@ src/
   components/markets/    mapa SVG (world-map, servidor) + interacción (markets-map, cliente)
   components/forms/      campos, honeypot, botón de envío y avisos reutilizables (fase 4 en adelante)
   components/producers/  portal de productores: pizarra, gráfico, calculadora, formulario
+  components/contact/    pestañas de contacto, formularios de cotización y productores, selector de cortes, mapa
+  components/news/       tarjeta de noticia y markdown mínimo del cuerpo
   components/quality/    badges genéricos propios de certificaciones
   lib/supabase/          public.ts (clave publicable) y admin.ts (clave secreta)
   lib/prices/            lógica determinista de la pizarra (compartida por seed y cron)
   lib/catalog/           tipos y claves neutras, filtros de URL, slugs de especie, fotos por categoría
-  lib/data/              lecturas cacheadas ('use cache'): pizarra, catálogo, certificaciones y mercados
+  lib/data/              lecturas cacheadas ('use cache'): pizarra, catálogo, certificaciones, mercados,
+                         noticias y metas de sostenibilidad (editorial.ts)
+  lib/news/              fotos de noticias (clave → imagen; alt en News.images)
   lib/markets/           países por mercado, escala de color y geometría proyectada (server-only)
-  lib/forms/             tipos de estado/errores y helpers de Server Actions (insert anon, honeypot, ip_hash)
+  lib/forms/             tipos de estado/errores, helpers de Server Actions (insert anon, honeypot, ip_hash)
+                         y reglas de los formularios de contacto (contact-rules.ts)
+  lib/location-geometry.ts  mapa de ubicación de contacto (Natural Earth 50m, server-only)
   lib/producers/         categorías, rangos, departamentos y cálculo del lote (cliente y servidor)
   lib/metadata.ts        metadata de páginas estáticas (canonical + hreflang + x-default)
   lib/contact.ts         teléfono/WhatsApp/mail desde env + links con "[Demo]"
@@ -178,8 +184,40 @@ hex sueltos.
   fuera del schema: zod no corre los refinamientos del objeto si otro campo falló.
 - Aceptación de privacidad obligatoria en los tres formularios (`privacy_accepted`, check en la
   base). /privacidad ↔ /privacy explica qué se guarda, para qué, dónde y la purga a 90 días.
+- Pizarra: el precio es función SOLO de (categoría, lunes) (`lib/prices/rotation.ts`): índice de
+  mercado semanal por especie (paseo con reversión desde 2025-01-06) × base × ruido chico por
+  categoría, y orden garantizado dentro de cada especie según `sort` (novillo > vaquillona > vaca;
+  cordero pesado > borrego > oveja; diferencia mínima `MIN_GAP`). El seed reescribe todo el historial
+  (idempotente) y el cron completa las semanas que falten con la misma fórmula. qa:producers verifica
+  orden y fórmula en las 12 semanas. El rendimiento por defecto de cada categoría tiene que estar
+  dentro del rango de su especie (`LIMITS`); el seed lo valida.
+- Errores de formularios: aviso y campos con `scroll-below-header` (scroll-margin = header + 1rem);
+  después de un envío con errores, `revealFirstError` lleva el aviso a la vista y pone el foco en el
+  primer campo sin volver a desplazar (`useResponseFocus`). qa:producers y qa:contact miden a 375 px
+  que el aviso y el campo queden debajo del header.
 - Fechas "de hoy" en componentes cliente: solo en el cliente (`useSyncExternalStore` con snapshot de
   servidor `null`); en el prerender serían las del build y Cache Components lo marca como error.
+
+## Contacto y secundarias (fase 5)
+- /contacto ↔ /contact: pestañas accesibles (`components/ui/tabs.tsx`: tablist, flechas, Inicio/Fin,
+  tabindex itinerante) con la pestaña en la URL (`?tab=quote|producer`, History API). La página lee
+  searchParams dentro de `<Suspense>` (fallback: pestaña de cotización sin precarga).
+- "Pedir cotización" (tarjetas, detalle de corte, home) → `/contacto?tab=quote&cut=<id>` con el id
+  global neutro (`beef_tenderloin`): precarga el corte en cualquier idioma; ids desconocidos se
+  ignoran. No queda ningún mailto de cotización: `check:links` falla si aparece uno.
+- Pedido de cotización → `quote_requests` (cut_ids, volume_amount/unit, incoterm, destination_port;
+  `cuts_of_interest` y `volume` se siguen llenando como texto). Cortes validados contra el catálogo.
+  Consulta de productores → `producer_contacts` (reason). Mismo patrón de la fase 4 (Server Action,
+  zod, honeypot, insert anon sin `.select()`, límite de la base). El éxito aclara que es un sitio demo.
+- Sostenibilidad: `sustainability_goals` (topic = pestaña, baseline_year); avance =
+  (actual − base) / (objetivo − base). Cifras modestas, sin sellos ambientales.
+- Noticias: `news_posts` + `news_translations` (slug por idioma derivado del título), cuerpo en markdown
+  mínimo (párrafos, `##`, listas). Detalle con generateStaticParams, `instant = false`, alternates y
+  `<SetAlternates>`. Sin declaraciones de personas u organismos reales.
+- Trabajá con nosotros: estático, postulación por mail con asunto "[Demo] Postulación" (sin CV).
+- Todos los flags de navegación quedan activos.
+- Scripts de Playwright con tsx: dentro de `page.evaluate` no declarar funciones con nombre (tsx
+  inyecta `__name`, que no existe en la página).
 
 ## Reglas
 
@@ -292,6 +330,8 @@ npm run qa:catalog -- <url-base>   # diagrama por teclado, filtros en URL, idiom
 npm run qa:institutional -- <url-base>  # lista = mapa, links a catálogo filtrado, popups con teclado, CLS, 375 px
 npm run qa:producers -- <url-base> [--rate-limit] [--real-submit]  # calculadora, precarga, validación, honeypot,
                                    # límite (local) y envío real (se borra con la clave secreta; registro en screenshots/producers)
+npm run qa:contact -- <url-base> [--real-submit]  # pestañas (teclado y URL), precarga del corte desde el catálogo,
+                                   # validaciones, honeypot, errores a 375 px y un envío real por formulario (se borran)
 npm run qa:fixes -- <url-base>     # menú a 375×667, catálogo móvil (tarjetas compactas, vacuno completo a 375), drawer,
                                    # garrón seleccionado, foto de origen cargada (capturas en screenshots/fixes)
 npm run diagram:preview            # PNG de las siluetas en screenshots/diagram
@@ -299,7 +339,7 @@ npm run diagram:preview            # PNG de las siluetas en screenshots/diagram
 
 ## Cierre de cada fase
 typecheck, lint, build, i18n:check (y db:test-permissions si se tocó la base),
-check:links, qa:layout, qa:catalog, qa:institutional, qa:fixes y qa:producers contra producción,
+check:links, qa:layout, qa:catalog, qa:institutional, qa:fixes, qa:producers y qa:contact contra producción,
 capturas en escritorio y 375 px de las páginas tocadas en ES y EN (más el catálogo vacuno
 completo a 375 px). Toda captura de página completa pasa por `settlePage` (sin fotos a medio cargar). Esperar revisión
 del usuario antes de pasar a la siguiente fase.

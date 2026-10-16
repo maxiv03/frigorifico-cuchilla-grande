@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
-import { IconMail } from "@/components/icons";
+import { IconArrowRight } from "@/components/icons";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/components/ui/cn";
 import { CutDiagram } from "./cut-diagram";
@@ -8,7 +8,6 @@ import { Link } from "@/i18n/navigation";
 import { cutImage } from "@/lib/catalog/images";
 import { speciesSlugs } from "@/lib/catalog/species";
 import type { Bone, Presentation, Species } from "@/lib/catalog/types";
-import { buildMailto } from "@/lib/mailto";
 
 export type CardCut = {
   id: string;
@@ -25,8 +24,6 @@ export type CardCut = {
 
 type Props = {
   cut: CardCut;
-  /** Mail del equipo (desde env, resuelto en el servidor). */
-  email: string;
   headingLevel?: "h2" | "h3";
   /**
    * Ilustración: mini-silueta con la zona resaltada (catálogo) o foto de la pieza (destacados
@@ -43,13 +40,13 @@ type Props = {
 /**
  * Tarjeta de corte: mini-silueta del animal con la zona del corte (o la foto de la pieza),
  * nombre, alias, zona y badges. Toda la tarjeta lleva al detalle (enlace estirado sobre el título);
- * "Pedir cotización" es un mailto aparte, por encima del enlace.
+ * "Pedir cotización" es un link aparte, por encima del enlace, a /contacto?tab=quote&cut=<id>
+ * (id neutro: el formulario precarga el corte en cualquier idioma).
  * Con silueta, en móvil (< sm) es compacta y horizontal: silueta chica a la izquierda, texto a la
  * derecha y sin la línea de zona (la silueta ya la muestra y la nombra).
  */
 export function CutCard({
   cut,
-  email,
   headingLevel: H = "h3",
   visual = "diagram",
   eager,
@@ -59,10 +56,6 @@ export function CutCard({
   const t = useTranslations("Products");
   const locale = useLocale();
   const image = visual === "photo" ? cutImage(cut.image, cut.species) : null;
-  const subject = t("card.quoteSubject", {
-    cut: cut.name,
-    species: t(`species.${cut.species}`),
-  });
   const compact = !image;
   // En la tarjeta compacta, badges más ceñidos para que entren en una sola línea.
   const badge = compact ? "max-sm:px-1.5 max-sm:tracking-normal" : undefined;
@@ -159,14 +152,15 @@ export function CutCard({
           </li>
         </ul>
         <div className={cn("mt-auto", compact ? "pt-2 sm:pt-5" : "pt-5")}>
-          <a
-            href={buildMailto(email, subject)}
+          <Link
+            href={{ pathname: "/contact", query: { tab: "quote", cut: cut.id } }}
+            data-quote-link={cut.id}
             aria-label={t("card.quoteFor", { cut: cut.name })}
             className="relative z-10 inline-flex min-h-6 items-center gap-1.5 rounded-sm text-sm font-semibold text-brand-700 underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700"
           >
-            <IconMail width={16} height={16} />
             {t("card.quote")}
-          </a>
+            <IconArrowRight width={16} height={16} />
+          </Link>
         </div>
       </div>
     </article>

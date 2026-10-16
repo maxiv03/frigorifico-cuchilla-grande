@@ -14,6 +14,9 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { chromium, type Page } from "@playwright/test";
+import { orderViolations, quotesBetween } from "@/lib/prices/rotation";
+import { CATEGORY_IDS, CATEGORY_SPECIES, LIMITS } from "@/lib/producers/livestock";
+import { priceCategories } from "../supabase/seed";
 import { adminClient } from "./lib/db";
 import { settlePage } from "./settle";
 
@@ -88,6 +91,22 @@ async function main() {
     check(`${locale} gráfico: 3 líneas de ovinos`, points === 3, String(points));
     await page.click('button[data-species="beef"]');
 
+    // Orden de categorías y fórmula en las 12 semanas (tabla de datos del gráfico)
+    const table = await page.$$eval("[data-chart] tr[data-week]", (trs) =>
+      trs.map((tr) => ({
+        week: tr.getAttribute("data-week")!,
+        cells: [...tr.querySelectorAll("td[data-series]")].map((td) => ({ id: td.getAttribute("data-series")!, value: Number(td.getAttribute("data-value")) })),
+      })),
+    );
+    const shown = table.flatMap((r) => r.cells.map((c) => ({ categoryId: c.id, weekStart: r.week, price: c.value })));
+    const weeks = [...new Set(shown.map((q) => q.weekStart))].sort();
+    check(`${locale} pizarra: 12 semanas de historial para las 6 categorías`, weeks.length === 12 && shown.length === 72, `${weeks.length} semanas · ${shown.length} valores`);
+    const violations = orderViolations(priceCategories, shown);
+    check(`${locale} pizarra: novillo > vaquillona > vaca y cordero pesado > borrego > oveja en las 12 semanas`, violations.length === 0, violations.join("; ") || `${weeks[0]} a ${weeks.at(-1)}`);
+    const expected = new Map(quotesBetween(priceCategories, weeks[0], weeks.at(-1)!).map((q) => [`${q.categoryId}|${q.weekStart}`, q.price]));
+    const mismatches = shown.filter((q) => expected.get(`${q.categoryId}|${q.weekStart}`) !== q.price);
+    check(`${locale} pizarra: valores = fórmula determinista (mercado por especie + ruido por categoría)`, mismatches.length === 0, mismatches.slice(0, 3).map((q) => `${q.weekStart} ${q.categoryId} ${q.price}`).join("; ") || "72/72");
+
     // ─── 2. Calculadora ────────────────────────────────────────────────────
     const calc = page.locator("[data-calculator]");
     const priceOf = async () => Number(await calc.locator("[data-price]").getAttribute("data-price"));
@@ -117,6 +136,21 @@ async function main() {
     check(`${locale} calculadora: otra categoría → rendimiento por defecto y peso ovino`, num(lambYield, locale) === 47 && lambWeight === "42", `${lambYield} · ${lambWeight}`);
     await page.fill("#f-calc-heads", "250");
     await expectResult("250 corderos de 42 kg", 250, 42);
+
+    // Rendimiento: rango de la especie y valor por defecto dentro del rango, en las 6 categorías
+    for (const id of CATEGORY_IDS) {
+      await page.selectOption("#f-calc-category", id);
+      const range = LIMITS[CATEGORY_SPECIES[id]].yield;
+      const seedYield = priceCategories.find((c) => c.id === id)!.yieldPct;
+      const shownYield = num(await page.inputValue("#f-calc-yield"), locale);
+      const hint = (await page.textContent("#f-calc-yield-hint")) ?? "";
+      const invalid = await page.getAttribute("#f-calc-yield", "aria-invalid");
+      check(
+        `${locale} calculadora: ${id} → rendimiento ${seedYield} % dentro de ${range.min}–${range.max} % (${CATEGORY_SPECIES[id]})`,
+        shownYield === seedYield && seedYield >= range.min && seedYield <= range.max && hint.includes(String(range.min)) && hint.includes(String(range.max)) && invalid !== "true" && (await calc.locator("[data-carcass-kg]").count()) === 1,
+        `${shownYield} · ${hint}`,
+      );
+    }
 
     // Validación de rangos con mensaje traducido
     await page.selectOption("#f-calc-category", "steer");
@@ -179,6 +213,19 @@ async function main() {
     await open(errorMobile, paths[locale]);
     await errorMobile.click('[data-offer-form] button[type="submit"]');
     await errorMobile.waitForSelector('[data-form-alert="error"]');
+    await errorMobile.waitForTimeout(400);
+    // Lo que ve la persona después del envío vacío (sin desplazar nada desde el script).
+    const geo = await errorMobile.evaluate(() => {
+      const header = document.querySelector("header")?.getBoundingClientRect();
+      const alert = document.querySelector('[data-offer-form] [data-form-alert="error"]')?.getBoundingClientRect();
+      const active = document.activeElement;
+      const field = active?.closest("[data-field]")?.getBoundingClientRect();
+      return { headerBottom: header?.bottom ?? 0, alertTop: alert?.top, alertBottom: alert?.bottom, fieldTop: field?.top, fieldBottom: field?.bottom, focused: active?.getAttribute("name"), vh: innerHeight };
+    });
+    await errorMobile.screenshot({ path: join(out, `${locale}_formulario-errores-375-vista.png`) });
+    const visible = (top?: number, bottom?: number) => top !== undefined && bottom !== undefined && top >= geo.headerBottom && bottom <= geo.vh;
+    check(`${locale} 375 px: aviso de errores visible debajo del header`, visible(geo.alertTop, geo.alertBottom), JSON.stringify(geo));
+    check(`${locale} 375 px: primer campo con error (con foco) visible debajo del header`, geo.focused === "category" && visible(geo.fieldTop, geo.fieldBottom), JSON.stringify(geo));
     await errorMobile.locator("[data-offer-form]").screenshot({ path: join(out, `${locale}_formulario-errores-375.png`) });
     await errorMobile.close();
 

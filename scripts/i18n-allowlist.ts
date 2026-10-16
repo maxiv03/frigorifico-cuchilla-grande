@@ -14,6 +14,10 @@ export const allowedMessageKeys: string[] = [
   "Markets.map.legend.range", // solo placeholders
   "Producers.calculator.kgValue", // placeholder + unidad (kg)
   "Privacy.sections.cookies.title", // préstamo aceptado en español
+  "Sustainability.withUnit", // placeholder + unidad (símbolos neutros)
+  "Contact.quote.company.email", // "Email" en los dos idiomas
+  "Contact.quote.order.incoterm", // término de comercio internacional
+  "Contact.location.plantPlace", // topónimo
 ];
 
 /** Valores de contenido (seed y company.ts) que pueden repetirse entre idiomas. */

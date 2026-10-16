@@ -6,7 +6,6 @@ import { PresentationSpecs } from "@/components/cuts/presentation-specs";
 import { Section, SectionHeader } from "@/components/ui/section";
 import { getPathname } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
-import { contactInfo } from "@/lib/contact";
 import { getCatalog } from "@/lib/data/catalog";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -42,7 +41,6 @@ export default async function ProductsPage({ searchParams }: PageProps<"/[locale
     })),
     zones: catalog.zones,
     markets: catalog.markets,
-    email: contactInfo().email,
     aside: <PresentationSpecs />,
     asideCollapsed: <PresentationSpecs collapsible />,
   };

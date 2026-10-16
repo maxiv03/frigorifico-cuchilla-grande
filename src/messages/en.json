@@ -59,7 +59,6 @@
         "benefit2": "Approved for China, the United States, the European Union and Israel",
         "benefit3": "Individual traceability from farm to container",
         "cta": "Request a quote",
-        "mailSubject": "[Demo] Quote request",
         "imageAlt": "Container ship at sea, seen from above"
       },
       "producers": {
@@ -103,6 +102,11 @@
       "title": "Where our meat is eaten",
       "lead": "Main destinations by share of exports.",
       "cta": "See the markets map"
+    },
+    "news": {
+      "eyebrow": "News",
+      "title": "Latest from the plant",
+      "cta": "See all news"
     }
   },
   "Products": {
@@ -167,7 +171,6 @@
     "card": {
       "quote": "Request a quote",
       "quoteFor": "Request a quote for {cut}",
-      "quoteSubject": "[Demo] Quote: {cut} ({species})",
       "zone": "Area: {zone}"
     },
     "specs": {
@@ -424,7 +427,23 @@
       "option": "Choose an option from the list.",
       "date": "Enter a valid date.",
       "dateRange": "Choose a date between {from} and {to}.",
-      "privacy": "You need to accept the privacy policy to send the form."
+      "privacy": "You need to accept the privacy policy to send the form.",
+      "selectOne": "Choose at least one option.",
+      "tooMany": "You can choose up to {max}."
+    },
+    "status": {
+      "invalid": {
+        "title": "Check the highlighted fields",
+        "text": "{count, plural, one {One field has an error.} other {# fields have errors.}}"
+      },
+      "rateLimited": {
+        "title": "Too many submissions",
+        "text": "For security, we limit submissions from the same connection. Please try again in a few minutes."
+      },
+      "error": {
+        "title": "We could not send the form",
+        "text": "An unexpected error occurred. Please try again later or message us on WhatsApp."
+      }
     }
   },
   "Producers": {
@@ -578,7 +597,7 @@
         "title": "What we store",
         "text": "When you send a form we store:",
         "items": {
-          "fields": "The details you entered: for example, livestock category and number of head, department, availability date, name, phone, email (if provided) and comments.",
+          "fields": "The details you entered: for example, company, country, cuts and volume in a quote request; livestock category and number of head in an offer; name, phone, email (if provided), department and message.",
           "technical": "The date and time of the submission, the site language and the environment (production or testing).",
           "ip": "An encrypted fingerprint of your connection: a hash of your IP address with a secret key. We do not store the IP; the fingerprint is only used to limit repeated submissions."
         }
@@ -603,6 +622,293 @@
         "title": "Cookies",
         "text": "The site uses a single technical cookie (NEXT_LOCALE) to remember your chosen language. There are no advertising or analytics cookies."
       }
+    }
+  },
+  "Contact": {
+    "metaTitle": "Contact",
+    "metaDescription": "Request a quote for beef and lamb cuts or get in touch as a livestock producer. Plant in Sarandí del Yí, Durazno, Uruguay.",
+    "eyebrow": "Contact",
+    "title": "Let's talk",
+    "lead": "Importers and distributors: request a quote for the cuts you need. Producers: ask us about selling livestock or about your settlement.",
+    "tabs": {
+      "label": "Type of enquiry",
+      "quote": "Quote request",
+      "producer": "Producers"
+    },
+    "form": {
+      "choose": "Choose an option",
+      "sending": "Sending…",
+      "privacy": "I have read and accept the <link>privacy policy</link>.",
+      "demoNote": "Demo site: the submission is stored only to test the form and is deleted after 90 days.",
+      "successDemo": "This is a demo site for a fictitious company: your request does not reach any salesperson and nobody will contact you. The data is deleted after 90 days."
+    },
+    "quote": {
+      "intro": "Tell us which cuts you are looking for, in which presentation and the volume you expect. The sales team replies with price and availability per shipment.",
+      "submit": "Send quote request",
+      "success": {
+        "title": "Thank you! We received your quote request",
+        "text": "On a real site, the sales team would reply by email with price and availability."
+      },
+      "company": {
+        "legend": "Company and contact",
+        "company": "Company",
+        "country": "Country",
+        "contactName": "Full name",
+        "email": "Email",
+        "phone": "Phone",
+        "phoneHint": "Including the country code, for example +31 20 123 4567."
+      },
+      "order": {
+        "legend": "Order",
+        "presentation": "Presentation",
+        "presentationHint": "Vacuum-packed chilled or frozen.",
+        "presentations": {
+          "chilled": "Chilled",
+          "frozen": "Frozen",
+          "both": "Chilled and frozen"
+        },
+        "incoterm": "Incoterm",
+        "incotermHint": "If you already know how you want to buy.",
+        "incotermNone": "Not decided",
+        "incoterms": {
+          "FOB": "FOB — free on board, Montevideo",
+          "CFR": "CFR — cost and freight",
+          "CIF": "CIF — cost, insurance and freight"
+        },
+        "port": "Destination port",
+        "portHint": "For example, Rotterdam or Qingdao.",
+        "message": "Message",
+        "messageHint": "Sizes, shipment frequency, certifications you need…"
+      },
+      "volume": {
+        "label": "Estimated volume per month",
+        "unit": "Unit",
+        "unitHint": "Whole number per month. Tonnes: {tonnes}; containers: {containers}.",
+        "range": "{min} to {max}",
+        "units": {
+          "tonnes_month": "tonnes per month",
+          "containers_month": "containers per month"
+        }
+      },
+      "cuts": {
+        "label": "Cuts of interest",
+        "hint": "Choose one or more from the catalog (up to {max}). You can search by name.",
+        "chosen": "{count, plural, one {# cut chosen} other {# cuts chosen}}",
+        "remove": "Remove {cut}",
+        "search": "Search cuts",
+        "searchPlaceholder": "Search by name, for example tenderloin",
+        "matches": "{count, plural, =0 {No cuts match} one {# cut matches} other {# cuts match}}",
+        "total": "{count} cuts in the catalog",
+        "none": "No cuts with that name."
+      }
+    },
+    "producer": {
+      "offerText": "Want to offer a lot? Use the form in the producer portal, with category, number of head and weight.",
+      "offerLink": "Go to “Offer livestock”",
+      "legend": "Your enquiry",
+      "name": "Full name",
+      "phone": "Phone",
+      "phoneHint": "Including the area code, for example 099 123 456.",
+      "department": "Department",
+      "reason": "Reason",
+      "reasons": {
+        "sell": "Sell livestock",
+        "settlement": "Settlement enquiry",
+        "other": "Other"
+      },
+      "message": "Message",
+      "messageHint": "Tell us how we can help.",
+      "submit": "Send enquiry",
+      "success": {
+        "title": "Thank you! We received your enquiry",
+        "text": "On a real site, the livestock buying team would call you on the number you left."
+      }
+    },
+    "aside": {
+      "title": "Contact details",
+      "plant": "Plant and offices",
+      "team": "Team",
+      "whatsapp": "Sales team WhatsApp",
+      "whatsappMessage": "[Demo] Hello, I am contacting you from the contact page.",
+      "mail": "Team email",
+      "mailSubject": "[Demo] Enquiry from the website",
+      "hours": {
+        "title": "Opening hours",
+        "fictitious": "Fictitious",
+        "office": {
+          "label": "Sales office",
+          "value": "Monday to Friday, 8:00 to 17:00"
+        },
+        "livestock": {
+          "label": "Livestock reception",
+          "value": "Sunday to Friday, by appointment"
+        },
+        "dispatch": {
+          "label": "Dispatch",
+          "value": "Monday to Saturday, 6:00 to 22:00"
+        }
+      }
+    },
+    "location": {
+      "mapTitle": "Plant location",
+      "mapDesc": "Map of Uruguay showing the plant in Sarandí del Yí, Durazno department, on Route 6, and the port of Montevideo to the south.",
+      "port": "Montevideo (port)",
+      "plant": "Plant",
+      "plantPlace": "Sarandí del Yí",
+      "attribution": "Map: Natural Earth (public domain). Approximate location; fictitious company."
+    }
+  },
+  "Sustainability": {
+    "metaTitle": "Sustainability",
+    "metaDescription": "Energy, water, emissions, animal welfare and community goals, with baseline, target and progress.",
+    "eyebrow": "Sustainability",
+    "title": "Measurable goals, real progress",
+    "lead": "We publish our goals with their baseline, the target and the committed year, and how we are doing. Some are already met; others are behind schedule, and we say so too.",
+    "tabsLabel": "Topics",
+    "topics": {
+      "energy": {
+        "tab": "Energy",
+        "title": "Energy",
+        "text": "Refrigeration is the plant's largest load. Our on-site solar park and more efficient refrigeration equipment are the two main levers."
+      },
+      "water": {
+        "tab": "Water",
+        "title": "Water",
+        "text": "We meter water by area and treat all effluent before it returns to the environment. Part of the treated water is reused away from product areas."
+      },
+      "emissions": {
+        "tab": "Emissions",
+        "title": "Emissions",
+        "text": "We measure direct emissions and those from purchased energy per tonne processed. Livestock production emissions are outside these targets."
+      },
+      "animal_welfare": {
+        "tab": "Animal welfare",
+        "title": "Animal welfare",
+        "text": "Short journeys, calm handling in the pens and an indicator shared with every producer."
+      },
+      "community": {
+        "tab": "Community",
+        "title": "Community",
+        "text": "The plant is one of the main employers in the area: we prioritise local hiring and training during working hours."
+      }
+    },
+    "status": {
+      "achieved": "Achieved",
+      "on_track": "On track",
+      "in_progress": "In progress",
+      "at_risk": "Behind schedule"
+    },
+    "baseline": "Baseline ({year})",
+    "current": "Current",
+    "target": "Target ({year})",
+    "progress": "Progress",
+    "progressText": "{pct}% of the way to the {year} target",
+    "percent": "{value}%",
+    "withUnit": "{value} {unit}",
+    "method": {
+      "title": "How we measure",
+      "text": "Fictitious figures for a mid-sized plant, with units per tonne of carcass processed. We do not use environmental seals or certifications: we show the numbers and how they change.",
+      "news": "Read the news about the solar park and the cold storage expansion"
+    }
+  },
+  "News": {
+    "metaTitle": "News",
+    "metaDescription": "News from Frigorífico Cuchilla Grande: investments, markets, producers and new product lines.",
+    "eyebrow": "News",
+    "title": "Latest from the plant",
+    "lead": "Investments, markets, producers and new products. Fictitious news from a fictitious company.",
+    "readMore": "Read the story",
+    "breadcrumb": "Breadcrumb",
+    "back": "← Back to news",
+    "more": "More news",
+    "fictitious": "Fictitious story",
+    "metaDetail": "{title} · News",
+    "images": {
+      "parque-solar": "Rows of solar panels on green grass under a cloudy sky",
+      "ampliacion-frio": "New, empty industrial building with a steel frame and concrete floor",
+      "jornada-productores": "Riders herding cattle across a field of tall grass",
+      "feria-alimentos": "Visitors walking the aisles of a trade fair",
+      "porcionados-vacunos": "Two raw ribeye steaks on a wooden board next to a cleaver",
+      "puerto-contenedores": "Container port with cranes and a ship at the quay at dusk"
+    }
+  },
+  "Careers": {
+    "metaTitle": "Careers",
+    "metaDescription": "Work areas, benefits and how to apply to Frigorífico Cuchilla Grande, in Sarandí del Yí, Uruguay.",
+    "eyebrow": "Careers",
+    "title": "Skilled work, close to home",
+    "lead": "We are {employees} people in Sarandí del Yí. We are looking for people keen to learn a trade and grow at a plant that exports to more than 30 countries.",
+    "areas": {
+      "title": "Work areas",
+      "lead": "There is room for experienced and entry-level profiles: most trades are learned at the plant.",
+      "items": {
+        "production": {
+          "title": "Production",
+          "text": "Boning, cutting, packing and carton assembly, with training at every station."
+        },
+        "quality": {
+          "title": "Quality and food safety",
+          "text": "In-line checks, laboratory, audits and documentation for each market."
+        },
+        "maintenance": {
+          "title": "Maintenance and refrigeration",
+          "text": "Electricians, mechanics and industrial refrigeration technicians."
+        },
+        "livestock": {
+          "title": "Livestock and lairage",
+          "text": "Animal reception, handling in the pens and animal welfare."
+        },
+        "logistics": {
+          "title": "Logistics and dispatch",
+          "text": "Cold rooms, container loading, shipping documents and transport."
+        },
+        "office": {
+          "title": "Administration and export",
+          "text": "Sales, purchasing, finance, human resources and IT."
+        }
+      }
+    },
+    "benefits": {
+      "title": "Benefits",
+      "lead": "On top of salary and statutory benefits, at the plant you get:",
+      "items": {
+        "transport": {
+          "title": "Transport",
+          "text": "Buses from Sarandí del Yí and Durazno on every shift."
+        },
+        "canteen": {
+          "title": "Canteen",
+          "text": "Lunch and dinner in the plant canteen."
+        },
+        "training": {
+          "title": "Training",
+          "text": "24 hours of training per person per year, during working hours."
+        },
+        "health": {
+          "title": "Health",
+          "text": "On-site medical service and supplementary cover."
+        },
+        "uniform": {
+          "title": "Work gear",
+          "text": "Thermal clothing and protective equipment provided by the company."
+        },
+        "internal": {
+          "title": "Internal openings",
+          "text": "Vacancies are offered to plant staff first."
+        }
+      }
+    },
+    "apply": {
+      "title": "Apply",
+      "text": "Send us your CV by email. There does not need to be an open position: we keep it for upcoming ones.",
+      "steps": {
+        "one": "Attach your CV as a PDF.",
+        "two": "Tell us which area you would like to work in.",
+        "three": "Include your town and a contact phone number."
+      },
+      "demo": "Demo site: the email goes to the project team, not to a real company. Please do not send personal data.",
+      "cta": "Apply by email",
+      "subject": "[Demo] Job application"
     }
   }
 }

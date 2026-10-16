@@ -214,3 +214,39 @@ export const IconAlert = (p: SVGProps<SVGSVGElement>) => (
     <path d="M12 10v4.5M12 17.5h.01" />
   </Icon>
 );
+export const IconSun = (p: SVGProps<SVGSVGElement>) => (
+  <Icon {...p}>
+    <circle cx="12" cy="12" r="4" />
+    <path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4" />
+  </Icon>
+);
+export const IconCloud = (p: SVGProps<SVGSVGElement>) => (
+  <Icon {...p}>
+    <path d="M7 18.5h10.5a4 4 0 0 0 .4-8 6 6 0 0 0-11.6 1.6A3.3 3.3 0 0 0 7 18.5z" />
+  </Icon>
+);
+export const IconUsers = (p: SVGProps<SVGSVGElement>) => (
+  <Icon {...p}>
+    <circle cx="9" cy="8" r="3.2" />
+    <path d="M3 19.5c.5-3.3 3-5.3 6-5.3s5.5 2 6 5.3" />
+    <path d="M15.5 4.9a3.2 3.2 0 0 1 0 6.2M17.5 14.6c1.8.6 3.1 2.3 3.5 4.9" />
+  </Icon>
+);
+export const IconSearch = (p: SVGProps<SVGSVGElement>) => (
+  <Icon {...p}>
+    <circle cx="10.5" cy="10.5" r="6" />
+    <path d="M15 15l5 5" />
+  </Icon>
+);
+export const IconClock = (p: SVGProps<SVGSVGElement>) => (
+  <Icon {...p}>
+    <circle cx="12" cy="12" r="8.5" />
+    <path d="M12 7.5V12l3 2" />
+  </Icon>
+);
+export const IconBriefcase = (p: SVGProps<SVGSVGElement>) => (
+  <Icon {...p}>
+    <rect x="3.5" y="7.5" width="17" height="12" rx="2" />
+    <path d="M9 7.5V6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v1.5M3.5 13h17" />
+  </Icon>
+);

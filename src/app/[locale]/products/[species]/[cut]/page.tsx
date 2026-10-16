@@ -6,9 +6,9 @@ import { CutCard } from "@/components/cuts/cut-card";
 import { CutDiagram } from "@/components/cuts/cut-diagram";
 import { PresentationSpecs } from "@/components/cuts/presentation-specs";
 import { SetAlternates } from "@/components/i18n/alternates";
-import { IconMail } from "@/components/icons";
+import { IconArrowRight } from "@/components/icons";
 import { Badge } from "@/components/ui/badge";
-import { ButtonAnchor, ButtonLink } from "@/components/ui/button";
+import { ButtonLink } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
 import { getPathname, Link } from "@/i18n/navigation";
@@ -16,7 +16,6 @@ import { routing, type Locale } from "@/i18n/routing";
 import { cutImage } from "@/lib/catalog/images";
 import { speciesFromSlug, speciesSlugs } from "@/lib/catalog/species";
 import type { Species } from "@/lib/catalog/types";
-import { contactInfo, mailtoUrl } from "@/lib/contact";
 import { getCatalog, getCutSlugs, type CatalogCut } from "@/lib/data/catalog";
 
 type Params = { locale: string; species: string; cut: string };
@@ -79,7 +78,6 @@ export default async function CutPage({ params }: { params: Promise<Params> }) {
   const zoneName = zone?.name ?? cut.zone;
   const marketNames = new Map(catalog.markets.map((m) => [m.id, m.name]));
   const image = cutImage(cut.image, species);
-  const { email } = contactInfo();
   const sameZone = catalog.cuts.filter((c) => c.species === species && c.zone === cut.zone && c.id !== cut.id);
   const speciesName = t(`species.${species}`);
   const toCard = (c: CatalogCut) => ({ ...c, zoneName });
@@ -205,13 +203,14 @@ export default async function CutPage({ params }: { params: Promise<Params> }) {
               <h2 className="font-serif text-xl font-semibold">{t("detail.quoteTitle")}</h2>
               <p className="mt-2 text-brand-100">{t("detail.quoteText")}</p>
               <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-                <ButtonAnchor
-                  href={mailtoUrl(t("card.quoteSubject", { cut: cut.name, species: speciesName }))}
+                <ButtonLink
+                  href={{ pathname: "/contact", query: { tab: "quote", cut: cut.id } }}
                   variant="earth"
-                  icon={<IconMail />}
+                  icon={<IconArrowRight />}
+                  data-quote-link={cut.id}
                 >
                   {t("card.quote")}
-                </ButtonAnchor>
+                </ButtonLink>
                 <ButtonLink
                   href={{ pathname: "/products", query: species === "beef" ? {} : { species } }}
                   variant="outlineLight"
@@ -232,7 +231,7 @@ export default async function CutPage({ params }: { params: Promise<Params> }) {
           <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {sameZone.map((c) => (
               <li key={c.id} className="flex">
-                <CutCard cut={toCard(c)} email={email} className="w-full" />
+                <CutCard cut={toCard(c)} className="w-full" />
               </li>
             ))}
           </ul>

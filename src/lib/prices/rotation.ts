@@ -1,16 +1,27 @@
 /**
  * Rotación determinista de la pizarra de precios de hacienda (valores ficticios).
- * Módulo puro: lo usan el seed (historial inicial) y el cron diario (semanas nuevas).
+ * Módulo puro: lo usan el seed (historial) y el cron diario (semanas nuevas).
  *
- * Cada semana: precio = anterior × (1 + ruido + reversión)
- *  - ruido: ±1,5 % derivado de un hash de (categoría, lunes) → siempre el mismo valor.
- *  - reversión: 15 % de la distancia al precio base, para que no deriven con los años.
+ * El precio de una semana es función SOLO de (categoría, lunes): no depende de lo que haya en
+ * la base, así que el seed y el cron siempre coinciden y regenerar es idempotente.
+ *
+ *  1. Mercado por especie: índice semanal común a todas sus categorías, paseo aleatorio con
+ *     reversión a 1 desde `EPOCH` (choque ±2 % por semana, 15 % de reversión).
+ *  2. Categoría: base × índice × (1 + ruido chico, ±0,5 %).
+ *  3. Orden: dentro de cada especie, en el orden de `sort` (novillo > vaquillona > vaca;
+ *     cordero pesado > borrego > oveja), cada categoría queda al menos `MIN_GAP` por debajo
+ *     de la anterior.
  */
 
-const MAX_NOISE = 0.015;
+const EPOCH = "2025-01-06"; // lunes
+const MARKET_SHOCK = 0.02;
 const REVERSION = 0.15;
+const CATEGORY_NOISE = 0.005;
+/** Diferencia mínima, en US$/kg, entre una categoría y la siguiente de su especie. */
+export const MIN_GAP = 0.05;
 
 export type Quote = { categoryId: string; weekStart: string; price: number };
+export type PriceCategoryRef = { id: string; species: string; basePrice: number; sort: number };
 
 /** FNV-1a de 32 bits → número en [0, 1). */
 function hashUnit(input: string): number {
@@ -22,10 +33,41 @@ function hashUnit(input: string): number {
   return (h >>> 0) / 0x1_0000_0000;
 }
 
-export function nextPrice(categoryId: string, weekStart: string, previous: number, base: number) {
-  const noise = (hashUnit(`${categoryId}|${weekStart}`) * 2 - 1) * MAX_NOISE;
-  const reversion = ((base - previous) / base) * REVERSION;
-  return Math.round(previous * (1 + noise + reversion) * 100) / 100;
+const signed = (key: string) => hashUnit(key) * 2 - 1;
+
+/** Índice de mercado de la especie en esa semana (1 = precio base). */
+export function marketIndex(species: string, weekStart: string): number {
+  let idx = 1;
+  for (let w = addWeeks(EPOCH, 1); w <= weekStart; w = addWeeks(w, 1)) {
+    idx = idx * (1 + signed(`market|${species}|${w}`) * MARKET_SHOCK) + (1 - idx) * REVERSION;
+  }
+  return idx;
+}
+
+const cents = (n: number) => Math.round(n * 100) / 100;
+
+/** Pizarra completa de una semana, con el orden entre categorías garantizado. */
+export function quotesForWeek(categories: PriceCategoryRef[], weekStart: string): Quote[] {
+  const out: Quote[] = [];
+  const bySpecies = Map.groupBy(categories, (c) => c.species);
+  for (const [species, group] of bySpecies) {
+    const idx = marketIndex(species, weekStart);
+    let ceiling = Infinity;
+    for (const c of group.toSorted((a, b) => a.sort - b.sort)) {
+      const raw = cents(c.basePrice * idx * (1 + signed(`${c.id}|${weekStart}`) * CATEGORY_NOISE));
+      const price = cents(Math.min(raw, ceiling - MIN_GAP));
+      out.push({ categoryId: c.id, weekStart, price });
+      ceiling = price;
+    }
+  }
+  return out;
+}
+
+/** Pizarras de `from` a `to` (lunes, ambos inclusive). */
+export function quotesBetween(categories: PriceCategoryRef[], from: string, to: string): Quote[] {
+  const out: Quote[] = [];
+  for (let w = from; w <= to; w = addWeeks(w, 1)) out.push(...quotesForWeek(categories, w));
+  return out;
 }
 
 /** Lunes (YYYY-MM-DD) de la semana que contiene `date`, en hora de Montevideo (UTC−3, sin horario de verano). */
@@ -43,30 +85,24 @@ export function addWeeks(weekStart: string, weeks: number): string {
 }
 
 /**
- * Semanas faltantes desde la última cargada hasta la vigente (inclusive).
- * Si el cron falló varios días, completa todas las semanas que falten.
+ * Categorías de una especie fuera de orden en alguna semana (lista vacía = todo en orden).
+ * La usan el seed (antes de escribir) y las pruebas.
  */
-export function missingQuotes(
-  categoryId: string,
-  base: number,
-  last: { weekStart: string; price: number },
-  currentMonday: string,
-): Quote[] {
-  const out: Quote[] = [];
-  let { weekStart, price } = last;
-  while (weekStart < currentMonday) {
-    weekStart = addWeeks(weekStart, 1);
-    price = nextPrice(categoryId, weekStart, price, base);
-    out.push({ categoryId, weekStart, price });
+export function orderViolations(categories: PriceCategoryRef[], quotes: Quote[]): string[] {
+  const price = new Map(quotes.map((q) => [`${q.categoryId}|${q.weekStart}`, q.price]));
+  const weeks = [...new Set(quotes.map((q) => q.weekStart))];
+  const out: string[] = [];
+  for (const group of Map.groupBy(categories, (c) => c.species).values()) {
+    const sorted = group.toSorted((a, b) => a.sort - b.sort);
+    for (const w of weeks) {
+      for (let i = 1; i < sorted.length; i++) {
+        const hi = price.get(`${sorted[i - 1].id}|${w}`);
+        const lo = price.get(`${sorted[i].id}|${w}`);
+        if (hi !== undefined && lo !== undefined && !(hi - lo >= MIN_GAP - 1e-9)) {
+          out.push(`${w}: ${sorted[i - 1].id} ${hi} ≤ ${sorted[i].id} ${lo}`);
+        }
+      }
+    }
   }
   return out;
-}
-
-/** Historial inicial: arranca en el precio base `weeks` semanas atrás. */
-export function initialHistory(categoryId: string, base: number, currentMonday: string, weeks: number): Quote[] {
-  const first = addWeeks(currentMonday, -(weeks - 1));
-  return [
-    { categoryId, weekStart: first, price: base },
-    ...missingQuotes(categoryId, base, { weekStart: first, price: base }, currentMonday),
-  ];
 }

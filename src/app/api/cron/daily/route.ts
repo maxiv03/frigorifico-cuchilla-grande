@@ -1,13 +1,13 @@
 /**
  * Único cron diario (Vercel Hobby: 1/día, solo producción). Protegido con CRON_SECRET.
  * 1. Keep-alive de Supabase (las consultas de abajo cuentan como actividad).
- * 2. Rotación de la pizarra: inserta la semana vigente y cualquier semana faltante.
+ * 2. Rotación de la pizarra: inserta la semana vigente y cualquier semana faltante (sin historial: lo crea el seed).
  * 3. Purga de envíos de formularios con más de 90 días (declarado en Privacidad).
  * Única ubicación de la app donde se usa la clave secreta.
  */
 import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
-import { missingQuotes, mondayOf } from "@/lib/prices/rotation";
+import { addWeeks, mondayOf, quotesBetween, type Quote } from "@/lib/prices/rotation";
 import { adminDb } from "@/lib/supabase/admin";
 
 const RETENTION_DAYS = 90;
@@ -24,35 +24,28 @@ export async function GET() {
   const currentMonday = mondayOf(new Date());
 
   // ─── Rotación de precios ──────────────────────────────────────────────────
-  const { data: categories, error: catError } = await db.from("price_categories").select("id, base_price");
+  // El precio es función de (categoría, lunes): se completan todas las semanas que falten
+  // desde la última cargada hasta la vigente, con el orden entre categorías garantizado.
+  const { data: rows, error: catError } = await db.from("price_categories").select("id, species, base_price, sort");
   if (catError) return fail("price_categories", catError.message);
+  const categories = rows.map((c) => ({ id: c.id, species: c.species, basePrice: Number(c.base_price), sort: c.sort }));
 
-  const inserted: { categoryId: string; weekStart: string; price: number }[] = [];
-  for (const c of categories) {
-    const { data: last, error } = await db
-      .from("price_quotes")
-      .select("week_start, price_usd_kg")
-      .eq("category_id", c.id)
-      .order("week_start", { ascending: false })
-      .limit(1)
-      .maybeSingle();
-    if (error) return fail("price_quotes", error.message);
-    if (!last) continue; // sin historial: lo crea el seed
+  const { data: last, error } = await db
+    .from("price_quotes")
+    .select("week_start")
+    .order("week_start", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (error) return fail("price_quotes", error.message);
 
-    const quotes = missingQuotes(
-      c.id,
-      Number(c.base_price),
-      { weekStart: last.week_start, price: Number(last.price_usd_kg) },
-      currentMonday,
-    );
-    if (quotes.length === 0) continue;
-
+  let inserted: Quote[] = [];
+  if (last && last.week_start < currentMonday) {
+    inserted = quotesBetween(categories, addWeeks(last.week_start, 1), currentMonday);
     const { error: insError } = await db.from("price_quotes").upsert(
-      quotes.map((q) => ({ category_id: q.categoryId, week_start: q.weekStart, price_usd_kg: q.price })),
+      inserted.map((q) => ({ category_id: q.categoryId, week_start: q.weekStart, price_usd_kg: q.price })),
       { onConflict: "category_id,week_start", ignoreDuplicates: true },
     );
     if (insError) return fail("price_quotes insert", insError.message);
-    inserted.push(...quotes);
   }
   // expire: 0 → la próxima visita renderiza la pizarra nueva (sin servir la semana vieja).
   // El cron corre 06:00 UY, con poco tráfico: ese único render bloqueante es barato.

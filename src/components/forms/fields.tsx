@@ -1,21 +1,21 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import type { ComponentProps, ReactNode } from "react";
+import { useEffect, type ComponentProps, type ReactNode, type RefObject } from "react";
 import { useFormStatus } from "react-dom";
 import { IconAlert, IconCheck } from "@/components/icons";
 import { buttonClasses } from "@/components/ui/button";
 import { cn } from "@/components/ui/cn";
 import type { Locale } from "@/i18n/routing";
 import { formatFigure } from "@/lib/format";
-import { HONEYPOT_FIELD, type FieldError } from "@/lib/forms/types";
+import { HONEYPOT_FIELD, type FieldError, type FormState } from "@/lib/forms/types";
 
 /**
  * Campos de formulario reutilizables: label visible, ayuda y error asociados con
  * aria-describedby, aria-invalid y mensajes traducidos desde códigos (Forms.errors).
  */
 
-const control =
+export const control =
   "block w-full rounded-md bg-surface px-3.5 py-2.5 text-base text-ink ring-1 ring-earth-300 ring-inset placeholder:text-ink-subtle " +
   "focus:ring-2 focus:ring-brand-700 focus:outline-none aria-invalid:ring-2 aria-invalid:ring-down disabled:bg-surface-muted";
 
@@ -51,7 +51,7 @@ function FieldShell({ name, label, error, hint, optional, className, children }:
   const t = useTranslations("Forms");
   const errorText = useErrorText();
   return (
-    <div className={className} data-field={name}>
+    <div className={cn("scroll-below-header", className)} data-field={name}>
       <label htmlFor={`f-${name}`} className="block font-semibold text-ink">
         {label}
         {optional && <span className="ml-1.5 text-sm font-normal text-ink-muted">({t("optional")})</span>}
@@ -160,7 +160,7 @@ export function CheckboxField({
 }: { name: string; label: ReactNode; error?: FieldError; className?: string } & Omit<ComponentProps<"input">, "name" | "type">) {
   const errorText = useErrorText();
   return (
-    <div className={className} data-field={name}>
+    <div className={cn("scroll-below-header", className)} data-field={name}>
       <div className="flex items-start gap-3">
         <input
           id={`f-${name}`}
@@ -184,6 +184,28 @@ export function CheckboxField({
       )}
     </div>
   );
+}
+
+/**
+ * Después de un envío con errores: lleva el aviso a la vista (debajo del header, por su
+ * scroll-margin) y pone el foco en el primer campo con error sin volver a desplazar, así quedan
+ * visibles los dos. Si el aviso y el campo no entran juntos, manda el campo.
+ */
+export function revealFirstError(form: HTMLFormElement | null, alert: HTMLElement | null, firstName?: string) {
+  // Un grupo (lista de casillas) puede designar su control de foco con data-focus-for.
+  const field = firstName
+    ? (form?.querySelector<HTMLElement>(`[data-focus-for="${firstName}"]`) ?? form?.querySelector<HTMLElement>(`[name="${firstName}"]`))
+    : null;
+  const wrapper = field?.closest<HTMLElement>("[data-field]");
+  const target = alert?.querySelector<HTMLElement>("[data-form-alert]") ?? alert;
+  if (target && wrapper) {
+    const span = wrapper.getBoundingClientRect().bottom - target.getBoundingClientRect().top;
+    const header = parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
+    (span + header <= window.innerHeight ? target : wrapper).scrollIntoView({ block: "start" });
+  } else {
+    (target ?? wrapper)?.scrollIntoView({ block: "start" });
+  }
+  (field ?? alert)?.focus({ preventScroll: true });
 }
 
 /** Campo trampa: fuera de la vista y del orden de tabulación; los lectores de pantalla lo ignoran. */
@@ -221,7 +243,7 @@ export function FormAlert({ tone, title, children }: { tone: "error" | "success"
       role={tone === "error" ? "alert" : "status"}
       data-form-alert={tone}
       className={cn(
-        "flex gap-3 rounded-md p-4 ring-1 ring-inset",
+        "scroll-below-header flex gap-3 rounded-md p-4 ring-1 ring-inset",
         tone === "error" ? "bg-brand-50 text-brand-900 ring-brand-200" : "bg-earth-50 text-ink ring-earth-300",
       )}
     >
@@ -230,6 +252,63 @@ export function FormAlert({ tone, title, children }: { tone: "error" | "success"
         <p className="font-semibold">{title}</p>
         {children && <div className="mt-1 text-sm">{children}</div>}
       </div>
+    </div>
+  );
+}
+
+/**
+ * Después de cada respuesta de la acción: errores → aviso y primer campo a la vista (foco en el
+ * campo); éxito → caja de éxito; límite o error general → aviso. Todo debajo del header sticky.
+ */
+export function useResponseFocus(
+  state: FormState,
+  refs: { form: RefObject<HTMLFormElement | null>; alert: RefObject<HTMLElement | null>; success: RefObject<HTMLElement | null> },
+) {
+  const { form, alert, success } = refs;
+  useEffect(() => {
+    if (!state.at) return;
+    if (state.status === "invalid") {
+      revealFirstError(form.current, alert.current, Object.keys(state.fieldErrors ?? {})[0]);
+      return;
+    }
+    const target = state.status === "success" ? success.current : alert.current;
+    target?.scrollIntoView({ block: "start" });
+    target?.focus({ preventScroll: true });
+  }, [state, form, alert, success]);
+}
+
+/** Avisos de estado del envío (errores, límite, error general) con textos de Forms.status. */
+export function FormStatusAlerts({ state, alertRef }: { state: FormState; alertRef: RefObject<HTMLDivElement | null> }) {
+  const t = useTranslations("Forms.status");
+  return (
+    <div ref={alertRef} tabIndex={-1} className="scroll-below-header outline-none">
+      {state.status === "invalid" && (
+        <FormAlert tone="error" title={t("invalid.title")}>
+          {t("invalid.text", { count: Object.keys(state.fieldErrors ?? {}).length })}
+        </FormAlert>
+      )}
+      {state.status === "rate_limited" && (
+        <FormAlert tone="error" title={t("rateLimited.title")}>
+          {t("rateLimited.text")}
+        </FormAlert>
+      )}
+      {state.status === "error" && (
+        <FormAlert tone="error" title={t("error.title")}>
+          {t("error.text")}
+        </FormAlert>
+      )}
+    </div>
+  );
+}
+
+/** Caja de éxito enfocable; `demo` aclara que es un sitio de demostración. */
+export function FormSuccess({ successRef, title, text, demo }: { successRef: RefObject<HTMLDivElement | null>; title: string; text: ReactNode; demo: ReactNode }) {
+  return (
+    <div ref={successRef} tabIndex={-1} data-form-success className="scroll-below-header rounded-lg bg-surface p-8 shadow-card ring-1 ring-line outline-none">
+      <FormAlert tone="success" title={title}>
+        {text}
+      </FormAlert>
+      <p className="mt-5 text-sm text-ink-muted">{demo}</p>
     </div>
   );
 }

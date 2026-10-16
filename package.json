@@ -19,7 +19,8 @@
     "qa:institutional": "tsx scripts/qa-institutional.ts",
     "qa:fixes": "tsx scripts/qa-fixes.ts",
     "qa:layout": "node scripts/qa-layout.mjs",
-    "qa:producers": "tsx --env-file=.env.local scripts/qa-producers.ts"
+    "qa:producers": "tsx --env-file=.env.local scripts/qa-producers.ts",
+    "qa:contact": "tsx --env-file=.env.local scripts/qa-contact.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.117.3",

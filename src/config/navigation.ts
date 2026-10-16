@@ -33,13 +33,13 @@ export const mainNav: NavItem[] = [
   { key: "quality", href: "/quality", enabled: true }, // fase 3
   { key: "company", href: "/company", enabled: true }, // fase 3
   { key: "producers", href: "/producers", enabled: true, highlight: true }, // fase 4
-  { key: "contact", href: "/contact", enabled: false }, // fase 5
+  { key: "contact", href: "/contact", enabled: true }, // fase 5
 ];
 
 export const utilityNav: NavItem[] = [
-  { key: "news", href: "/news", enabled: false }, // fase 5
-  { key: "sustainability", href: "/sustainability", enabled: false }, // fase 5
-  { key: "careers", href: "/careers", enabled: false }, // fase 5
+  { key: "news", href: "/news", enabled: true }, // fase 5
+  { key: "sustainability", href: "/sustainability", enabled: true }, // fase 5
+  { key: "careers", href: "/careers", enabled: true }, // fase 5
 ];
 
 function previewAll() {

@@ -1,12 +1,13 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import { useActionState, useEffect, useRef, useSyncExternalStore } from "react";
+import { useActionState, useRef, useSyncExternalStore } from "react";
 import { offerLivestock } from "@/app/[locale]/producers/actions";
 import {
   CheckboxField,
   FormAlert,
   Honeypot,
+  useResponseFocus,
   SelectField,
   SubmitButton,
   TextAreaField,
@@ -40,22 +41,11 @@ function OfferFormInner({ categories, prefill }: Props & { prefill: ReturnType<t
   // Fecha de hoy solo en el cliente (en el prerender sería la del build).
   const today = useSyncExternalStore(noop, todayUy, () => null);
 
-  // Después de cada respuesta: foco en el primer campo con error, en el aviso o en el éxito.
-  useEffect(() => {
-    if (!state.at) return;
-    if (state.status === "invalid") {
-      const first = Object.keys(state.fieldErrors ?? {})[0];
-      formRef.current?.querySelector<HTMLElement>(`[name="${first}"]`)?.focus();
-    } else if (state.status === "success") {
-      successRef.current?.focus();
-    } else {
-      alertRef.current?.focus();
-    }
-  }, [state]);
+  useResponseFocus(state, { form: formRef, alert: alertRef, success: successRef });
 
   if (state.status === "success") {
     return (
-      <div ref={successRef} tabIndex={-1} data-form-success className="rounded-lg bg-surface p-8 shadow-card ring-1 ring-line outline-none">
+      <div ref={successRef} tabIndex={-1} data-form-success className="scroll-below-header rounded-lg bg-surface p-8 shadow-card ring-1 ring-line outline-none">
         <FormAlert tone="success" title={t("success.title")}>
           {t("success.text")}
         </FormAlert>
@@ -73,7 +63,7 @@ function OfferFormInner({ categories, prefill }: Props & { prefill: ReturnType<t
       <input type="hidden" name="locale" value={locale} />
       <Honeypot />
 
-      <div ref={alertRef} tabIndex={-1} className="outline-none">
+      <div ref={alertRef} tabIndex={-1} className="scroll-below-header outline-none">
         {state.status === "invalid" && (
           <FormAlert tone="error" title={t("invalid.title")}>
             {t("invalid.text", { count: Object.keys(state.fieldErrors ?? {}).length })}

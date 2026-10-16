@@ -16,6 +16,8 @@ export type FieldErrorCode =
   | "option"
   | "date"
   | "dateRange"
+  | "selectOne"
+  | "tooMany"
   | "privacy";
 
 export type FormState = {

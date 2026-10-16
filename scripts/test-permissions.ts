@@ -33,8 +33,13 @@ const FORMS: Record<string, Record<string, unknown>> = {
     cuts_of_interest: "test",
     volume: "1 contenedor",
     presentation: "frozen",
+    cut_ids: ["beef_tenderloin", "lamb_frenched_rack"],
+    volume_amount: 2,
+    volume_unit: "containers_month",
+    incoterm: "CFR",
+    destination_port: "Rotterdam",
   },
-  producer_contacts: { ...base, name: "Test", phone: "099000000", department: "Durazno", message: "test" },
+  producer_contacts: { ...base, name: "Test", phone: "099000000", department: "Durazno", message: "test", reason: "settlement" },
   livestock_offers: {
     ...base,
     category_id: "steer",
@@ -105,6 +110,20 @@ async function main() {
   for (const [t, row] of Object.entries(FORMS)) {
     const noConsent = await anon.from(t).insert({ ...row, privacy_accepted: false });
     check(noConsent.error?.code === "23514", `INSERT ${t} sin aceptar privacidad rechazado`, noConsent.error?.message ?? "se aceptó");
+  }
+
+  console.log("Datos estructurados obligatorios y valores válidos (fase 5):");
+  const invalid: [string, Record<string, unknown>, string][] = [
+    ["quote_requests", { ...FORMS.quote_requests, cut_ids: null }, "pedido sin cortes"],
+    ["quote_requests", { ...FORMS.quote_requests, volume_unit: null }, "pedido sin unidad de volumen"],
+    ["quote_requests", { ...FORMS.quote_requests, incoterm: "EXW" }, "incoterm fuera de FOB/CFR/CIF"],
+    ["quote_requests", { ...FORMS.quote_requests, volume_unit: "kg" }, "unidad de volumen desconocida"],
+    ["producer_contacts", { ...FORMS.producer_contacts, reason: null }, "contacto de productor sin motivo"],
+    ["producer_contacts", { ...FORMS.producer_contacts, reason: "spam" }, "motivo desconocido"],
+  ];
+  for (const [t, row, label] of invalid) {
+    const res = await anon.from(t).insert(row);
+    check(res.error?.code === "23514", `INSERT ${t} rechazado: ${label}`, res.error?.message ?? "se aceptó");
   }
 
   console.log("Límite de envíos (5 por IP cada 10 min):");

@@ -92,6 +92,11 @@
   }
 }
 
+/* Avisos y campos de formulario: al llevarlos a la vista quedan debajo del header sticky. */
+@utility scroll-below-header {
+  scroll-margin-top: calc(var(--spacing-header) + 1rem);
+}
+
 /* ─── Mapa de mercados (SVG propio) ────────────────────────────────────────── */
 /* Países sin mercado: gris cálido claro. Cada mercado es un <g> enfocable con sus países. */
 .market-map .country {
