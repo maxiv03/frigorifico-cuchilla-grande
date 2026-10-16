@@ -1,7 +1,7 @@
 # QA — Frigorífico Cuchilla Grande (fase 6)
 
 Informe de calidad del sitio de demostración: SEO técnico, accesibilidad, performance, seguridad,
-operación y QA cruzado ES/EN. Medido el **16 de octubre de 2026** contra producción
+operación y QA cruzado ES/EN. Medido el **16 de octubre de 2026** (fases 6 y 7) contra producción
 (https://frigorifico-cuchilla-grande.vercel.app) salvo donde se indica.
 
 Todo se puede repetir con los scripts del repo (ver `CLAUDE.md`, sección Comandos).
@@ -10,7 +10,7 @@ Todo se puede repetir con los scripts del repo (ver `CLAUDE.md`, sección Comand
 
 | Área | Resultado |
 |---|---|
-| Lighthouse móvil (12 mediciones) | Performance 93–98 · Accesibilidad 100 · Buenas prácticas 100 · SEO 66–69 por el noindex buscado; 100 en modo indexable |
+| Lighthouse móvil (12 mediciones) | Performance 91–98 · Accesibilidad 100 · Buenas prácticas 100 · SEO 66–69 por el noindex buscado; 100 en modo indexable |
 | axe (100 combinaciones de página/estado × idioma × ancho) | 0 violaciones serias o críticas, 0 moderadas o menores |
 | Recorrido por teclado | 62/62 verificaciones (formularios, diagrama, mapa, pestañas, menú, salto al contenido) |
 | SEO técnico (`check:seo`) | 106 URLs del sitemap · 212 imágenes OG/Twitter · JSON-LD válido en todas |
@@ -161,22 +161,23 @@ mínimo es 3:1.
 
 ### Lighthouse móvil — producción (noindex)
 
-Lighthouse 13.5 con la simulación móvil por defecto (Moto G Power, 4G lenta, CPU ×4).
+Lighthouse 13.5 con la simulación móvil por defecto (Moto G Power, 4G lenta, CPU ×4). Medición final del
+16 de octubre de 2026 (cierre de la fase 7), después de los ajustes de LCP.
 
 | Página | Idioma | Performance | Accesibilidad | Buenas prácticas | SEO | LCP | CLS | TBT | JS (KB) |
 |---|---|---|---|---|---|---|---|---|---|
-| Home | es | 94 | 100 | 100 | 69 | 2,8 s | 0 | 140 ms | 194 |
-| Home | en | 93 | 100 | 100 | 69 | 3,2 s | 0 | 90 ms | 194 |
-| Catálogo | es | 96 | 100 | 100 | 66 | 2,5 s | 0 | 120 ms | 187 |
-| Catálogo | en | 97 | 100 | 100 | 66 | 2,5 s | 0 | 100 ms | 187 |
-| Detalle de corte | es | 94 | 100 | 100 | 69 | 2,9 s | 0 | 130 ms | 186 |
-| Detalle de corte | en | 94 | 100 | 100 | 69 | 2,9 s | 0 | 120 ms | 187 |
-| Mercados | es | 95 | 100 | 100 | 66 | 2,7 s | 0 | 160 ms | 172 |
-| Mercados | en | 95 | 100 | 100 | 66 | 2,5 s | 0 | 160 ms | 172 |
-| Productores | es | 95 | 100 | 100 | 66 | 2,4 s | 0 | 190 ms | 178 |
-| Productores | en | 95 | 100 | 100 | 66 | 2,4 s | 0 | 200 ms | 178 |
-| Contacto | es | 98 | 100 | 100 | 66 | 2,3 s | 0 | 90 ms | 178 |
-| Contacto | en | 98 | 100 | 100 | 66 | 2,3 s | 0 | 80 ms | 178 |
+| Home | es | 91 | 100 | 100 | 69 | 3,3 s | 0 | 150 ms | 194 |
+| Home | en | 92 | 100 | 100 | 69 | 3,3 s | 0 | 110 ms | 194 |
+| Catálogo | es | 97 | 100 | 100 | 66 | 2,3 s | 0 | 120 ms | 187 |
+| Catálogo | en | 98 | 100 | 100 | 66 | 2,3 s | 0 | 100 ms | 187 |
+| Detalle de corte | es | 95 | 100 | 100 | 69 | 2,7 s | 0 | 140 ms | 187 |
+| Detalle de corte | en | 95 | 100 | 100 | 69 | 2,8 s | 0 | 140 ms | 187 |
+| Mercados | es | 96 | 100 | 100 | 66 | 2,6 s | 0 | 120 ms | 172 |
+| Mercados | en | 97 | 100 | 100 | 66 | 2,4 s | 0 | 110 ms | 172 |
+| Productores | es | 97 | 100 | 100 | 66 | 2,2 s | 0 | 140 ms | 178 |
+| Productores | en | 98 | 100 | 100 | 66 | 2,2 s | 0 | 140 ms | 178 |
+| Contacto | es | 98 | 100 | 100 | 66 | 2,2 s | 0 | 90 ms | 178 |
+| Contacto | en | 98 | 100 | 100 | 66 | 2,3 s | 0 | 90 ms | 178 |
 
 **SEO** marca solo `is-crawlable` ("la página está bloqueada para la indexación"): es el noindex
 buscado. La diferencia entre 66 y 69 es el peso de esa auditoría según las demás que aplican.
@@ -260,7 +261,10 @@ Lo que no se pudo bajar más, y por qué:
 - Hay ruido entre corridas: el mismo detalle de corte midió 2,5 s en ES y 2,8 s en EN en la misma
   tanda.
 
-Resultado de la última medición (tabla de arriba): ver el resumen al final de esta sección.
+Resultado de la medición final (tabla de arriba): LCP ≤ 2,5 s en catálogo, productores, contacto y
+mercados en inglés; entre 2,6 y 2,8 s en mercados (ES) y el detalle de corte; 3,3 s en la home. La
+home varía entre corridas (2,7 a 3,3 s en tres mediciones del mismo día) y su LCP es la foto del hero,
+que no se puede precargar sin el efecto descripto arriba.
 
 ## Seguridad
 

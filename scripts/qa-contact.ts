@@ -157,8 +157,11 @@ async function tabsAndUrl(browser: Browser, locale: L) {
 async function prefill(browser: Browser, locale: L) {
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
   await page.goto(`${base}${catalogPaths[locale]}`, { waitUntil: "load" });
-  await page.waitForSelector("[data-quote-link]");
-  const link = page.locator("[data-quote-link]").first();
+  // El HTML estático trae el catálogo vacuno; con ?species=lamb se espera a que lo reemplace el
+  // filtrado, si no se lee un link y se hace clic en otro.
+  const prefix = locale === "es" ? "beef_" : "lamb_";
+  await page.waitForSelector(`[data-quote-link^="${prefix}"]`);
+  const link = page.locator(`[data-quote-link^="${prefix}"]`).first();
   const cut = (await link.getAttribute("data-quote-link"))!;
   const href = await link.getAttribute("href");
   check(`${locale} catálogo: "Pedir cotización" → /contacto con id neutro`, href === `${paths[locale]}?tab=quote&cut=${cut}`, String(href));

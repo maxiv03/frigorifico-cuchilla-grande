@@ -61,7 +61,7 @@ Medido en producción (detalle completo en [docs/QA.md](docs/QA.md)):
 
 | Área | Resultado |
 |---|---|
-| Lighthouse móvil (6 páginas × ES/EN) | Performance 92–98 · Accesibilidad 100 · Buenas prácticas 100 · SEO 100 en modo indexable |
+| Lighthouse móvil (6 páginas × ES/EN) | Performance 91–98 · Accesibilidad 100 · Buenas prácticas 100 · SEO 100 en modo indexable |
 | axe (100 combinaciones de página, estado, idioma y ancho) | 0 violaciones |
 | Recorrido por teclado | 62/62 verificaciones |
 | SEO técnico | 106 URLs con canonical, hreflang recíproco, Open Graph y JSON-LD válidos |
@@ -198,7 +198,7 @@ Measured in production (full report in Spanish: [docs/QA.md](docs/QA.md)):
 
 | Area | Result |
 |---|---|
-| Lighthouse mobile (6 pages × ES/EN) | Performance 92–98 · Accessibility 100 · Best practices 100 · SEO 100 in indexable mode |
+| Lighthouse mobile (6 pages × ES/EN) | Performance 91–98 · Accessibility 100 · Best practices 100 · SEO 100 in indexable mode |
 | axe (100 page/state/language/width combinations) | 0 violations |
 | Keyboard walkthrough | 62/62 checks |
 | Technical SEO | 106 URLs with valid canonical, reciprocal hreflang, Open Graph and JSON-LD |
