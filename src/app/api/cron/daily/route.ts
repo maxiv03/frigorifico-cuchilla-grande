@@ -3,6 +3,7 @@
  * 1. Keep-alive de Supabase (las consultas de abajo cuentan como actividad).
  * 2. Rotación de la pizarra: inserta la semana vigente y cualquier semana faltante (sin historial: lo crea el seed).
  * 3. Purga de envíos de formularios con más de 90 días (declarado en Privacidad).
+ * 4. Registro en cron_runs (los logs de Vercel Hobby no alcanzan para verificar las corridas).
  * Única ubicación de la app donde se usa la clave secreta.
  */
 import { revalidateTag } from "next/cache";
@@ -59,6 +60,11 @@ export async function GET() {
     if (error) return fail(`${table} purge`, error.message);
     purged[table] = count ?? 0;
   }
+
+  // ─── Registro de la ejecución ─────────────────────────────────────────────
+  // Vercel Hobby no retiene logs: esta fila es la prueba de que el cron corrió (npm run ops:status).
+  const { error: runError } = await db.from("cron_runs").insert({ current_monday: currentMonday, inserted_quotes: inserted.length, purged });
+  if (runError) return fail("cron_runs", runError.message);
 
   return Response.json({ ok: true, currentMonday, insertedQuotes: inserted.length, purged });
 }

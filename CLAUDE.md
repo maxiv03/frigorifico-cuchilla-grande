@@ -19,6 +19,7 @@ Planta ficticia: Sarandí del Yí (departamento de Durazno), sobre ruta 6.
 | zod | 4.6.7 | validación de formularios y env |
 | d3-geo + topojson-client + world-atlas | 3.1.1 / 3.1.0 / 2.0.2 | mapa de mercados en SVG, generado en el servidor (Natural Earth 110m) |
 | Playwright | 1.64.1 | solo para capturas de QA |
+| @axe-core/playwright + lighthouse | 4.13.0 / 13.5.0 | solo QA (accesibilidad y performance) |
 | Node | 24 LTS | |
 
 Deploy: Vercel Hobby (cuenta personal), repo público `maxiv03/frigorifico-cuchilla-grande`
@@ -55,6 +56,11 @@ src/
   lib/forms/             tipos de estado/errores, helpers de Server Actions (insert anon, honeypot, ip_hash)
                          y reglas de los formularios de contacto (contact-rules.ts)
   lib/location-geometry.ts  mapa de ubicación de contacto (Natural Earth 50m, server-only)
+  lib/site.ts            URL pública (siteUrl/absoluteUrl) y SITE_INDEXABLE
+  lib/og/                plantillas de imágenes OG (next/og): general, corte, noticia + fuentes estáticas
+  lib/motion.ts          scrollBehavior() que respeta prefers-reduced-motion
+  components/seo/        JSON-LD (Organization, BreadcrumbList, NewsArticle)
+  i18n/global-error-messages.ts  textos de global-error (fuera de messages/*.json: no van al cliente)
   lib/producers/         categorías, rangos, departamentos y cálculo del lote (cliente y servidor)
   lib/metadata.ts        metadata de páginas estáticas (canonical + hreflang + x-default)
   lib/contact.ts         teléfono/WhatsApp/mail desde env + links con "[Demo]"
@@ -143,8 +149,9 @@ hex sueltos.
   sin filtros (queda en el HTML estático).
 - Detalle: `generateStaticParams` para todos los cortes y `export const instant = false`
   (lee params fuera de Suspense a propósito, para que el contenido quede en el HTML).
-  Slug desconocido → `notFound()`; con Cache Components el 1.er pedido puede salir 200 con la
-  404 + noindex (no existe `dynamicParams=false`). `check:links` lo cuenta como roto.
+  Slug desconocido → `notFound()`: en Vercel responde 404 desde el primer pedido (verificado en
+  la fase 6, cortes, noticias y rutas sueltas en ES y EN); `next start` local todavía da 200 al
+  primero. `check:links` cuenta cualquier soft-404 como roto.
 
 ## Calidad, empresa y mercados (fase 3)
 - Certificaciones en la base (`certifications`, `market_certifications`), seed en
@@ -218,6 +225,44 @@ hex sueltos.
 - Todos los flags de navegación quedan activos.
 - Scripts de Playwright con tsx: dentro de `page.evaluate` no declarar funciones con nombre (tsx
   inyecta `__name`, que no existe en la página).
+
+## SEO, accesibilidad, performance y seguridad (fase 6)
+- **SITE_INDEXABLE (por defecto false, regla dura):** la empresa es ficticia y no debe aparecer en
+  buscadores. Con false: `robots: noindex, nofollow` en todas las páginas (layout), robots.txt con
+  `Disallow: /` y `X-Robots-Tag: noindex, nofollow` en todas las respuestas (next.config). Con
+  "true": indexable. Se lee en el BUILD (páginas estáticas): cambiarla exige un deploy nuevo. En
+  Vercel solo está definida en Preview (true); los previews igual llevan `X-Robots-Tag: noindex` de
+  Vercel y Vercel Authentication, por eso el SEO indexable se mide con un build local
+  (`SITE_INDEXABLE=true NEXT_PUBLIC_SITE_URL=http://localhost:3100`).
+- Metadata: `pageMetadata` / `staticPageMetadata` (`lib/metadata.ts`) en TODA página nueva: título
+  (plantilla "%s · Frigorífico Cuchilla Grande"), descripción traducida, canonical, hreflang es/en/
+  x-default con slugs traducidos, Open Graph (es_UY / en_GB) y Twitter card.
+- Imágenes OG: un `opengraph-image.tsx` y un `twitter-image.tsx` por ruta, con las plantillas de
+  `lib/og` (general, corte, noticia). Se generan por pedido (Cache Components no las prerenderiza) y
+  el CDN las cachea un año; leen fuentes y fotos del repo (`outputFileTracingIncludes`). El proxy
+  excluye `*/opengraph-image` y `*/twitter-image` (si no, `/es/news/opengraph-image` se tomaba como
+  slug y redirigía).
+- sitemap.xml (estáticas, cortes y noticias con alternates) y JSON-LD: Organization en el layout,
+  BreadcrumbList en cortes y noticias, NewsArticle en noticias. `npm run check:seo` valida todo.
+- Headers (next.config): CSP aplicada sin orígenes externos; `script-src 'unsafe-inline'` porque
+  Next inyecta scripts inline en páginas estáticas (con nonce cada página pasaría a renderizarse por
+  pedido). CSP estricta en report-only solo con `CSP_STRICT_REPORT_ONLY=true` (en producción genera
+  un error de consola por script y baja "Buenas prácticas"). Más nosniff, Referrer-Policy,
+  Permissions-Policy, X-Frame-Options DENY + frame-ancestors 'none', COOP.
+- Accesibilidad: axe sin violaciones serias/críticas (`qa:a11y`), recorrido por teclado
+  (`qa:keyboard`). Dos formularios en la misma página → `<FieldIdScope value="…">` (ids únicos).
+  Links chicos apilados: `min-h-6` (target de 24 px). Regiones con scroll horizontal: `tabIndex={0}`,
+  `role="region"` y nombre. Desplazamientos por JS con `scrollBehavior()`. Movimiento reducido:
+  sin transiciones ni animaciones (globals.css).
+- Cliente liviano: `NextIntlClientProvider` recibe solo `CLIENT_NAMESPACES` (layout). Un componente
+  de cliente que use un namespace nuevo → agregarlo ahí. d3-geo, topojson y world-atlas quedan en el
+  servidor (verificado en el build).
+- Fechas: siempre `formatDate()` (`lib/format.ts`), en-GB para inglés ("12 October 2026"). Nada de
+  `{date, date}` de ICU ni `format.dateTime`. Inglés británico en todo el sitio (catalogue, centre,
+  colour, programme, US sin puntos).
+- Operación: Vercel Hobby retiene logs menos de una hora y Supabase gratis 24 horas; el cron escribe
+  cada ejecución en `cron_runs` (solo clave secreta) y `npm run ops:status` muestra el historial,
+  huecos, la pizarra y la purga.
 
 ## Reglas
 
@@ -335,11 +380,17 @@ npm run qa:contact -- <url-base> [--real-submit]  # pestañas (teclado y URL), p
 npm run qa:fixes -- <url-base>     # menú a 375×667, catálogo móvil (tarjetas compactas, vacuno completo a 375), drawer,
                                    # garrón seleccionado, foto de origen cargada (capturas en screenshots/fixes)
 npm run diagram:preview            # PNG de las siluetas en screenshots/diagram
+npm run check:seo -- <url-base> [--indexable]  # metadata, hreflang recíproco, robots, OG/Twitter, JSON-LD, fechas por idioma
+npm run qa:a11y -- <url-base>      # axe (ES/EN, 1440/375, estados), lang, zoom 200 %, movimiento reducido
+npm run qa:keyboard -- <url-base>  # Tab por formularios, diagrama, mapa, pestañas, menú; foco visible en cada parada
+npm run lighthouse -- <url-base> [--label x]  # Lighthouse móvil, 6 páginas × ES/EN (screenshots/lighthouse/<label>)
+npm run ops:status                 # ejecuciones del cron (cron_runs), pizarra y purga
 ```
 
 ## Cierre de cada fase
 typecheck, lint, build, i18n:check (y db:test-permissions si se tocó la base),
-check:links, qa:layout, qa:catalog, qa:institutional, qa:fixes, qa:producers y qa:contact contra producción,
+check:links, check:seo, qa:layout, qa:catalog, qa:institutional, qa:fixes, qa:producers, qa:contact, qa:a11y,
+qa:keyboard y lighthouse contra producción,
 capturas en escritorio y 375 px de las páginas tocadas en ES y EN (más el catálogo vacuno
 completo a 375 px). Toda captura de página completa pasa por `settlePage` (sin fotos a medio cargar). Esperar revisión
 del usuario antes de pasar a la siguiente fase.

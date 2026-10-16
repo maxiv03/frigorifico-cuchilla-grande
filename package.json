@@ -23,7 +23,9 @@
     "qa:contact": "tsx --env-file=.env.local scripts/qa-contact.ts",
     "check:seo": "tsx scripts/check-seo.ts",
     "qa:a11y": "tsx scripts/qa-a11y.ts",
-    "qa:keyboard": "tsx scripts/qa-keyboard.ts"
+    "qa:keyboard": "tsx scripts/qa-keyboard.ts",
+    "lighthouse": "tsx scripts/lighthouse.ts",
+    "ops:status": "tsx --env-file=.env.local scripts/ops-status.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.117.3",

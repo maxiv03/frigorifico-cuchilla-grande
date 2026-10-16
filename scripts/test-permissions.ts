@@ -139,6 +139,12 @@ async function main() {
   }
   check(blockedAt === 6, "el 6.º envío se bloquea", `bloqueó en ${blockedAt || "ninguno"}`);
 
+  console.log("Registro del cron (anon sin ningún permiso):");
+  const runSel = await anon.from("cron_runs").select("*").limit(1);
+  check(denied(runSel.error), "SELECT cron_runs rechazado", runSel.error?.message ?? "se pudo leer");
+  const runIns = await anon.from("cron_runs").insert({ current_monday: "2030-01-07" });
+  check(denied(runIns.error), "INSERT cron_runs rechazado", runIns.error?.message ?? "se pudo insertar");
+
   console.log("Funciones internas:");
   const rpc = await anon.rpc("enforce_form_rate_limit" as never);
   check(!!rpc.error, "RPC enforce_form_rate_limit rechazado", "se pudo ejecutar");

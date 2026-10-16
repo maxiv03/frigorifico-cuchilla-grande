@@ -58,6 +58,8 @@ es ninguna feria identificable. Todas bajo la Unsplash License.
 - [Source Serif 4](https://fonts.google.com/specimen/Source+Serif+4) y
   [Source Sans 3](https://fonts.google.com/specimen/Source+Sans+3), de Adobe —
   SIL Open Font License 1.1. Servidas con `next/font` (autohospedadas en el build).
+- Imágenes Open Graph (next/og): las mismas familias en archivos estáticos WOFF (latin, 400 y
+  600) de [Fontsource](https://fontsource.org) 5.2.5, en `src/lib/og/fonts` (misma licencia OFL 1.1).
 
 ## Logo e íconos
 
