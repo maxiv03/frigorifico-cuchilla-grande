@@ -118,11 +118,15 @@ hex sueltos.
   Estados sin depender del color: hover (tono + contorno fino), foco (anillo punteado, solo
   teclado), seleccionada (rayado + contorno grueso + etiqueta en negrita sobre pastilla; nunca
   `stroke` en el texto seleccionado). Una pieza puede tener nombre propio (`piece`: brazuelo y
-  garrón de la zona "Garrón y brazuelo") y etiqueta junto a las patas (`anchor`). Revisar
+  garrón de la zona "Garrón y brazuelo") y etiqueta junto a las patas (`anchor`). Las zonas del
+  tronco terminan donde nacen las patas (pecho y falda no bajan entre las patas delanteras). Revisar
   cambios de geometría con `npm run diagram:preview`.
 - Catálogo en móvil (< lg): chips de zona en una fila con desplazamiento horizontal, filtros en
   un panel modal ("Filtros (n)": foco atrapado, Escape, devuelve el foco) y "Presentaciones y
   formato de caja" plegado debajo de los resultados. Los items de grilla llevan `min-w-0`.
+  Bajo `sm` (< 640 px) la tarjeta con silueta es compacta y horizontal (silueta chica a la izquierda;
+  nombre, alias, badges en una línea y "Pedir cotización" a la derecha; sin la línea de zona).
+  Desde `sm`, tarjeta vertical. La tarjeta con foto (destacados de la home) no cambia.
 - Filtros: estado propio del componente + `history.replaceState` (sin ida y vuelta al
   servidor). No depender de `useSearchParams` después de montar: llega desfasado con clics
   rápidos. La página lee `searchParams` dentro de `<Suspense>`; el fallback es el catálogo
@@ -251,16 +255,19 @@ npm run db:push              # aplica migraciones (SUPABASE_DB_URL)
 npm run db:seed              # upsert idempotente del contenido (clave secreta)
 npm run db:test-permissions  # verifica que anon no lea/modifique formularios
 npm run shots -- <url-base> es en es/productos [--menu]  # capturas 1440 y 375 px (rutas sin "/" inicial en Git Bash)
+                             # antes de cada captura recorre la página y espera todas las imágenes (scripts/settle.ts)
 npm run check:links -- <url-base>  # links internos y anclas sin errores (cuenta soft-404)
 npm run qa:layout -- <url-base>    # skip link, menú móvil, idioma, imágenes, overflow
 npm run qa:catalog -- <url-base>   # diagrama por teclado, filtros en URL, idioma, vacío, detalle
 npm run qa:institutional -- <url-base>  # lista = mapa, links a catálogo filtrado, popups con teclado, CLS, 375 px
-npm run qa:fixes -- <url-base>     # menú a 375×667, catálogo móvil, drawer, garrón seleccionado (capturas en screenshots/fixes)
+npm run qa:fixes -- <url-base>     # menú a 375×667, catálogo móvil (tarjetas compactas, vacuno completo a 375), drawer,
+                                   # garrón seleccionado, foto de origen cargada (capturas en screenshots/fixes)
 npm run diagram:preview            # PNG de las siluetas en screenshots/diagram
 ```
 
 ## Cierre de cada fase
 typecheck, lint, build, i18n:check (y db:test-permissions si se tocó la base),
 check:links, qa:layout, qa:catalog y qa:institutional contra producción,
-capturas en escritorio y 375 px de las páginas tocadas en ES y EN. Esperar revisión
+capturas en escritorio y 375 px de las páginas tocadas en ES y EN (más el catálogo vacuno
+completo a 375 px). Toda captura de página completa pasa por `settlePage` (sin fotos a medio cargar). Esperar revisión
 del usuario antes de pasar a la siguiente fase.

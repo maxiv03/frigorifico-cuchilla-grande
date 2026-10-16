@@ -4,10 +4,13 @@
  *   npm run shots -- http://localhost:3000 es en es/productos
  *   --menu  además captura el menú móvil abierto (375 px) → <ruta>--mobile-menu.png
  * Salida: screenshots/<ruta>--desktop.png y --mobile.png
+ * Antes de cada captura se recorre la página hasta el final y se espera a que carguen todas las
+ * imágenes, sin placeholders blur (`settlePage`).
  */
 import { mkdirSync } from "node:fs";
 import { join } from "node:path";
 import { chromium } from "@playwright/test";
+import { settlePage } from "./settle";
 
 const args = process.argv.slice(2);
 const openMenu = args.includes("--menu");
@@ -37,10 +40,18 @@ async function main() {
         deviceScaleFactor: vp.name === "mobile" ? 2 : 1,
       });
       for (const path of paths) {
-        const response = await page.goto(new URL(path, baseUrl).toString(), { waitUntil: "networkidle" });
-        const file = join(outDir, `${path.replace(/^\/|\/$/g, "").replace(/[/?=&]/g, "_") || "root"}--${vp.name}.png`);
+        const response = await page.goto(new URL(path, baseUrl).toString(), {
+          waitUntil: "networkidle",
+        });
+        await settlePage(page);
+        const file = join(
+          outDir,
+          `${path.replace(/^\/|\/$/g, "").replace(/[/?=&]/g, "_") || "root"}--${vp.name}.png`,
+        );
         await page.screenshot({ path: file, fullPage: true });
-        console.log(`  ${response?.status()} ${vp.name.padEnd(7)} ${path} → ${file}`);
+        console.log(
+          `  ${response?.status()} ${vp.name.padEnd(7)} ${path} → ${file}`,
+        );
         if (openMenu && vp.name === "mobile") {
           await page.evaluate(() => window.scrollTo(0, 0));
           await page.locator("header button[aria-expanded]").first().click();

@@ -109,14 +109,15 @@ const beef: DiagramGeometry = {
     { id: "chuck", polygon: [[305, 0], [440, 0], [446, 240], [312, 236]], label: [376, 200] },
     { id: "blade", polygon: [[312, 236], [446, 240], [452, 392], [330, 405], [320, 335]], label: [386, 320] },
     {
+      // El pecho termina donde nacen las patas delanteras (y≈452): debajo es brazuelo.
       id: "brisket",
-      polygon: [[0, 345], [236, 345], [320, 335], [330, 405], [452, 392], [420, 478], [0, 478]],
+      polygon: [[0, 345], [236, 345], [320, 335], [330, 405], [452, 392], [400, 452], [0, 452]],
       label: [300, 425],
     },
     { id: "rib", polygon: [[440, 0], [565, 0], [568, 246], [446, 240]], label: [505, 205] },
     {
       id: "plate",
-      polygon: [[446, 240], [568, 246], [612, 600], [420, 600], [420, 478], [452, 392]],
+      polygon: [[446, 240], [568, 246], [612, 600], [386, 600], [386, 452], [400, 452], [452, 392]],
       label: [515, 380],
     },
     { id: "loin", polygon: [[565, 0], [762, 0], [758, 250], [568, 246]], label: [662, 210] },
@@ -131,7 +132,7 @@ const beef: DiagramGeometry = {
       // Una zona ("Garrón y brazuelo") en dos piezas: brazuelo en las patas delanteras y
       // garrón en las traseras, cada una con su nombre junto a las patas.
       id: "shank",
-      polygon: [[0, 478], [420, 478], [420, 600], [0, 600]],
+      polygon: [[0, 452], [386, 452], [386, 600], [0, 600]],
       label: [402, 548],
       anchor: "start",
       piece: "shin",
@@ -195,15 +196,16 @@ const lamb: DiagramGeometry = {
       label: [735, 290],
     },
     {
+      // Como en el vacuno, el pecho termina donde nacen las patas delanteras (y≈368).
       id: "breast",
       polygon: [
         [0, 262], [244, 262], [310, 250], [318, 326], [436, 312], [554, 300], [668, 290],
-        [640, 396], [640, 600], [370, 600], [370, 396], [0, 396],
+        [640, 396], [640, 600], [364, 600], [364, 368], [0, 368],
       ],
       label: [480, 352],
     },
     // garrón: patas delanteras y traseras; la etiqueta va entre ambos pares, bajo el vientre
-    { id: "shank", polygon: [[0, 396], [370, 396], [370, 600], [0, 600]], label: [508, 476] },
+    { id: "shank", polygon: [[0, 368], [364, 368], [364, 600], [0, 600]], label: [508, 476] },
     { id: "shank_hind", polygon: [[652, 466], [1000, 466], [1000, 600], [640, 600], [640, 396]], label: null },
   ],
 };

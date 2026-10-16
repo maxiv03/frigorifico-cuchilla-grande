@@ -370,7 +370,7 @@ function Catalog({
         </p>
 
         {count > 0 ? (
-          <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <ul className="mt-6 grid gap-3 sm:mt-8 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4">
             {results.map((c, i) => (
               <li key={c.id} className="flex">
                 <CutCard cut={c} email={email} eager={eager && i < 4} className="w-full" />

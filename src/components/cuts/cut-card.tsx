@@ -44,6 +44,8 @@ type Props = {
  * Tarjeta de corte: mini-silueta del animal con la zona del corte (o la foto de la pieza),
  * nombre, alias, zona y badges. Toda la tarjeta lleva al detalle (enlace estirado sobre el título);
  * "Pedir cotización" es un mailto aparte, por encima del enlace.
+ * Con silueta, en móvil (< sm) es compacta y horizontal: silueta chica a la izquierda, texto a la
+ * derecha y sin la línea de zona (la silueta ya la muestra y la nombra).
  */
 export function CutCard({
   cut,
@@ -57,13 +59,20 @@ export function CutCard({
   const t = useTranslations("Products");
   const locale = useLocale();
   const image = visual === "photo" ? cutImage(cut.image, cut.species) : null;
-  const subject = t("card.quoteSubject", { cut: cut.name, species: t(`species.${cut.species}`) });
+  const subject = t("card.quoteSubject", {
+    cut: cut.name,
+    species: t(`species.${cut.species}`),
+  });
+  const compact = !image;
+  // En la tarjeta compacta, badges más ceñidos para que entren en una sola línea.
+  const badge = compact ? "max-sm:px-1.5 max-sm:tracking-normal" : undefined;
 
   return (
     <article
       data-cut={cut.id}
       className={cn(
-        "group relative flex flex-col overflow-hidden rounded-lg bg-surface shadow-card ring-1 ring-line transition-shadow focus-within:ring-2 focus-within:ring-brand-700 hover:shadow-raised",
+        "group relative flex overflow-hidden rounded-lg bg-surface shadow-card ring-1 ring-line transition-shadow focus-within:ring-2 focus-within:ring-brand-700 hover:shadow-raised",
+        compact ? "flex-row sm:flex-col" : "flex-col",
         className,
       )}
     >
@@ -80,43 +89,80 @@ export function CutCard({
           />
         </div>
       ) : (
-        <div className="border-b border-line bg-surface-muted px-5 pt-4 pb-3">
+        <div className="flex w-24 shrink-0 items-center border-r border-line bg-surface-muted px-2 sm:block sm:w-auto sm:border-r-0 sm:border-b sm:px-5 sm:pt-4 sm:pb-3">
           <CutDiagram
             species={cut.species}
             selected={cut.zone}
             zones={[{ key: cut.zone, name: cut.zoneName, label: cut.zoneName }]}
-            label={t("detail.diagramLabel", { species: t(`detail.speciesInline.${cut.species}`), zone: cut.zoneName })}
+            label={t("detail.diagramLabel", {
+              species: t(`detail.speciesInline.${cut.species}`),
+              zone: cut.zoneName,
+            })}
             showLabels={false}
-            className="mx-auto max-w-52 sm:max-w-72"
+            className="mx-auto sm:max-w-72"
           />
         </div>
       )}
-      <div className="flex flex-1 flex-col p-5">
-        <p className="text-xs font-semibold tracking-[0.12em] text-earth-700 uppercase">{t("card.zone", { zone: cut.zoneName })}</p>
-        <H className="mt-2 font-serif text-xl leading-snug font-semibold text-ink">
+      <div
+        className={cn(
+          "flex min-w-0 flex-1 flex-col",
+          compact ? "px-3 py-3 sm:p-5" : "p-5",
+        )}
+      >
+        <p
+          className={cn(
+            "text-xs font-semibold tracking-[0.12em] text-earth-700 uppercase",
+            compact && "max-sm:hidden",
+          )}
+        >
+          {t("card.zone", { zone: cut.zoneName })}
+        </p>
+        <H
+          className={cn(
+            "font-serif leading-snug font-semibold text-ink",
+            compact ? "text-lg sm:mt-2 sm:text-xl" : "mt-2 text-xl",
+          )}
+        >
           <Link
-            href={{ pathname: "/products/[species]/[cut]", params: { species: speciesSlugs[cut.species][locale], cut: cut.slug } }}
+            href={{
+              pathname: "/products/[species]/[cut]",
+              params: {
+                species: speciesSlugs[cut.species][locale],
+                cut: cut.slug,
+              },
+            }}
             className="outline-none after:absolute after:inset-0 after:content-['']"
           >
             {cut.name}
           </Link>
         </H>
-        {cut.alias && <p className="mt-0.5 text-sm text-ink-muted">{cut.alias}</p>}
-        <ul className="mt-4 flex flex-wrap gap-1.5">
+        {cut.alias && (
+          <p className="mt-0.5 text-sm text-ink-muted">{cut.alias}</p>
+        )}
+        <ul
+          className={cn(
+            "flex flex-wrap gap-1.5",
+            compact ? "mt-2 sm:mt-4" : "mt-4",
+          )}
+        >
           {cut.presentations.map((p) => (
             <li key={p}>
-              <Badge tone="earth">{t(`presentation.${p}`)}</Badge>
+              <Badge tone="earth" className={badge}>
+                {t(`presentation.${p}`)}
+              </Badge>
             </li>
           ))}
           <li>
-            <Badge tone="neutral">{t(`bone.${cut.bone}`)}</Badge>
+            <Badge tone="neutral" className={badge}>
+              {t(`bone.${cut.bone}`)}
+            </Badge>
           </li>
         </ul>
-        <div className="mt-auto pt-5">
+        <div className={cn("mt-auto", compact ? "pt-2 sm:pt-5" : "pt-5")}>
           <a
             href={buildMailto(email, subject)}
             aria-label={t("card.quoteFor", { cut: cut.name })}
-            className="relative z-10 inline-flex items-center gap-1.5 rounded-sm text-sm font-semibold text-brand-700 underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700"
+            className="relative z-10 inline-flex min-h-6 items-center gap-1.5 rounded-sm text-sm font-semibold text-brand-700 underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700"
           >
             <IconMail width={16} height={16} />
             {t("card.quote")}
