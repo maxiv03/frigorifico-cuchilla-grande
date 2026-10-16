@@ -384,7 +384,7 @@ Se buscaron los **valores reales** de `SUPABASE_SECRET_KEY`, `SUPABASE_PUBLISHAB
 | `qa:layout` | Salto al contenido, menú móvil, idioma, imágenes, overflow | 20/20 |
 | `qa:catalog` | Diagrama por teclado, filtros en la URL, detalle, 404 desde el primer pedido | 42/42 (v1.0.1: chips de 40 px y ≥ 8 px entre chips en lugar de 44 px) |
 | `qa:institutional` | Mapa = lista, links al catálogo filtrado, panel por teclado, CLS, 375 px | 82/82 |
-| `qa:fixes` | Menú a 375×667, catálogo móvil, drawer, foto de origen; filas deslizables (v1.0.1) | QA_FIXES_RESULT |
+| `qa:fixes` | Menú a 375×667, catálogo móvil, drawer, foto de origen; filas deslizables (v1.0.1) | 66/66 (40 + 26 de v1.0.1) |
 | `qa:producers` | Pizarra ordenada y fórmula (12 semanas), calculadora, precarga, validación, honeypot, errores a 375 px | 78/78 |
 | `qa:contact` | Pestañas, precarga del corte (ES/EN), validaciones, honeypot, errores a 375 px | 70/70 |
 | `qa:a11y` | axe, lang, zoom 200 %, movimiento reducido | 100 combinaciones, 0 violaciones; 19/19 verificaciones extra |
