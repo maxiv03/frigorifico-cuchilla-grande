@@ -5,7 +5,7 @@
  * Por página: título y descripción presentes y únicos; canonical = la propia URL; hreflang es/en/
  * x-default recíprocos (la otra versión apunta de vuelta); meta robots según SITE_INDEXABLE
  * (noindex,nofollow por defecto; con --indexable, sin noindex); Open Graph y Twitter con imagen que
- * responde 200 image/png; JSON-LD parseable con los campos obligatorios de cada tipo
+ * responde 200 (PNG o JPEG) y pesa menos de 300 KB; JSON-LD parseable con los campos obligatorios de cada tipo
  * (Organization en todas; BreadcrumbList en cortes y noticias; NewsArticle en noticias).
  * También: robots.txt coherente con el modo y sitemap con alternates.
  */
@@ -14,6 +14,7 @@ const base = (args.find((a) => !a.startsWith("--")) ?? "http://localhost:3000").
 const INDEXABLE = args.includes("--indexable");
 
 const failures: string[] = [];
+const MAX_OG_BYTES = 300 * 1024;
 const fail = (msg: string) => failures.push(msg);
 
 type Ld = Record<string, unknown>;
@@ -43,6 +44,7 @@ async function main() {
   const descriptions = new Map<string, string>();
   const hreflang = new Map<string, Record<string, string>>();
   const imageStatus = new Map<string, string>();
+  const imageSizes = new Map<string, number>();
   const ldCount: Record<string, number> = {};
 
   for (const url of urls) {
@@ -93,9 +95,12 @@ async function main() {
       const key = local(img) + new URL(img).search;
       if (!imageStatus.has(key)) {
         const r = await fetch(key, { redirect: "manual" });
+        imageSizes.set(key, r.ok ? (await r.arrayBuffer()).byteLength : 0);
         imageStatus.set(key, `${r.status} ${r.headers.get("content-type")}`);
       }
-      if (imageStatus.get(key) !== "200 image/png") fail(`imagen OG ${imageStatus.get(key)}: ${new URL(img).pathname} (en ${path})`);
+      if (!/^200 image\/(png|jpeg)$/.test(imageStatus.get(key)!)) fail(`imagen OG ${imageStatus.get(key)}: ${new URL(img).pathname} (en ${path})`);
+      // WhatsApp y otras redes no muestran la vista previa con imágenes pesadas.
+      if ((imageSizes.get(key) ?? 0) > MAX_OG_BYTES) fail(`imagen OG de ${Math.round(imageSizes.get(key)! / 1024)} KB (> 300 KB): ${new URL(img).pathname}`);
     }
 
     const blocks = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => m[1]);
@@ -138,7 +143,7 @@ async function main() {
   }
 
   console.log(`Modo: ${INDEXABLE ? "indexable" : "noindex (SITE_INDEXABLE=false)"}`);
-  console.log(`${urls.length} URLs del sitemap · ${imageStatus.size} imágenes OG/Twitter · JSON-LD: ${Object.entries(ldCount).map(([k, v]) => `${k} ${v}`).join(", ")}`);
+  console.log(`${urls.length} URLs del sitemap · ${imageStatus.size} imágenes OG/Twitter (máx. ${Math.round(Math.max(...imageSizes.values()) / 1024)} KB) · JSON-LD: ${Object.entries(ldCount).map(([k, v]) => `${k} ${v}`).join(", ")}`);
   if (failures.length) {
     console.error(`\n✗ ${failures.length} problemas:`);
     for (const f of failures.slice(0, 60)) console.error(`  ${f}`);

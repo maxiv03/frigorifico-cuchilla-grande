@@ -2,6 +2,7 @@ import "server-only";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
+import sharp from "sharp";
 import { diagrams, toPath } from "@/components/cuts/diagram-geometry";
 import type { Species } from "@/lib/catalog/types";
 
@@ -13,6 +14,8 @@ import type { Species } from "@/lib/catalog/types";
  */
 export const OG_SIZE = { width: 1200, height: 630 };
 export const OG_CONTENT_TYPE = "image/png";
+/** Las noticias llevan foto: en PNG pesaban 0,6–1,1 MB (WhatsApp no muestra la vista previa). */
+export const OG_NEWS_CONTENT_TYPE = "image/jpeg";
 const DECORATIVE = "";
 
 const C = {
@@ -173,7 +176,7 @@ export async function renderCut({
 /** Noticia: foto a la derecha (si hay), fecha y título a la izquierda sobre bordó oscuro. */
 export async function renderNews({ brand, kicker, date, title, image }: { brand: Brand; kicker: string; date: string; title: string; image: string | null }) {
   const photo = image ? `data:image/jpeg;base64,${(await readFile(join(root, "public/images/news", `${image}.jpg`))).toString("base64")}` : null;
-  return new ImageResponse(
+  const png = new ImageResponse(
     (
       <div style={{ width: "100%", height: "100%", display: "flex", background: C.brand900 }}>
         <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", width: photo ? 640 : 1200, padding: 64 }}>
@@ -192,6 +195,12 @@ export async function renderNews({ brand, kicker, date, title, image }: { brand:
     ),
     { ...OG_SIZE, fonts: await fonts() },
   );
+  // ImageResponse solo genera PNG: se recodifica en JPEG (calidad 80, mozjpeg) para quedar por
+  // debajo de 300 KB. Misma caché que next/og (inmutable, un año).
+  const jpeg = await sharp(Buffer.from(await png.arrayBuffer())).jpeg({ quality: 80, mozjpeg: true }).toBuffer();
+  return new Response(new Uint8Array(jpeg), {
+    headers: { "content-type": OG_NEWS_CONTENT_TYPE, "cache-control": png.headers.get("cache-control") ?? "public, max-age=31536000, immutable" },
+  });
 }
 
 function clip(text: string, max: number) {

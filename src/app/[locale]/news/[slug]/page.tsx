@@ -120,8 +120,7 @@ export default async function NewsDetailPage({ params }: { params: Promise<Param
               alt={t(`images.${image.key}`)}
               sizes="(min-width: 768px) 720px, 100vw"
               placeholder="blur"
-              loading="eager"
-              fetchPriority="high"
+              preload
               className="mt-8 aspect-[16/10] w-full rounded-lg object-cover shadow-raised"
             />
           )}

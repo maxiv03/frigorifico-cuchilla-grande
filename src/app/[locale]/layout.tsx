@@ -11,8 +11,10 @@ import { siteIndexable, siteUrl } from "@/lib/site";
 import "../globals.css";
 
 // Source Serif 4 (títulos) + Source Sans 3 (texto): superfamilia de Adobe pensada para
-// combinarse; serif editorial sobria y sans muy legible. Variables: un archivo por familia.
-const serif = Source_Serif_4({ subsets: ["latin"], variable: "--font-source-serif", display: "swap" });
+// combinarse; serif editorial sobria y sans muy legible. La serif solo se usa en semibold: un
+// archivo estático de 600 (21 KB) en vez del variable (51 KB), que estaba en la ruta del LCP. La
+// sans sigue variable (29 KB: 400, 600 y algún 500/700).
+const serif = Source_Serif_4({ subsets: ["latin"], weight: ["600"], variable: "--font-source-serif", display: "swap" });
 const sans = Source_Sans_3({ subsets: ["latin"], variable: "--font-source-sans", display: "swap" });
 
 export function generateStaticParams() {

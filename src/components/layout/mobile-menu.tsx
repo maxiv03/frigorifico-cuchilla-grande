@@ -124,7 +124,7 @@ export function MobileMenu({ main, utility, footer }: Props) {
                     <Link
                       href={item.href}
                       className={cn(
-                        "flex min-h-11 items-center justify-between py-2 font-serif text-xl",
+                        "flex min-h-11 items-center justify-between py-2 font-serif text-xl font-semibold",
                         item.highlight ? "text-earth-700" : "text-ink",
                       )}
                     >

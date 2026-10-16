@@ -1,4 +1,5 @@
 import { getImageProps } from "next/image";
+import { preload } from "react-dom";
 import { getLocale, getTranslations } from "next-intl/server";
 import { IconArrowRight } from "@/components/icons";
 import { ButtonAnchor, ButtonLink } from "@/components/ui/button";
@@ -15,12 +16,17 @@ export async function Hero() {
   const locale = await getLocale();
   const { figures, address } = company;
 
-  // Dos candidatas a LCP según viewport: eager + fetchPriority (no `preload`, ver docs de next/image).
+  // Dos candidatas a LCP según viewport: eager + fetchPriority. El `preload` de next/image no sirve
+  // con dirección de arte (precargaría las dos); se precarga con React y `media`, así cada navegador
+  // baja solo la variante que va a mostrar, antes de llegar al <picture>.
   const common = { alt: t("imageAlt"), sizes: "100vw", loading: "eager", fetchPriority: "high", quality: 75 } as const;
   const { props: desktop } = getImageProps({ ...common, src: heroH, placeholder: "blur" });
   const {
     props: { srcSet: mobileSrcSet, ...mobile },
   } = getImageProps({ ...common, src: heroV, placeholder: "blur" });
+
+  preload(desktop.src, { as: "image", imageSrcSet: desktop.srcSet, imageSizes: "100vw", media: "(min-width: 768px)", fetchPriority: "high" });
+  preload(mobile.src, { as: "image", imageSrcSet: mobileSrcSet, imageSizes: "100vw", media: "(max-width: 767px)", fetchPriority: "high" });
 
   return (
     <section className="relative isolate flex min-h-[calc(100svh-var(--spacing-header))] items-end overflow-hidden bg-night lg:min-h-[calc(100svh-var(--spacing-header)-2.25rem)]">

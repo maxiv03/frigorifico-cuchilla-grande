@@ -136,8 +136,7 @@ export default async function CutPage({ params }: { params: Promise<Params> }) {
                     alt={t(`images.${image.key}`)}
                     fill
                     placeholder="blur"
-                    loading="eager"
-                    fetchPriority="high"
+                    preload
                     sizes="(min-width: 1216px) 560px, (min-width: 1024px) 46vw, 100vw"
                     className="object-cover"
                   />
