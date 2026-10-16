@@ -21,7 +21,7 @@ import { HONEYPOT_FIELD, type FieldError, type FormState } from "@/lib/forms/typ
  */
 const FieldIdPrefix = createContext("f");
 export const FieldIdScope = FieldIdPrefix.Provider;
-export const useFieldId = () => {
+const useFieldId = () => {
   const prefix = useContext(FieldIdPrefix);
   return (name: string, suffix?: string) => `${prefix}-${name}${suffix ? `-${suffix}` : ""}`;
 };
@@ -207,7 +207,7 @@ export function CheckboxField({
  * scroll-margin) y pone el foco en el primer campo con error sin volver a desplazar, así quedan
  * visibles los dos. Si el aviso y el campo no entran juntos, manda el campo.
  */
-export function revealFirstError(form: HTMLFormElement | null, alert: HTMLElement | null, firstName?: string) {
+function revealFirstError(form: HTMLFormElement | null, alert: HTMLElement | null, firstName?: string) {
   // Un grupo (lista de casillas) puede designar su control de foco con data-focus-for.
   const field = firstName
     ? (form?.querySelector<HTMLElement>(`[data-focus-for="${firstName}"]`) ?? form?.querySelector<HTMLElement>(`[name="${firstName}"]`))

@@ -1,10 +1,8 @@
 import { getImageProps } from "next/image";
-import { preload } from "react-dom";
 import { getLocale, getTranslations } from "next-intl/server";
 import { IconArrowRight } from "@/components/icons";
-import { ButtonAnchor, ButtonLink } from "@/components/ui/button";
+import { ButtonLink } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
-import { isEnabled } from "@/config/navigation";
 import { company } from "@/data/company";
 import { formatFigure } from "@/lib/format";
 import heroH from "../../../public/images/home/hero-angus-campo-h.jpg";
@@ -16,17 +14,15 @@ export async function Hero() {
   const locale = await getLocale();
   const { figures, address } = company;
 
-  // Dos candidatas a LCP según viewport: eager + fetchPriority. El `preload` de next/image no sirve
-  // con dirección de arte (precargaría las dos); se precarga con React y `media`, así cada navegador
-  // baja solo la variante que va a mostrar, antes de llegar al <picture>.
+  // Dos candidatas a LCP según viewport: eager + fetchPriority, sin preload. El `preload` de
+  // next/image precargaría las dos variantes, y `preload()` de React (con `media`) viaja en el
+  // payload RSC: como las demás páginas precargan la home (logo, "Inicio"), todas bajaban esta foto
+  // con prioridad alta (medido en la fase 7). La foto está al principio del HTML y se descubre igual.
   const common = { alt: t("imageAlt"), sizes: "100vw", loading: "eager", fetchPriority: "high", quality: 75 } as const;
   const { props: desktop } = getImageProps({ ...common, src: heroH, placeholder: "blur" });
   const {
     props: { srcSet: mobileSrcSet, ...mobile },
   } = getImageProps({ ...common, src: heroV, placeholder: "blur" });
-
-  preload(desktop.src, { as: "image", imageSrcSet: desktop.srcSet, imageSizes: "100vw", media: "(min-width: 768px)", fetchPriority: "high" });
-  preload(mobile.src, { as: "image", imageSrcSet: mobileSrcSet, imageSizes: "100vw", media: "(max-width: 767px)", fetchPriority: "high" });
 
   return (
     <section className="relative isolate flex min-h-[calc(100svh-var(--spacing-header))] items-end overflow-hidden bg-night lg:min-h-[calc(100svh-var(--spacing-header)-2.25rem)]">
@@ -56,24 +52,12 @@ export async function Hero() {
             })}
           </p>
           <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-            {isEnabled("products") ? (
-              <ButtonLink href="/products" size="lg" icon={<IconArrowRight />}>
-                {t("ctaBuyer")}
-              </ButtonLink>
-            ) : (
-              <ButtonAnchor href="#buyers" size="lg" icon={<IconArrowRight />}>
-                {t("ctaBuyer")}
-              </ButtonAnchor>
-            )}
-            {isEnabled("producers") ? (
-              <ButtonLink href="/producers" size="lg" variant="outlineLight">
-                {t("ctaProducer")}
-              </ButtonLink>
-            ) : (
-              <ButtonAnchor href="#producers" size="lg" variant="outlineLight">
-                {t("ctaProducer")}
-              </ButtonAnchor>
-            )}
+            <ButtonLink href="/products" size="lg" icon={<IconArrowRight />}>
+              {t("ctaBuyer")}
+            </ButtonLink>
+            <ButtonLink href="/producers" size="lg" variant="outlineLight">
+              {t("ctaProducer")}
+            </ButtonLink>
           </div>
         </div>
       </Container>

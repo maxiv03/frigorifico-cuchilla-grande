@@ -2,7 +2,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { Logo } from "@/components/brand/logo";
 import { IconMail, IconMapPin, IconWhatsApp } from "@/components/icons";
 import { Container } from "@/components/ui/container";
-import { mainNav, utilityNav, visible } from "@/config/navigation";
+import { mainNav, utilityNav } from "@/config/navigation";
 import { company } from "@/data/company";
 import { Link } from "@/i18n/navigation";
 import { contactInfo, whatsappUrl } from "@/lib/contact";
@@ -13,7 +13,7 @@ export async function SiteFooter() {
   const locale = await getLocale();
   const contact = contactInfo();
   const { address } = company;
-  const links = visible([...mainNav, ...utilityNav]);
+  const links = [...mainNav, ...utilityNav];
 
   return (
     <footer className="bg-night text-earth-200">

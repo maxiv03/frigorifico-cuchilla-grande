@@ -79,12 +79,6 @@ export const IconMinus = (p: SVGProps<SVGSVGElement>) => (
     <path d="M5 12h14" />
   </Icon>
 );
-export const IconGlobe = (p: SVGProps<SVGSVGElement>) => (
-  <Icon {...p}>
-    <circle cx="12" cy="12" r="8.5" />
-    <path d="M3.5 12h17M12 3.5c2.5 2.6 3.6 5.4 3.6 8.5s-1.1 5.9-3.6 8.5c-2.5-2.6-3.6-5.4-3.6-8.5s1.1-5.9 3.6-8.5z" />
-  </Icon>
-);
 
 // ─── Institucionales (calidad, empresa) ─────────────────────────────────────
 export const IconEarTag = (p: SVGProps<SVGSVGElement>) => (
@@ -117,11 +111,6 @@ export const IconCuts = (p: SVGProps<SVGSVGElement>) => (
   <Icon {...p}>
     <path d="M4 10c0-3.3 3.4-6 8-6s8 2.7 8 6-3.6 7-8 7-8-3.7-8-7z" />
     <path d="M9 9.5c0-1.4 1.3-2.5 3-2.5s3 1.1 3 2.5-1.3 2.5-3 2.5-3-1.1-3-2.5zM12 17v3.5" />
-  </Icon>
-);
-export const IconBox = (p: SVGProps<SVGSVGElement>) => (
-  <Icon {...p}>
-    <path d="M3.5 7.5L12 3.5l8.5 4v9L12 20.5l-8.5-4zM3.5 7.5L12 11.5l8.5-4M12 11.5v9" />
   </Icon>
 );
 export const IconBarcode = (p: SVGProps<SVGSVGElement>) => (
@@ -179,11 +168,6 @@ export const IconThermometer = (p: SVGProps<SVGSVGElement>) => (
     <path d="M12 9v7" />
   </Icon>
 );
-export const IconCalendar = (p: SVGProps<SVGSVGElement>) => (
-  <Icon {...p}>
-    <path d="M5 5.5h14a1 1 0 0 1 1 1V19a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6.5a1 1 0 0 1 1-1zM4 10h16M8 3.5v4M16 3.5v4" />
-  </Icon>
-);
 export const IconDocument = (p: SVGProps<SVGSVGElement>) => (
   <Icon {...p}>
     <path d="M14 3.5H7A1.5 1.5 0 0 0 5.5 5v14A1.5 1.5 0 0 0 7 20.5h10a1.5 1.5 0 0 0 1.5-1.5V8z" />
@@ -200,12 +184,6 @@ export const IconUserCheck = (p: SVGProps<SVGSVGElement>) => (
   <Icon {...p}>
     <circle cx="9.5" cy="8" r="3.5" />
     <path d="M3 20c.6-3.5 3.2-5.5 6.5-5.5 1.4 0 2.6.3 3.6 1M15 18l2 2 4-4.5" />
-  </Icon>
-);
-export const IconCalculator = (p: SVGProps<SVGSVGElement>) => (
-  <Icon {...p}>
-    <path d="M7 3h10a1.5 1.5 0 0 1 1.5 1.5v15A1.5 1.5 0 0 1 17 21H7a1.5 1.5 0 0 1-1.5-1.5v-15A1.5 1.5 0 0 1 7 3z" />
-    <path d="M8.5 6.5h7v3h-7zM8.5 13h.01M12 13h.01M15.5 13h.01M8.5 17h.01M12 17h.01M15.5 17h.01" />
   </Icon>
 );
 export const IconAlert = (p: SVGProps<SVGSVGElement>) => (

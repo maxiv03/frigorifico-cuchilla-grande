@@ -3,7 +3,7 @@ import { Logo } from "@/components/brand/logo";
 import { IconMail, IconWhatsApp } from "@/components/icons";
 import { Container } from "@/components/ui/container";
 import { cn } from "@/components/ui/cn";
-import { mainNav, utilityNav, visible } from "@/config/navigation";
+import { mainNav, utilityNav } from "@/config/navigation";
 import { Link } from "@/i18n/navigation";
 import { contactInfo, whatsappUrl } from "@/lib/contact";
 import { LocaleSwitcher } from "./locale-switcher";
@@ -14,8 +14,8 @@ export async function SiteHeader() {
   const nav = await getTranslations("Nav");
   const contact = contactInfo();
 
-  const main: MenuLink[] = visible(mainNav).map((i) => ({ ...i, label: nav(i.key) }));
-  const utility: MenuLink[] = visible(utilityNav).map((i) => ({ ...i, label: nav(i.key) }));
+  const main: MenuLink[] = mainNav.map((i) => ({ ...i, label: nav(i.key) }));
+  const utility: MenuLink[] = utilityNav.map((i) => ({ ...i, label: nav(i.key) }));
 
   return (
     <>

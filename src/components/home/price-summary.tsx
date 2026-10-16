@@ -4,7 +4,6 @@ import { PriceChange } from "@/components/prices/price-change";
 import { Badge } from "@/components/ui/badge";
 import { ButtonLink } from "@/components/ui/button";
 import { Section, SectionHeader } from "@/components/ui/section";
-import { isEnabled } from "@/config/navigation";
 import { getPriceBoard, type PriceRow } from "@/lib/data/prices";
 import { formatDate, formatPrice } from "@/lib/format";
 
@@ -61,13 +60,11 @@ async function Board() {
           </li>
         ))}
       </ul>
-      {isEnabled("producers") && (
-        <div className="mt-8">
-          <ButtonLink href={{ pathname: "/producers", hash: "board" }} variant="secondary" icon={<IconArrowRight />}>
-            {t("seeFull")}
-          </ButtonLink>
-        </div>
-      )}
+      <div className="mt-8">
+        <ButtonLink href={{ pathname: "/producers", hash: "board" }} variant="secondary" icon={<IconArrowRight />}>
+          {t("seeFull")}
+        </ButtonLink>
+      </div>
     </div>
   );
 }

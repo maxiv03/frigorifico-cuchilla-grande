@@ -13,7 +13,7 @@ export function contactInfo() {
 }
 
 /** "59898016286" → "+598 98 016 286" (celular uruguayo); otros formatos quedan con "+" y espacios mínimos. */
-export function formatPhone(digits: string) {
+function formatPhone(digits: string) {
   const uy = digits.match(/^598(9\d)(\d{3})(\d{3})$/);
   if (uy) return `+598 ${uy[1]} ${uy[2]} ${uy[3]}`;
   return `+${digits}`;

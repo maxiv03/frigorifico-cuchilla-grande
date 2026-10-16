@@ -18,7 +18,7 @@ const MARKET_SHOCK = 0.02;
 const REVERSION = 0.15;
 const CATEGORY_NOISE = 0.005;
 /** Diferencia mínima, en US$/kg, entre una categoría y la siguiente de su especie. */
-export const MIN_GAP = 0.05;
+const MIN_GAP = 0.05;
 
 export type Quote = { categoryId: string; weekStart: string; price: number };
 export type PriceCategoryRef = { id: string; species: string; basePrice: number; sort: number };
@@ -36,7 +36,7 @@ function hashUnit(input: string): number {
 const signed = (key: string) => hashUnit(key) * 2 - 1;
 
 /** Índice de mercado de la especie en esa semana (1 = precio base). */
-export function marketIndex(species: string, weekStart: string): number {
+function marketIndex(species: string, weekStart: string): number {
   let idx = 1;
   for (let w = addWeeks(EPOCH, 1); w <= weekStart; w = addWeeks(w, 1)) {
     idx = idx * (1 + signed(`market|${species}|${w}`) * MARKET_SHOCK) + (1 - idx) * REVERSION;
@@ -47,7 +47,7 @@ export function marketIndex(species: string, weekStart: string): number {
 const cents = (n: number) => Math.round(n * 100) / 100;
 
 /** Pizarra completa de una semana, con el orden entre categorías garantizado. */
-export function quotesForWeek(categories: PriceCategoryRef[], weekStart: string): Quote[] {
+function quotesForWeek(categories: PriceCategoryRef[], weekStart: string): Quote[] {
   const out: Quote[] = [];
   const bySpecies = Map.groupBy(categories, (c) => c.species);
   for (const [species, group] of bySpecies) {

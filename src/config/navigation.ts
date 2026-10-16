@@ -1,12 +1,8 @@
 import type { StaticPathname } from "@/i18n/routing";
 
 /**
- * Navegación del sitio. Cada ítem tiene un flag `enabled`: SOLO se muestran las
- * secciones que ya existen (nunca un link a una página 404 en producción).
- * Al terminar cada fase, se activa su ítem acá.
- *
- * NAV_PREVIEW=1 muestra todos los ítems para revisar el diseño en local. Se ignora
- * siempre en producción (VERCEL_ENV=production).
+ * Navegación del sitio: menú principal y barra superior (los dos se repiten en el footer y en el
+ * menú móvil). Las etiquetas salen de `Nav.<key>` en los mensajes.
  */
 export type NavKey =
   | "products"
@@ -22,36 +18,21 @@ export type NavKey =
 export type NavItem = {
   key: NavKey;
   href: StaticPathname;
-  enabled: boolean;
   /** Estilo diferenciado (el otro público: productores). */
   highlight?: boolean;
 };
 
 export const mainNav: NavItem[] = [
-  { key: "products", href: "/products", enabled: true }, // fase 2
-  { key: "markets", href: "/markets", enabled: true }, // fase 3
-  { key: "quality", href: "/quality", enabled: true }, // fase 3
-  { key: "company", href: "/company", enabled: true }, // fase 3
-  { key: "producers", href: "/producers", enabled: true, highlight: true }, // fase 4
-  { key: "contact", href: "/contact", enabled: true }, // fase 5
+  { key: "products", href: "/products" },
+  { key: "markets", href: "/markets" },
+  { key: "quality", href: "/quality" },
+  { key: "company", href: "/company" },
+  { key: "producers", href: "/producers", highlight: true },
+  { key: "contact", href: "/contact" },
 ];
 
 export const utilityNav: NavItem[] = [
-  { key: "news", href: "/news", enabled: true }, // fase 5
-  { key: "sustainability", href: "/sustainability", enabled: true }, // fase 5
-  { key: "careers", href: "/careers", enabled: true }, // fase 5
+  { key: "news", href: "/news" },
+  { key: "sustainability", href: "/sustainability" },
+  { key: "careers", href: "/careers" },
 ];
-
-function previewAll() {
-  return process.env.NAV_PREVIEW === "1" && process.env.VERCEL_ENV !== "production";
-}
-
-export function visible(items: NavItem[]): NavItem[] {
-  const all = previewAll();
-  return items.filter((i) => i.enabled || all);
-}
-
-/** ¿La sección existe? Para decidir el destino de CTAs (página real o ancla de la home). */
-export function isEnabled(key: NavKey): boolean {
-  return [...mainNav, ...utilityNav].some((i) => i.key === key && i.enabled);
-}

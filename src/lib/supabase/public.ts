@@ -4,7 +4,7 @@ import { serverEnv } from "@/lib/env";
 
 /**
  * Cliente con la clave PUBLICABLE (rol anon). Úsese para TODA lectura de contenido
- * y TODO insert de formularios, así RLS y grants se aplican de verdad.
+ * y todos los inserts de formularios, así RLS y grants se aplican de verdad.
  */
 export function publicDb() {
   const env = serverEnv();
