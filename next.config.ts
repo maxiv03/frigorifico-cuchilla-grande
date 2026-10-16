@@ -27,15 +27,18 @@ const csp = [
 ].join("; ");
 
 /**
- * CSP estricta en modo report-only: sin 'unsafe-inline' en scripts. Next la viola en cada página
- * estática (scripts inline sin nonce), así que solo informa; documenta el objetivo si algún día
- * las páginas pasan a renderizarse con nonce.
+ * CSP estricta (sin 'unsafe-inline' en scripts) en modo report-only, solo con
+ * CSP_STRICT_REPORT_ONLY=true. Next la viola en cada página estática (scripts inline sin nonce):
+ * Chrome registra un error de consola y un aviso en DevTools por cada script, lo que baja
+ * "Buenas prácticas" de Lighthouse a 92. Sirve para auditar; en producción queda apagada.
+ * (Sin upgrade-insecure-requests: no aplica en report-only y también genera un aviso.)
  */
-const strictCsp = csp.replace(/script-src [^;]+/, "script-src 'self'");
+const strictCsp = csp.replace(/script-src [^;]+/, "script-src 'self'").replace("; upgrade-insecure-requests", "");
+const reportOnly = process.env.CSP_STRICT_REPORT_ONLY === "true";
 
 const securityHeaders = [
   { key: "Content-Security-Policy", value: csp },
-  ...(isDev ? [] : [{ key: "Content-Security-Policy-Report-Only", value: strictCsp }]),
+  ...(reportOnly ? [{ key: "Content-Security-Policy-Report-Only", value: strictCsp }] : []),
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
   { key: "X-Frame-Options", value: "DENY" },
