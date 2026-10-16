@@ -193,7 +193,19 @@ async function main() {
     await new Promise((r) => setTimeout(r, 1500));
     const honeypotRows = (await rowsWithMark()).filter((r) => r.name.includes("honeypot"));
     check(`${locale} honeypot: responde éxito y no guarda la fila`, honeypotRows.length === 0, `${honeypotRows.length} filas`);
+    // La pantalla de éxito es la misma que la de un envío real: sirve para las capturas sin guardar filas.
+    await form.locator("[data-form-success]").screenshot({ path: join(out, `${locale}_formulario-exito-1440.png`) });
     await form.close();
+    const okMobile = await browser.newPage({ viewport: { width: 375, height: 812 }, deviceScaleFactor: 2 });
+    await open(okMobile, paths[locale]);
+    await fillValid(okMobile, `${MARK} honeypot ${locale} 375`);
+    await okMobile.evaluate(() => {
+      (document.querySelector('input[name="website"]') as HTMLInputElement).value = "https://spam.example";
+    });
+    await okMobile.click('[data-offer-form] button[type="submit"]');
+    await okMobile.waitForSelector("[data-form-success]");
+    await okMobile.locator("[data-form-success]").screenshot({ path: join(out, `${locale}_formulario-exito-375.png`) });
+    await okMobile.close();
   }
 
   // ─── 6. Límite de envíos (local) ─────────────────────────────────────────
@@ -219,21 +231,19 @@ async function main() {
     await page.close();
   }
 
-  // ─── 7. Envío real ───────────────────────────────────────────────────────
+  // ─── 7. Envío real (uno) ─────────────────────────────────────────────────
   if (REAL_SUBMIT) {
-    for (const [locale, vp] of [["es", { width: 1440, height: 900 }], ["en", { width: 375, height: 812 }]] as const) {
-      const page = await browser.newPage({ viewport: vp, deviceScaleFactor: vp.width < 640 ? 2 : 1 });
-      await open(page, paths[locale]);
-      await fillValid(page, `${MARK} real ${locale}`);
-      await page.click('[data-offer-form] button[type="submit"]');
-      await page.waitForSelector("[data-form-success]", { timeout: 20_000 });
-      const msg = (await page.locator("[data-form-success]").textContent()) ?? "";
-      check(`${locale} envío real: mensaje de éxito`, msg.includes(text[locale].success), msg.slice(0, 80));
-      await page.locator("[data-form-success]").screenshot({ path: join(out, `${locale}_formulario-exito-${vp.width}.png`) });
-      await page.close();
-    }
+    const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+    await open(page, paths.es);
+    await fillValid(page, `${MARK} real es`);
+    await page.click('[data-offer-form] button[type="submit"]');
+    await page.waitForSelector("[data-form-success]", { timeout: 20_000 });
+    const msg = (await page.locator("[data-form-success]").textContent()) ?? "";
+    check("envío real: mensaje de éxito", msg.includes(text.es.success), msg.slice(0, 80));
+    await page.close();
     const real = (await rowsWithMark()).filter((r) => r.name.includes(" real "));
-    check("envío real: 2 filas guardadas (es y en)", real.length === 2, JSON.stringify(real));
+    check("envío real: 1 fila guardada", real.length === 1, JSON.stringify(real));
+    if (!base.includes("localhost")) check("envío real: columna env = production", real[0]?.env === "production", String(real[0]?.env));
     const del = await db.from("livestock_offers").delete({ count: "exact" }).in("id", real.map((r) => r.id));
     check("envío real: filas borradas con la clave secreta", !del.error && del.count === real.length, del.error?.message ?? `${del.count} borradas`);
     const left = (await rowsWithMark()).filter((r) => r.name.includes(" real "));

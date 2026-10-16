@@ -2,7 +2,9 @@
  * Recorre el sitio desde las home de cada idioma y verifica que ningún link interno
  * devuelva error (regla: nunca un link a una página 404 en producción).
  *   npm run check:links -- <url-base>
- * Sigue links internos hasta 3 niveles; anclas (#) se validan contra ids de la página.
+ * Recorrido en anchura hasta 4 niveles (cada página se explora desde su menor profundidad, así
+ * la cobertura no depende del orden de los links). Las anclas se validan contra los ids de la
+ * página de destino, también entre páginas (/es/calidad#cert-halal).
  */
 import { routing } from "@/i18n/routing";
 
@@ -11,52 +13,66 @@ if (!base) {
   console.error("Uso: npm run check:links -- <url-base>");
   process.exit(1);
 }
+const MAX_DEPTH = 4;
 const origin = new URL(base).origin;
 const seen = new Map<string, number>();
+const idsByPage = new Map<string, Set<string>>();
+const anchors: { page: string; id: string; from: string }[] = [];
 const failures: string[] = [];
 
-async function visit(path: string, from: string, depth: number) {
-  const url = new URL(path, origin);
-  const key = url.pathname + url.search;
-  if (seen.has(key)) return;
-  const res = await fetch(url, { redirect: "follow" });
+/** Visita una página; devuelve los links internos encontrados. */
+async function visit(key: string, from: string): Promise<string[]> {
+  const res = await fetch(new URL(key, origin), { redirect: "follow" });
   seen.set(key, res.status);
   if (!res.ok) {
     failures.push(`${res.status} ${key}  (desde ${from})`);
-    return;
+    return [];
   }
-  if (!res.headers.get("content-type")?.includes("text/html")) return;
+  if (!res.headers.get("content-type")?.includes("text/html")) return [];
   const html = await res.text();
   // Con Cache Components, el 1.er pedido a un slug inexistente puede salir 200 con la página
   // 404 (noindex). Se cuenta como roto igual.
   if (/<meta name="robots" content="noindex"/.test(html)) {
     seen.set(key, 404);
     failures.push(`404 (soft) ${key}  (desde ${from})`);
-    return;
+    return [];
   }
-  const ids = new Set([...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]));
+  idsByPage.set(key, new Set([...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1])));
+  const links: string[] = [];
   for (const [, href] of html.matchAll(/<a[^>]+href="([^"]+)"/g)) {
     const h = href.replace(/&amp;/g, "&");
-    if (h.startsWith("#")) {
-      if (h.length > 1 && !ids.has(decodeURIComponent(h.slice(1)))) failures.push(`ancla rota ${h}  (en ${key})`);
-      continue;
-    }
     if (/^(mailto:|tel:|https?:\/\/(?!localhost))/.test(h) && !h.startsWith(origin)) continue;
-    const next = new URL(h, url);
+    const next = new URL(h, new URL(key, origin));
     if (next.origin !== origin || next.pathname.startsWith("/_next")) continue;
-    if (depth < 3) await visit(next.pathname + next.search, key, depth + 1);
+    const target = next.pathname + next.search;
+    if (next.hash.length > 1) anchors.push({ page: target, id: decodeURIComponent(next.hash.slice(1)), from: key });
+    links.push(target);
   }
+  return links;
 }
 
 async function main() {
-  for (const locale of routing.locales) await visit(`/${locale}`, "inicio", 0);
+  let level = routing.locales.map((l) => ({ key: `/${l}`, from: "inicio" }));
+  for (let depth = 0; depth <= MAX_DEPTH && level.length; depth++) {
+    const next: typeof level = [];
+    for (const { key, from } of level) {
+      if (seen.has(key)) continue;
+      for (const link of await visit(key, from)) if (!seen.has(link)) next.push({ key: link, from: key });
+    }
+    level = next;
+  }
+  for (const { page, id, from } of anchors) {
+    const ids = idsByPage.get(page);
+    if (ids && !ids.has(id)) failures.push(`ancla rota ${page}#${id}  (en ${from})`);
+    if (!ids && seen.get(page) === undefined) failures.push(`ancla sin verificar (página fuera de alcance) ${page}#${id}  (en ${from})`);
+  }
   for (const [path, status] of seen) console.log(`  ${status} ${path}`);
   if (failures.length) {
     console.error(`\n✗ ${failures.length} problemas:`);
-    for (const f of failures) console.error(`  ${f}`);
+    for (const f of [...new Set(failures)]) console.error(`  ${f}`);
     process.exit(1);
   }
-  console.log(`\n✓ ${seen.size} URLs internas sin errores.`);
+  console.log(`\n✓ ${seen.size} URLs internas y ${new Set(anchors.map((a) => `${a.page}#${a.id}`)).size} anclas sin errores.`);
 }
 
 main().catch((e) => {

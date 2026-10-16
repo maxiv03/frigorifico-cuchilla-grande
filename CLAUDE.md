@@ -286,7 +286,7 @@ npm run db:seed              # upsert idempotente del contenido (clave secreta)
 npm run db:test-permissions  # verifica que anon no lea/modifique formularios
 npm run shots -- <url-base> es en es/productos [--menu]  # capturas 1440 y 375 px (rutas sin "/" inicial en Git Bash)
                              # antes de cada captura recorre la página y espera todas las imágenes (scripts/settle.ts)
-npm run check:links -- <url-base>  # links internos y anclas sin errores (cuenta soft-404)
+npm run check:links -- <url-base>  # links internos y anclas (también entre páginas), en anchura; cuenta soft-404
 npm run qa:layout -- <url-base>    # skip link, menú móvil, idioma, imágenes, overflow
 npm run qa:catalog -- <url-base>   # diagrama por teclado, filtros en URL, idioma, vacío, detalle
 npm run qa:institutional -- <url-base>  # lista = mapa, links a catálogo filtrado, popups con teclado, CLS, 375 px
