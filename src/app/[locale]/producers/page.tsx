@@ -14,6 +14,7 @@ import { Section, SectionHeader } from "@/components/ui/section";
 import { company } from "@/data/company";
 import { whatsappUrl } from "@/lib/contact";
 import { getPriceBoard, getPriceHistory } from "@/lib/data/prices";
+import { formatDate } from "@/lib/format";
 import { staticPageMetadata } from "@/lib/metadata";
 
 type IconT = ComponentType<SVGProps<SVGSVGElement>>;
@@ -95,7 +96,7 @@ export default async function ProducersPage() {
         </div>
         {board && history ? (
           <>
-            <p className="mt-8 text-sm font-semibold text-ink-muted">{th("asOf", { date: new Date(`${board.weekStart}T12:00:00Z`) })}</p>
+            <p className="mt-8 text-sm font-semibold text-ink-muted">{th("asOf", { date: formatDate(board.weekStart, locale) })}</p>
             <div className="mt-4">
               <FullBoard board={board} />
             </div>

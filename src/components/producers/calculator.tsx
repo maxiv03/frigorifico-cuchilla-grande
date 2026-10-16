@@ -6,7 +6,7 @@ import { SelectField, TextField } from "@/components/forms/fields";
 import { IconArrowRight } from "@/components/icons";
 import { buttonClasses } from "@/components/ui/button";
 import type { Locale } from "@/i18n/routing";
-import { formatDecimal, formatFigure, formatPrice, formatUsd } from "@/lib/format";
+import { formatDate, formatDecimal, formatFigure, formatPrice, formatUsd } from "@/lib/format";
 import type { FieldError } from "@/lib/forms/types";
 import { estimateLot, HEADS, LIMITS } from "@/lib/producers/livestock";
 import { useOffer } from "./offer-context";
@@ -132,7 +132,7 @@ export function Calculator({ categories, weekStart }: Props) {
             {t("price")}
           </p>
           <p className="mt-0.5 text-sm text-ink-muted">
-            {t("priceHint", { date: new Date(`${weekStart}T12:00:00Z`) })}
+            {t("priceHint", { date: formatDate(weekStart, locale) })}
           </p>
           <p className="mt-1.5 flex min-h-11 items-center rounded-md bg-surface-muted px-3.5 ring-1 ring-line ring-inset">
             <span className="font-semibold text-ink tabular-nums" data-price={category.price}>

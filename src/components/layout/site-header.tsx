@@ -84,7 +84,7 @@ export async function SiteHeader() {
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-semibold text-ink-muted">{t("language")}</span>
-                  <LocaleSwitcher />
+                  <LocaleSwitcher landmark={false} />
                 </div>
                 <div className="space-y-1 text-base">
                   <a

@@ -1,6 +1,6 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import type { PriceHistory, PriceRow } from "@/lib/data/prices";
-import { formatPrice } from "@/lib/format";
+import { formatDate, formatPrice } from "@/lib/format";
 
 /** Trazo por posición dentro de la especie: color + patrón distinto (no depende solo del color). */
 const STROKES = [
@@ -36,8 +36,8 @@ export async function PriceChart({ species, rows, history }: { species: "beef" |
   const ih = H - M.top - M.bottom;
   const x = (i: number) => M.left + (i / (weeks.length - 1)) * iw;
   const y = (v: number) => M.top + (1 - (v - lo) / (hi - lo)) * ih;
-  const short = new Intl.DateTimeFormat(locale, { day: "numeric", month: "short", timeZone: "UTC" });
-  const long = new Intl.DateTimeFormat(locale, { dateStyle: "long", timeZone: "UTC" });
+  const short = { format: (d: Date) => formatDate(d, locale, { day: "numeric", month: "short" }) };
+  const long = { format: (d: Date) => formatDate(d, locale) };
   const date = (w: string) => new Date(`${w}T12:00:00Z`);
 
   const lines = cats.map((c, i) => {
@@ -61,8 +61,9 @@ export async function PriceChart({ species, rows, history }: { species: "beef" |
 
   return (
     <figure data-chart={species}>
-      {/* En pantallas chicas el gráfico conserva un ancho legible y se desplaza dentro de su caja. */}
-      <div className="-mx-1 overflow-x-auto px-1">
+      {/* En pantallas chicas el gráfico conserva un ancho legible y se desplaza dentro de su caja.
+          Región enfocable: con teclado también se puede desplazar (flechas). */}
+      <div className="-mx-1 overflow-x-auto px-1" tabIndex={0} role="region" aria-labelledby={titleId}>
       <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-labelledby={`${titleId} ${descId}`} className="h-auto w-full min-w-[34rem] font-sans">
         <title id={titleId}>{t("title", { species: t(`species.${species}`), weeks: String(weeks.length) })}</title>
         <desc id={descId}>{summary}</desc>
@@ -114,7 +115,7 @@ export async function PriceChart({ species, rows, history }: { species: "beef" |
       <figcaption className="mt-2 text-sm text-ink-muted">{t("caption")}</figcaption>
       <details className="mt-3 text-sm">
         <summary className="cursor-pointer font-semibold text-brand-700">{t("showData")}</summary>
-        <div className="mt-3 overflow-x-auto">
+        <div className="mt-3 overflow-x-auto" tabIndex={0} role="region" aria-label={t("showData")}>
           <table className="w-full min-w-[28rem] text-left tabular-nums">
             <caption className="sr-only">{t("title", { species: t(`species.${species}`), weeks: String(weeks.length) })}</caption>
             <thead>

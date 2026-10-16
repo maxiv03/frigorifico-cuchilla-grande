@@ -145,15 +145,17 @@ async function main() {
     quote === "/es/contacto?tab=quote&cut=beef_rump_cap",
     String(quote),
   );
-  // Con Cache Components no existe dynamicParams=false: el primer pedido a un slug desconocido
-  // sale del shell genérico de la ruta (200) con la página 404 y noindex; los siguientes, 404.
+  // Corte inexistente: 404 desde el primer pedido (verificado en producción en la fase 6), con la
+  // página localizada y noindex (Next agrega su propio meta robots además del del sitio).
   const slug = `no-existe-${Date.now()}`;
   const firstStatus = (await open(page, `/es/productos/vacuno/${slug}`))?.status();
   const notFoundShown = await page.getByText("No encontramos esta página").isVisible();
-  const noindex = (await page.locator('meta[name="robots"]').getAttribute("content"))?.includes("noindex");
+  const robots = await page.locator('meta[name="robots"]').evaluateAll((els) => els.map((e) => e.getAttribute("content") ?? ""));
   const secondStatus = (await open(page, `/es/productos/vacuno/${slug}`))?.status();
-  check("detalle: corte inexistente muestra la 404 con noindex", notFoundShown && !!noindex);
-  console.log(`  · status corte inexistente: 1.er pedido ${firstStatus}, 2.º ${secondStatus}`);
+  check("detalle: corte inexistente muestra la 404 con noindex", notFoundShown && robots.some((r) => r.includes("noindex")), robots.join(" | "));
+  // `next start` local todavía responde 200 al primer pedido (shell genérico); en Vercel es 404.
+  if (base.includes("localhost")) console.log(`  · status corte inexistente (local): 1.er pedido ${firstStatus}, 2.º ${secondStatus}`);
+  else check("detalle: corte inexistente responde 404 desde el primer pedido", firstStatus === 404 && secondStatus === 404, `${firstStatus} / ${secondStatus}`);
 
   // ─── 5. Móvil, imágenes ─────────────────────────────────────────────────
   const mobile = await browser.newPage({ viewport: { width: 375, height: 812 } });

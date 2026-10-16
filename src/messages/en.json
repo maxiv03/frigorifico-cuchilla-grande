@@ -1,7 +1,8 @@
 {
   "Meta": {
     "siteName": "Frigorífico Cuchilla Grande",
-    "description": "Uruguayan beef and lamb exporter. Demo website of a fictitious company."
+    "description": "Uruguayan beef and lamb exporter. Demo website of a fictitious company.",
+    "homeTitle": "Frigorífico Cuchilla Grande · Uruguayan beef and lamb"
   },
   "Nav": {
     "home": "Home",
@@ -84,7 +85,7 @@
       "title": "Reference price board",
       "lead": "Indicative purchase prices in US dollars per kilo of carcass weight, updated every Monday.",
       "fictitious": "Fictitious values",
-      "asOf": "Valid from {date, date, long}",
+      "asOf": "Valid from {date}",
       "unit": "US$/kg carcass",
       "change": "{change} vs. previous week",
       "noChange": "No change vs. previous week",
@@ -490,7 +491,7 @@
       "yieldHint": "Defaults to the category's ({value}%). Between {min} and {max}%.",
       "range": "Between {min} and {max}.",
       "price": "Reference price",
-      "priceHint": "From the board valid since {date, date, long}.",
+      "priceHint": "From the board valid since {date}.",
       "priceValue": "US$ {price} per kg carcass",
       "result": "Estimate",
       "carcassKg": "Estimated carcass kilos",
@@ -692,13 +693,13 @@
       },
       "cuts": {
         "label": "Cuts of interest",
-        "hint": "Choose one or more from the catalog (up to {max}). You can search by name.",
+        "hint": "Choose one or more from the catalogue (up to {max}). You can search by name.",
         "chosen": "{count, plural, one {# cut chosen} other {# cuts chosen}}",
         "remove": "Remove {cut}",
         "search": "Search cuts",
         "searchPlaceholder": "Search by name, for example tenderloin",
         "matches": "{count, plural, =0 {No cuts match} one {# cut matches} other {# cuts match}}",
-        "total": "{count} cuts in the catalog",
+        "total": "{count} cuts in the catalogue",
         "none": "No cuts with that name."
       }
     },
@@ -910,5 +911,12 @@
       "cta": "Apply by email",
       "subject": "[Demo] Job application"
     }
+  },
+  "Error": {
+    "title": "Something went wrong",
+    "text": "An unexpected error occurred while showing this page. Please try again; if it keeps happening, go back to the home page.",
+    "retry": "Try again",
+    "home": "Back to home",
+    "digest": "Error code: {digest}"
   }
 }

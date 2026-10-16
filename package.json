@@ -20,7 +20,10 @@
     "qa:fixes": "tsx scripts/qa-fixes.ts",
     "qa:layout": "node scripts/qa-layout.mjs",
     "qa:producers": "tsx --env-file=.env.local scripts/qa-producers.ts",
-    "qa:contact": "tsx --env-file=.env.local scripts/qa-contact.ts"
+    "qa:contact": "tsx --env-file=.env.local scripts/qa-contact.ts",
+    "check:seo": "tsx scripts/check-seo.ts",
+    "qa:a11y": "tsx scripts/qa-a11y.ts",
+    "qa:keyboard": "tsx scripts/qa-keyboard.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.117.3",
@@ -35,6 +38,7 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
     "@playwright/test": "^1.64.1",
     "@tailwindcss/turbopack": "^4",
     "@types/d3-geo": "^3.1.0",
@@ -44,6 +48,7 @@
     "@types/topojson-client": "^3.1.5",
     "eslint": "^9",
     "eslint-config-next": "16.4.1",
+    "lighthouse": "13.5.0",
     "supabase": "^2.121.0",
     "tailwindcss": "^4",
     "tsx": "^4.23.15",

@@ -42,3 +42,16 @@ export function formatDecimal(value: number, locale: Locale, digits = 1) {
     maximumFractionDigits: digits,
   }).format(value);
 }
+
+/**
+ * Locale de Intl para fechas: el inglés del sitio es británico ("12 October 2026", no
+ * "October 12, 2026"). Toda fecha visible pasa por formatDate; no usar `{date, date}` de ICU ni
+ * format.dateTime de next-intl (formatean con "en" a la estadounidense).
+ */
+const DATE_LOCALE: Record<Locale, string> = { es: "es-UY", en: "en-GB" };
+
+/** Fecha (YYYY-MM-DD o Date) en el día exacto, sin corrimientos de zona horaria. */
+export function formatDate(date: string | Date, locale: Locale, options: Intl.DateTimeFormatOptions = { dateStyle: "long" }) {
+  const d = typeof date === "string" ? new Date(`${date.slice(0, 10)}T12:00:00Z`) : date;
+  return new Intl.DateTimeFormat(DATE_LOCALE[locale], { timeZone: "UTC", ...options }).format(d);
+}

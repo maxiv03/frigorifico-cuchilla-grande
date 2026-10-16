@@ -4,19 +4,13 @@ import { Suspense } from "react";
 import { CatalogFromUrl, CatalogStatic, type CatalogProps } from "@/components/cuts/catalog";
 import { PresentationSpecs } from "@/components/cuts/presentation-specs";
 import { Section, SectionHeader } from "@/components/ui/section";
-import { getPathname } from "@/i18n/navigation";
-import { routing } from "@/i18n/routing";
+import { staticPageMetadata } from "@/lib/metadata";
 import { getCatalog } from "@/lib/data/catalog";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
   const t = await getTranslations("Products");
-  const languages = Object.fromEntries(routing.locales.map((l) => [l, getPathname({ locale: l, href: "/products" })]));
-  return {
-    title: t("metaTitle"),
-    description: t("metaDescription"),
-    alternates: { canonical: languages[locale], languages: { ...languages, "x-default": languages[routing.defaultLocale] } },
-  };
+  return staticPageMetadata(locale, "/products", t("metaTitle"), t("metaDescription"));
 }
 
 export default async function ProductsPage({ searchParams }: PageProps<"/[locale]/products">) {

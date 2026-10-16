@@ -52,7 +52,7 @@ export const certifications: CertificationSeed[] = [
     name: { es: "Kosher", en: "Kosher" },
     summary: {
       es: "Línea de producción bajo supervisión rabínica permanente durante las campañas, con cortes del cuarto delantero. Requisito para Israel y para parte del mercado de Estados Unidos.",
-      en: "Production line under permanent rabbinical supervision during each run, focused on forequarter cuts. Required for Israel and for part of the U.S. market.",
+      en: "Production line under permanent rabbinical supervision during each run, focused on forequarter cuts. Required for Israel and for part of the US market.",
     },
     markets: ["il", "us"],
   },
@@ -89,7 +89,7 @@ export const certifications: CertificationSeed[] = [
     name: { es: "Habilitación USDA", en: "USDA approval" },
     summary: {
       es: "Habilitación para exportar a Estados Unidos bajo el sistema de inspección uruguayo, reconocido como equivalente por el Departamento de Agricultura de ese país.",
-      en: "Approval to export to the United States under Uruguay's inspection system, recognised as equivalent by the U.S. Department of Agriculture.",
+      en: "Approval to export to the United States under Uruguay's inspection system, recognised as equivalent by the US Department of Agriculture.",
     },
     markets: ["us"],
   },

@@ -1,16 +1,19 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { getFormatter, getTranslations } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import { SetAlternates } from "@/components/i18n/alternates";
+import { BreadcrumbJsonLd, NewsArticleJsonLd } from "@/components/seo/json-ld";
 import { Markdown } from "@/components/news/markdown";
-import { NewsCard, newsDate } from "@/components/news/news-card";
+import { NewsCard } from "@/components/news/news-card";
 import { Badge } from "@/components/ui/badge";
 import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
 import { getPathname, Link } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
+import { pageMetadata } from "@/lib/metadata";
 import { getNews, getNewsSlugs } from "@/lib/data/editorial";
+import { formatDate } from "@/lib/format";
 import { newsImage } from "@/lib/news/images";
 
 type Params = { locale: string; slug: string };
@@ -46,33 +49,35 @@ async function load(params: Promise<Params>) {
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const { locale, post, hrefs } = await load(params);
   const t = await getTranslations({ locale, namespace: "News" });
-  const image = newsImage(post.image);
   const title = t("metaDetail", { title: post.title });
-  return {
-    title,
-    description: post.excerpt,
-    alternates: { canonical: hrefs[locale], languages: { ...hrefs, "x-default": hrefs[routing.defaultLocale] } },
-    openGraph: {
-      type: "article",
-      title,
-      description: post.excerpt,
-      publishedTime: post.publishedAt,
-      images: image ? [image.src.src] : undefined,
-    },
-  };
+  return pageMetadata({ locale, hrefs, title, description: post.excerpt, type: "article", publishedTime: post.publishedAt });
 }
 
 export default async function NewsDetailPage({ params }: { params: Promise<Params> }) {
   const { locale, post, posts, hrefs } = await load(params);
   const t = await getTranslations({ locale, namespace: "News" });
   const tNav = await getTranslations({ locale, namespace: "Nav" });
-  const format = await getFormatter({ locale });
   const image = newsImage(post.image);
   const more = posts.filter((p) => p.id !== post.id).slice(0, 3);
 
   return (
     <>
       <SetAlternates hrefs={hrefs} />
+      <BreadcrumbJsonLd
+        items={[
+          [tNav("home"), getPathname({ locale, href: "/" })],
+          [tNav("news"), getPathname({ locale, href: "/news" })],
+          [post.title, hrefs[locale]],
+        ]}
+      />
+      <NewsArticleJsonLd
+        locale={locale}
+        url={hrefs[locale]}
+        headline={post.title}
+        description={post.excerpt}
+        datePublished={post.publishedAt}
+        image={image?.src.src ?? null}
+      />
       <div className="border-b border-line bg-surface-muted">
         <Container>
           <nav aria-label={t("breadcrumb")} className="py-4 text-sm">
@@ -102,7 +107,7 @@ export default async function NewsDetailPage({ params }: { params: Promise<Param
           <header>
             <div className="flex flex-wrap items-center gap-3 text-sm text-ink-muted">
               <time dateTime={post.publishedAt} className="font-semibold">
-                {format.dateTime(newsDate(post.publishedAt), { dateStyle: "long", timeZone: "UTC" })}
+                {formatDate(post.publishedAt, locale)}
               </time>
               <Badge tone="neutral">{t("fictitious")}</Badge>
             </div>

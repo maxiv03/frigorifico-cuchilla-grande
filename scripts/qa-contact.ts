@@ -70,12 +70,12 @@ async function fillQuote(page: Page, name: string) {
 
 async function fillProducer(page: Page, name: string) {
   const f = '[data-contact-form="producer"]';
-  await page.fill(`${f} #f-name`, name);
-  await page.fill(`${f} #f-phone`, "099 000 000");
-  await page.selectOption(`${f} #f-department`, "Florida");
-  await page.selectOption(`${f} #f-reason`, "settlement");
-  await page.fill(`${f} #f-message`, "Prueba automática de QA (se borra al terminar).");
-  await page.check(`${f} #f-privacy`);
+  await page.fill(`${f} #fp-name`, name);
+  await page.fill(`${f} #fp-phone`, "099 000 000");
+  await page.selectOption(`${f} #fp-department`, "Florida");
+  await page.selectOption(`${f} #fp-reason`, "settlement");
+  await page.fill(`${f} #fp-message`, "Prueba automática de QA (se borra al terminar).");
+  await page.check(`${f} #fp-privacy`);
 }
 
 async function quoteRows() {
@@ -228,7 +228,7 @@ async function validation(browser: Browser, locale: L) {
   const preq = { name: "required", phone: "required", department: "option", reason: "option", message: "required", privacy: "privacy" };
   check(`${locale} productores: obligatorios marcados con su código`, Object.entries(preq).every(([k, c]) => pc[k] === c), JSON.stringify(pc));
   await fillProducer(page, MARK);
-  await page.fill(`${p} #f-phone`, "12");
+  await page.fill(`${p} #fp-phone`, "12");
   await page.click(`${p} button[type="submit"]`);
   await page.waitForFunction((sel) => document.querySelectorAll(`${sel} [data-error]`).length === 1, p);
   const pc2 = await errorCodes(page, "producer");

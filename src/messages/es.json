@@ -1,7 +1,8 @@
 {
   "Meta": {
     "siteName": "Frigorífico Cuchilla Grande",
-    "description": "Frigorífico uruguayo exportador de carne vacuna y ovina. Sitio de demostración de una empresa ficticia."
+    "description": "Frigorífico uruguayo exportador de carne vacuna y ovina. Sitio de demostración de una empresa ficticia.",
+    "homeTitle": "Frigorífico Cuchilla Grande · Carne vacuna y ovina del Uruguay"
   },
   "Nav": {
     "home": "Inicio",
@@ -84,7 +85,7 @@
       "title": "Pizarra de precios de referencia",
       "lead": "Precios de compra orientativos en dólares por kilo de carcasa, actualizados cada lunes.",
       "fictitious": "Valores ficticios",
-      "asOf": "Vigente desde el {date, date, long}",
+      "asOf": "Vigente desde el {date}",
       "unit": "US$/kg carcasa",
       "change": "{change} vs. semana anterior",
       "noChange": "Sin cambios vs. semana anterior",
@@ -490,7 +491,7 @@
       "yieldHint": "Por defecto, el de la categoría ({value} %). Entre {min} y {max} %.",
       "range": "Entre {min} y {max}.",
       "price": "Precio de referencia",
-      "priceHint": "De la pizarra vigente desde el {date, date, long}.",
+      "priceHint": "De la pizarra vigente desde el {date}.",
       "priceValue": "US$ {price} por kg carcasa",
       "result": "Estimación",
       "carcassKg": "Kilos de carcasa estimados",
@@ -910,5 +911,12 @@
       "cta": "Postularme por mail",
       "subject": "[Demo] Postulación"
     }
+  },
+  "Error": {
+    "title": "Algo salió mal",
+    "text": "Ocurrió un error inesperado al mostrar esta página. Probá de nuevo; si sigue pasando, volvé al inicio.",
+    "retry": "Probar de nuevo",
+    "home": "Volver al inicio",
+    "digest": "Código del error: {digest}"
   }
 }

@@ -11,7 +11,7 @@ compresión propios.
 
 | Archivo | Dónde se usa | Autor | Fuente |
 |---|---|---|---|
-| `public/images/home/hero-angus-campo-h.jpg` / `-v.jpg` | Home · hero (recorte horizontal para escritorio, vertical para móvil) | Priscilla Du Preez ([@priscilladupreez](https://unsplash.com/@priscilladupreez)) | [unsplash.com/photos/tGtWKDdicn4](https://unsplash.com/photos/tGtWKDdicn4) |
+| `public/images/home/hero-angus-campo-h.jpg` y `public/images/home/hero-angus-campo-v.jpg` | Home · hero (recorte horizontal para escritorio, vertical para móvil) | Priscilla Du Preez ([@priscilladupreez](https://unsplash.com/@priscilladupreez)) | [unsplash.com/photos/tGtWKDdicn4](https://unsplash.com/photos/tGtWKDdicn4) |
 | `public/images/home/compradores-buque.jpg` | Home · tarjeta "Compradores e importadores" | Venti Views ([@ventiviews](https://unsplash.com/@ventiviews)) | [unsplash.com/photos/1cqIcrWFQBI](https://unsplash.com/photos/1cqIcrWFQBI) |
 | `public/images/home/productores-hereford.jpg` | Home · tarjeta "Productores ganaderos" | Dmitry Fomin ([@dafomin](https://unsplash.com/@dafomin)) | [unsplash.com/photos/YZUyYzgvnAY](https://unsplash.com/photos/YZUyYzgvnAY) |
 | `public/images/home/campo-angus-eucaliptos.jpg` | Home · bloque "Desde Sarandí del Yí al mundo" | Jason Leung ([@ninjason](https://unsplash.com/@ninjason)) | [unsplash.com/photos/VZYJ9uuZFp0](https://unsplash.com/photos/VZYJ9uuZFp0) |

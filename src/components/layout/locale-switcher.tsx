@@ -8,7 +8,12 @@ import { useAlternates } from "@/components/i18n/alternates";
 import { getPathname, usePathname } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
 
-type Props = { className?: string; tone?: "dark" | "light" };
+type Props = {
+  className?: string;
+  tone?: "dark" | "light";
+  /** Dentro del menú móvil: grupo en vez de landmark (la barra ya tiene su <nav> de idioma visible). */
+  landmark?: boolean;
+};
 
 /**
  * Selector de idioma: lleva a la página equivalente (slug traducido si la página
@@ -32,7 +37,7 @@ function LinksWithQuery(props: Props) {
   return <Links {...props} query={query} />;
 }
 
-function Links({ className, tone = "dark", query }: Props & { query: string }) {
+function Links({ className, tone = "dark", landmark = true, query }: Props & { query: string }) {
   const t = useTranslations("LocaleSwitcher");
   const current = useLocale();
   const pathname = usePathname();
@@ -65,8 +70,9 @@ function Links({ className, tone = "dark", query }: Props & { query: string }) {
     return query ? `${base}?${query}` : base;
   }
 
+  const Wrapper = landmark ? "nav" : "div";
   return (
-    <nav aria-label={t("label")} className={cn("flex items-center gap-1 text-sm", className)}>
+    <Wrapper role={landmark ? undefined : "group"} aria-label={t("label")} className={cn("flex items-center gap-1 text-sm", className)}>
       {routing.locales.map((locale, i) => {
         const active = locale === current;
         return (
@@ -98,7 +104,7 @@ function Links({ className, tone = "dark", query }: Props & { query: string }) {
           </span>
         );
       })}
-    </nav>
+    </Wrapper>
   );
 }
 

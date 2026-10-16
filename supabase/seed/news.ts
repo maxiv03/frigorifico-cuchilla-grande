@@ -191,7 +191,7 @@ Las especificaciones de peso y calibre se acuerdan con cada cliente en el pedido
 - Food service: consistent portions that make cost per plate easier to manage.
 - Retail: individual packs ready for the shelf, with the customer's label.
 
-Portions are available chilled or frozen, with the same temperatures and the same traceability as the rest of the catalog.
+Portions are available chilled or frozen, with the same temperatures and the same traceability as the rest of the catalogue.
 
 Weight and size specifications are agreed with each customer in the quote request.`,
     },

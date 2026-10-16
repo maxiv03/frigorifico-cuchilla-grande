@@ -1,12 +1,10 @@
 import Image from "next/image";
-import { getFormatter, getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { cn } from "@/components/ui/cn";
 import { Link } from "@/i18n/navigation";
 import type { NewsPost } from "@/lib/data/editorial";
+import { formatDate } from "@/lib/format";
 import { newsImage } from "@/lib/news/images";
-
-/** Fecha de publicación (YYYY-MM-DD) como Date al mediodía UTC: el día no cambia por zona horaria. */
-export const newsDate = (d: string) => new Date(`${d}T12:00:00Z`);
 
 /**
  * Tarjeta de noticia: foto, fecha, título y extracto. Toda la tarjeta lleva al detalle (enlace
@@ -27,7 +25,7 @@ export async function NewsCard({
   className?: string;
 }) {
   const t = await getTranslations("News");
-  const format = await getFormatter();
+  const locale = await getLocale();
   const image = newsImage(post.image);
   return (
     <article
@@ -49,7 +47,7 @@ export async function NewsCard({
       )}
       <div className="flex flex-1 flex-col p-6">
         <p className="text-sm font-semibold text-ink-muted">
-          <time dateTime={post.publishedAt}>{format.dateTime(newsDate(post.publishedAt), { dateStyle: "long", timeZone: "UTC" })}</time>
+          <time dateTime={post.publishedAt}>{formatDate(post.publishedAt, locale)}</time>
         </p>
         <H className="mt-2 font-serif text-xl leading-snug font-semibold text-ink">
           <Link

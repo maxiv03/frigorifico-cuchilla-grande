@@ -85,7 +85,7 @@ export default async function MarketsPage() {
                         <li key={c.id}>
                           <Link
                             href={{ pathname: "/products/[species]/[cut]", params: { species: speciesSlugs[c.species][locale], cut: c.slug } }}
-                            className="text-brand-700 underline-offset-2 hover:underline"
+                            className="inline-flex min-h-6 items-center text-brand-700 underline-offset-2 hover:underline"
                           >
                             {c.name}
                           </Link>
@@ -100,7 +100,7 @@ export default async function MarketsPage() {
                     <ul>
                       {m.certifications.map((id) => (
                         <li key={id}>
-                          <Link href={{ pathname: "/quality", hash: `cert-${id}` }} className="text-brand-700 underline-offset-2 hover:underline">
+                          <Link href={{ pathname: "/quality", hash: `cert-${id}` }} className="inline-flex min-h-6 items-center text-brand-700 underline-offset-2 hover:underline">
                             {certName.get(id) ?? id}
                           </Link>
                         </li>

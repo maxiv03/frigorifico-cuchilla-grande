@@ -6,7 +6,7 @@ import { ButtonLink } from "@/components/ui/button";
 import { Section, SectionHeader } from "@/components/ui/section";
 import { isEnabled } from "@/config/navigation";
 import { getPriceBoard, type PriceRow } from "@/lib/data/prices";
-import { formatPrice } from "@/lib/format";
+import { formatDate, formatPrice } from "@/lib/format";
 
 /** Categorías que muestra el resumen de la home (la pizarra completa está en el portal de productores). */
 const HOME_CATEGORIES = ["steer", "heifer", "cow", "heavy_lamb"];
@@ -47,7 +47,7 @@ async function Board() {
   return (
     <div className="mt-10">
       <p className="text-sm font-semibold text-ink-muted">
-        {t("asOf", { date: new Date(`${board.weekStart}T12:00:00Z`) })}
+        {t("asOf", { date: formatDate(board.weekStart, locale) })}
       </p>
       <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {rows.map((r) => (

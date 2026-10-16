@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type KeyboardEvent, type ReactNode, type SyntheticEvent } from "react";
+import { scrollBehavior } from "@/lib/motion";
 
 type Props = {
   /** SVG del mapa, renderizado en el servidor (un `[data-market]` enfocable por mercado). */
@@ -42,7 +43,7 @@ export function MarketsMap({ map, panels, intro, panelLabel }: Props) {
       requestAnimationFrame(() => panelRef.current?.querySelector<HTMLElement>("[data-panel-heading]")?.focus());
     } else {
       const row = document.getElementById(`market-${id}`);
-      row?.scrollIntoView({ behavior: "smooth", block: "start" });
+      row?.scrollIntoView({ behavior: scrollBehavior(), block: "start" });
       row?.focus({ preventScroll: true });
     }
   };

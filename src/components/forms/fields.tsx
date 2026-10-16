@@ -1,19 +1,30 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import { useEffect, type ComponentProps, type ReactNode, type RefObject } from "react";
+import { createContext, useContext, useEffect, type ComponentProps, type ReactNode, type RefObject } from "react";
 import { useFormStatus } from "react-dom";
 import { IconAlert, IconCheck } from "@/components/icons";
 import { buttonClasses } from "@/components/ui/button";
 import { cn } from "@/components/ui/cn";
 import type { Locale } from "@/i18n/routing";
-import { formatFigure } from "@/lib/format";
+import { formatDate, formatFigure } from "@/lib/format";
 import { HONEYPOT_FIELD, type FieldError, type FormState } from "@/lib/forms/types";
 
 /**
  * Campos de formulario reutilizables: label visible, ayuda y error asociados con
  * aria-describedby, aria-invalid y mensajes traducidos desde códigos (Forms.errors).
  */
+
+/**
+ * Prefijo de los ids de campo (`f-<name>` por defecto). Dos formularios en la misma página (las
+ * pestañas de contacto) usan prefijos distintos para no repetir ids: `<FieldIdScope value="fp">`.
+ */
+const FieldIdPrefix = createContext("f");
+export const FieldIdScope = FieldIdPrefix.Provider;
+export const useFieldId = () => {
+  const prefix = useContext(FieldIdPrefix);
+  return (name: string, suffix?: string) => `${prefix}-${name}${suffix ? `-${suffix}` : ""}`;
+};
 
 export const control =
   "block w-full rounded-md bg-surface px-3.5 py-2.5 text-base text-ink ring-1 ring-earth-300 ring-inset placeholder:text-ink-subtle " +
@@ -30,7 +41,7 @@ export function useErrorText() {
         typeof v === "number"
           ? formatFigure(v, locale)
           : /^\d{4}-\d{2}-\d{2}$/.test(v)
-            ? new Intl.DateTimeFormat(locale, { dateStyle: "long", timeZone: "UTC" }).format(new Date(`${v}T00:00:00Z`))
+            ? formatDate(v, locale)
             : v,
       ]),
     );
@@ -48,22 +59,23 @@ type FieldProps = {
 };
 
 function FieldShell({ name, label, error, hint, optional, className, children }: FieldProps & { children: ReactNode }) {
+  const id = useFieldId();
   const t = useTranslations("Forms");
   const errorText = useErrorText();
   return (
     <div className={cn("scroll-below-header", className)} data-field={name}>
-      <label htmlFor={`f-${name}`} className="block font-semibold text-ink">
+      <label htmlFor={id(name)} className="block font-semibold text-ink">
         {label}
         {optional && <span className="ml-1.5 text-sm font-normal text-ink-muted">({t("optional")})</span>}
       </label>
       {hint && (
-        <p id={`f-${name}-hint`} className="mt-0.5 text-sm text-ink-muted">
+        <p id={id(name, "hint")} className="mt-0.5 text-sm text-ink-muted">
           {hint}
         </p>
       )}
       <div className="mt-1.5">{children}</div>
       {error && (
-        <p id={`f-${name}-error`} data-error={error.code} className="mt-1.5 flex items-start gap-1.5 text-sm font-semibold text-down">
+        <p id={id(name, "error")} data-error={error.code} className="mt-1.5 flex items-start gap-1.5 text-sm font-semibold text-down">
           <IconAlert width={16} height={16} className="mt-0.5 shrink-0" />
           {errorText(error)}
         </p>
@@ -72,8 +84,8 @@ function FieldShell({ name, label, error, hint, optional, className, children }:
   );
 }
 
-const describedBy = (name: string, error?: FieldError, hint?: ReactNode) =>
-  [hint ? `f-${name}-hint` : null, error ? `f-${name}-error` : null].filter(Boolean).join(" ") || undefined;
+const describedBy = (id: ReturnType<typeof useFieldId>, name: string, error?: FieldError, hint?: ReactNode) =>
+  [hint ? id(name, "hint") : null, error ? id(name, "error") : null].filter(Boolean).join(" ") || undefined;
 
 export function TextField({
   name,
@@ -85,14 +97,15 @@ export function TextField({
   suffix,
   ...props
 }: FieldProps & Omit<ComponentProps<"input">, "name"> & { suffix?: string }) {
+  const id = useFieldId();
   return (
     <FieldShell name={name} label={label} error={error} hint={hint} optional={optional} className={className}>
       <div className="relative">
         <input
-          id={`f-${name}`}
+          id={id(name)}
           name={name}
           aria-invalid={error ? true : undefined}
-          aria-describedby={describedBy(name, error, hint)}
+          aria-describedby={describedBy(id, name, error, hint)}
           required={!optional}
           className={cn(control, suffix && "pr-16")}
           {...props}
@@ -117,13 +130,14 @@ export function SelectField({
   children,
   ...props
 }: FieldProps & Omit<ComponentProps<"select">, "name">) {
+  const id = useFieldId();
   return (
     <FieldShell name={name} label={label} error={error} hint={hint} optional={optional} className={className}>
       <select
-        id={`f-${name}`}
+        id={id(name)}
         name={name}
         aria-invalid={error ? true : undefined}
-        aria-describedby={describedBy(name, error, hint)}
+        aria-describedby={describedBy(id, name, error, hint)}
         required={!optional}
         className={cn(control, "appearance-auto pr-8")}
         {...props}
@@ -135,14 +149,15 @@ export function SelectField({
 }
 
 export function TextAreaField({ name, label, error, hint, optional, className, ...props }: FieldProps & Omit<ComponentProps<"textarea">, "name">) {
+  const id = useFieldId();
   return (
     <FieldShell name={name} label={label} error={error} hint={hint} optional={optional} className={className}>
       <textarea
-        id={`f-${name}`}
+        id={id(name)}
         name={name}
         rows={4}
         aria-invalid={error ? true : undefined}
-        aria-describedby={describedBy(name, error, hint)}
+        aria-describedby={describedBy(id, name, error, hint)}
         required={!optional}
         className={control}
         {...props}
@@ -158,26 +173,27 @@ export function CheckboxField({
   className,
   ...props
 }: { name: string; label: ReactNode; error?: FieldError; className?: string } & Omit<ComponentProps<"input">, "name" | "type">) {
+  const id = useFieldId();
   const errorText = useErrorText();
   return (
     <div className={cn("scroll-below-header", className)} data-field={name}>
       <div className="flex items-start gap-3">
         <input
-          id={`f-${name}`}
+          id={id(name)}
           name={name}
           type="checkbox"
           required
           aria-invalid={error ? true : undefined}
-          aria-describedby={error ? `f-${name}-error` : undefined}
+          aria-describedby={error ? id(name, "error") : undefined}
           className="mt-1 size-5 shrink-0 accent-brand-700"
           {...props}
         />
-        <label htmlFor={`f-${name}`} className="text-ink">
+        <label htmlFor={id(name)} className="text-ink">
           {label}
         </label>
       </div>
       {error && (
-        <p id={`f-${name}-error`} data-error={error.code} className="mt-1.5 flex items-start gap-1.5 text-sm font-semibold text-down">
+        <p id={id(name, "error")} data-error={error.code} className="mt-1.5 flex items-start gap-1.5 text-sm font-semibold text-down">
           <IconAlert width={16} height={16} className="mt-0.5 shrink-0" />
           {errorText(error)}
         </p>
@@ -210,11 +226,12 @@ export function revealFirstError(form: HTMLFormElement | null, alert: HTMLElemen
 
 /** Campo trampa: fuera de la vista y del orden de tabulación; los lectores de pantalla lo ignoran. */
 export function Honeypot() {
+  const id = useFieldId();
   const t = useTranslations("Forms");
   return (
     <div aria-hidden="true" className="absolute -left-[10000px] h-px w-px overflow-hidden">
-      <label htmlFor={`f-${HONEYPOT_FIELD}`}>{t("honeypot")}</label>
-      <input id={`f-${HONEYPOT_FIELD}`} name={HONEYPOT_FIELD} type="text" tabIndex={-1} autoComplete="off" defaultValue="" />
+      <label htmlFor={id(HONEYPOT_FIELD)}>{t("honeypot")}</label>
+      <input id={id(HONEYPOT_FIELD)} name={HONEYPOT_FIELD} type="text" tabIndex={-1} autoComplete="off" defaultValue="" />
     </div>
   );
 }

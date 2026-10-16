@@ -10,6 +10,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { company } from "@/data/company";
+import { globalErrorMessages } from "@/i18n/global-error-messages";
 import { routing } from "@/i18n/routing";
 import * as seed from "../supabase/seed";
 import { allowedMessageKeys, allowedValues } from "./i18n-allowlist";
@@ -102,6 +103,7 @@ function walk(value: unknown, path: string) {
 }
 
 walk(company, "company");
+walk(globalErrorMessages, "globalErrorMessages");
 for (const [name, value] of Object.entries(seed)) walk(value, `seed.${name}`);
 
 // ─── 3. Locales del seed ────────────────────────────────────────────────────

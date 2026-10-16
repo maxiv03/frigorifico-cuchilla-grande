@@ -6,6 +6,7 @@ import { CutCard } from "@/components/cuts/cut-card";
 import { CutDiagram } from "@/components/cuts/cut-diagram";
 import { PresentationSpecs } from "@/components/cuts/presentation-specs";
 import { SetAlternates } from "@/components/i18n/alternates";
+import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
 import { IconArrowRight } from "@/components/icons";
 import { Badge } from "@/components/ui/badge";
 import { ButtonLink } from "@/components/ui/button";
@@ -13,6 +14,7 @@ import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
 import { getPathname, Link } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
+import { pageMetadata } from "@/lib/metadata";
 import { cutImage } from "@/lib/catalog/images";
 import { speciesFromSlug, speciesSlugs } from "@/lib/catalog/species";
 import type { Species } from "@/lib/catalog/types";
@@ -60,14 +62,8 @@ async function load(params: Promise<Params>) {
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const { locale, species, cut, hrefs } = await load(params);
   const t = await getTranslations({ locale, namespace: "Products" });
-  const image = cutImage(cut.image, species);
   const title = t("detail.metaTitle", { cut: cut.alias ? `${cut.name} (${cut.alias})` : cut.name, species: t(`species.${species}`) });
-  return {
-    title,
-    description: cut.description,
-    alternates: { canonical: hrefs[locale], languages: { ...hrefs, "x-default": hrefs[routing.defaultLocale] } },
-    openGraph: { title, description: cut.description, images: image ? [image.src.src] : undefined },
-  };
+  return pageMetadata({ locale, hrefs, title, description: cut.description });
 }
 
 export default async function CutPage({ params }: { params: Promise<Params> }) {
@@ -83,21 +79,17 @@ export default async function CutPage({ params }: { params: Promise<Params> }) {
   const toCard = (c: CatalogCut) => ({ ...c, zoneName });
   const diagramLabel = t("detail.diagramLabel", { species: t(`detail.speciesInline.${species}`), zone: zoneName });
 
-  const site = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-  const breadcrumbLd = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { name: tNav("home"), path: getPathname({ locale, href: "/" }) },
-      { name: tNav("products"), path: getPathname({ locale, href: "/products" }) },
-      { name: cut.name, path: hrefs[locale] },
-    ].map((item, i) => ({ "@type": "ListItem", position: i + 1, name: item.name, item: new URL(item.path, site).toString() })),
-  };
 
   return (
     <>
       <SetAlternates hrefs={hrefs} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
+      <BreadcrumbJsonLd
+        items={[
+          [tNav("home"), getPathname({ locale, href: "/" })],
+          [tNav("products"), getPathname({ locale, href: "/products" })],
+          [cut.name, hrefs[locale]],
+        ]}
+      />
 
       <div className="border-b border-line bg-surface-muted">
         <Container>

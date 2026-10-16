@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
+import { scrollBehavior } from "@/lib/motion";
 
 /** Valores que la calculadora pasa al formulario "Ofrecer ganado". */
 export type OfferPrefill = { category: string; headCount: string; avgWeight: string };
@@ -25,7 +26,7 @@ export function OfferProvider({ children }: { children: ReactNode }) {
     // Después de montar el formulario precargado: llevarlo a la vista y enfocar su título.
     requestAnimationFrame(() => {
       const heading = document.getElementById("offer");
-      heading?.scrollIntoView({ behavior: "smooth", block: "start" });
+      heading?.scrollIntoView({ behavior: scrollBehavior(), block: "start" });
       heading?.focus({ preventScroll: true });
     });
   }, []);
