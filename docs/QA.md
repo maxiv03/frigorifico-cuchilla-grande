@@ -19,6 +19,41 @@ Todo se puede repetir con los scripts del repo (ver `CLAUDE.md`, sección Comand
 | Claves en el bundle | Ninguna (búsqueda de los valores reales en `.next/static`) |
 | QA existentes y enlaces | ver la tabla de abajo |
 
+## v1.0.1 — filas deslizables en móvil
+
+Revisión en un Android real: en la fila de chips de "Zonas de corte" se veía la barra de scroll contra
+la esquina redondeada, el último chip quedaba cortado en seco y entraban dos y medio.
+
+- **Barra oculta** (`scrollbar-width: none` y `::-webkit-scrollbar`), con el scroll táctil, por rueda
+  y por foco intactos.
+- **Degradado** (`mask-image`) solo en el borde con más contenido: a la derecha al inicio, en los dos
+  a la mitad, a la izquierda al final.
+- **Alineación**: la fila va de borde a borde de la tarjeta; el primer chip queda alineado con el
+  título y el último tiene 16 px de aire. `py-1` deja lugar al anillo de foco.
+- **Snap** suave (`proximity`). Al elegir una zona en el diagrama, su chip se desplaza a la vista (scroll
+  suave, o instantáneo con movimiento reducido).
+- **Chips compactos bajo 640 px**: 40 px de alto, 15 px de texto, 12 px de relleno lateral y 8 px entre
+  chips. Entran tres enteros y el cuarto se ve bajo el degradado.
+- **Mismo tratamiento en las pestañas** (sostenibilidad y contacto). En contacto, las dos pestañas
+  desbordaban por 3 px a 375 px; con menos relleno en móvil ahora entran sin desplazar. Los filtros
+  activos y los cortes elegidos en contacto hacen `flex-wrap`, no desplazan. El gráfico y la tabla de la
+  pizarra conservan la barra a propósito, porque son datos.
+
+`qa:fixes` suma 13 verificaciones por idioma, con emulación táctil (isMobile + hasTouch, 375 px):
+
+- barra oculta, según el estilo calculado;
+- chips de 40 px y separación entre ellos;
+- degradado al inicio, a la mitad y ausente al final;
+- ningún chip recortado por la tarjeta;
+- la zona elegida en el diagrama queda visible, con y sin movimiento reducido;
+- pestañas.
+
+Capturas en `docs/qa/v1.0.1/`.
+
+| Inicio | Mitad | Final | Zona elegida en el diagrama |
+|---|---|---|---|
+| ![](qa/v1.0.1/es_chips-375-inicio.png) | ![](qa/v1.0.1/es_chips-375-mitad.png) | ![](qa/v1.0.1/es_chips-375-final.png) | ![](qa/v1.0.1/es_chips-375-zona-diagrama.png) |
+
 ## Indexación (`SITE_INDEXABLE`)
 
 La empresa es ficticia: por defecto el sitio **no se indexa**.
@@ -347,9 +382,9 @@ Se buscaron los **valores reales** de `SUPABASE_SECRET_KEY`, `SUPABASE_PUBLISHAB
 | `check:links` | Links internos y anclas (también entre páginas), soft-404, mailto de cotización | 200 URLs y 234 anclas sin errores; ningún mailto de cotización (280 revisados); 1.024 links "Pedir cotización" a /contacto |
 | `check:seo` | Metadata, hreflang, robots, OG/Twitter, JSON-LD, fechas por idioma | 106 URLs, 212 imágenes, sin errores |
 | `qa:layout` | Salto al contenido, menú móvil, idioma, imágenes, overflow | 20/20 |
-| `qa:catalog` | Diagrama por teclado, filtros en la URL, detalle, 404 desde el primer pedido | 42/42 |
+| `qa:catalog` | Diagrama por teclado, filtros en la URL, detalle, 404 desde el primer pedido | 42/42 (v1.0.1: chips de 40 px y ≥ 8 px entre chips en lugar de 44 px) |
 | `qa:institutional` | Mapa = lista, links al catálogo filtrado, panel por teclado, CLS, 375 px | 82/82 |
-| `qa:fixes` | Menú a 375×667, catálogo móvil, drawer, foto de origen | 40/40 |
+| `qa:fixes` | Menú a 375×667, catálogo móvil, drawer, foto de origen; filas deslizables (v1.0.1) | QA_FIXES_RESULT |
 | `qa:producers` | Pizarra ordenada y fórmula (12 semanas), calculadora, precarga, validación, honeypot, errores a 375 px | 78/78 |
 | `qa:contact` | Pestañas, precarga del corte (ES/EN), validaciones, honeypot, errores a 375 px | 70/70 |
 | `qa:a11y` | axe, lang, zoom 200 %, movimiento reducido | 100 combinaciones, 0 violaciones; 19/19 verificaciones extra |

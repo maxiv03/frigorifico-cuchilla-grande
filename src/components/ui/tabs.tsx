@@ -1,7 +1,8 @@
 "use client";
 
-import { useId, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
+import { useEffect, useId, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { cn } from "./cn";
+import { revealInRow, useScrollRow } from "./use-scroll-row";
 
 export type TabItem = {
   /** Clave neutra (igual en todos los idiomas; ?tab=quote). */
@@ -39,6 +40,16 @@ export function Tabs({ items, label, value, defaultValue, onValueChange, idPrefi
   const [internal, setInternal] = useState(defaultValue ?? items[0]?.id);
   const active = value ?? internal;
   const refs = useRef<Record<string, HTMLButtonElement | null>>({});
+  // Si las pestañas no entran (móvil), la lista se desliza de borde a borde de la pantalla (anula
+  // el gutter de 16 px del Container; la primera queda alineada con el texto) y la activa se lleva
+  // a la vista.
+  const listRef = useScrollRow<HTMLDivElement>();
+  const mounted = useRef(false);
+  useEffect(() => {
+    const tab = active ? refs.current[active] : null;
+    if (listRef.current && tab) revealInRow(listRef.current, tab, !mounted.current);
+    mounted.current = true;
+  }, [active, listRef]);
 
   const select = (id: string, focus = false) => {
     if (value === undefined) setInternal(id);
@@ -67,9 +78,10 @@ export function Tabs({ items, label, value, defaultValue, onValueChange, idPrefi
   return (
     <div className={className}>
       <div
+        ref={listRef}
         role="tablist"
         aria-label={label}
-        className={cn("flex gap-1 overflow-x-auto border-b border-line [scrollbar-width:thin]", listClassName)}
+        className={cn("scroll-row -mx-4 flex snap-x snap-proximity scroll-px-6 gap-1 overflow-x-auto border-b border-line px-4 sm:mx-0 sm:px-0", listClassName)}
       >
         {items.map((t) => {
           const selected = t.id === active;
@@ -89,7 +101,7 @@ export function Tabs({ items, label, value, defaultValue, onValueChange, idPrefi
               onClick={() => select(t.id)}
               onKeyDown={onKeyDown}
               className={cn(
-                "-mb-px inline-flex min-h-12 shrink-0 items-center gap-2 border-b-[3px] px-4 font-semibold whitespace-nowrap transition-colors focus-visible:outline-offset-[-2px]",
+                "-mb-px inline-flex min-h-12 shrink-0 snap-start items-center gap-2 border-b-[3px] px-3 font-semibold whitespace-nowrap transition-colors focus-visible:outline-offset-[-2px] sm:px-4",
                 selected ? "border-brand-700 text-brand-800" : "border-transparent text-ink-muted hover:border-line hover:text-ink",
               )}
             >

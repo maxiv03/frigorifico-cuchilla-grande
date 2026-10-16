@@ -6,6 +6,7 @@ import { useCallback, useEffect, useId, useMemo, useRef, useState, type Componen
 import { IconClose } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/components/ui/cn";
+import { revealInRow, useScrollRow } from "@/components/ui/use-scroll-row";
 import {
   activeFilterKeys,
   matches,
@@ -102,6 +103,21 @@ function Catalog({
     speciesZones.map((z) => [z.key, cuts.filter((c) => matches(c, { ...filters, zone: z.key })).length]),
   );
   const toggleZone = (zone: string) => update({ zone: filters.zone === zone ? null : zone });
+
+  // Fila de chips en móvil (desplazamiento horizontal): la zona elegida (también desde el
+  // diagrama) se lleva a la vista; al cambiar de especie la fila vuelve al inicio. Quitar la zona
+  // no la mueve (sería un salto bajo el dedo). Al montar, sin animación.
+  const chipsRef = useScrollRow<HTMLDivElement>();
+  const shown = useRef<string | null>(null);
+  useEffect(() => {
+    const row = chipsRef.current;
+    const first = shown.current === null;
+    const speciesChanged = !first && !shown.current!.startsWith(`${filters.species}:`);
+    shown.current = `${filters.species}:${filters.zone ?? ""}`;
+    if (!row || (!filters.zone && !speciesChanged)) return;
+    const chip = row.querySelector<HTMLElement>('[aria-pressed="true"]');
+    if (chip) revealInRow(row, chip, first);
+  }, [filters.species, filters.zone, chipsRef]);
 
   const filterLabel = (k: FilterKey) => {
     const v = filters[k];
@@ -217,10 +233,14 @@ function Catalog({
               }))}
               className="mt-4"
             />
+            {/* Móvil: una fila que se desliza de borde a borde de la tarjeta, con el primer chip
+                alineado al texto (px-4) y aire al final; py-1 deja lugar al anillo de foco. */}
             <div
+              ref={chipsRef}
               role="group"
               aria-label={t("diagram.chipsLabel")}
-              className="-mx-4 mt-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:mt-5 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0"
+              data-zone-chips
+              className="scroll-row -mx-4 mt-3 flex snap-x snap-proximity scroll-px-6 gap-2 overflow-x-auto px-4 py-1 sm:mx-0 sm:mt-5 sm:flex-wrap sm:overflow-visible sm:p-0"
             >
               <Chip pressed={!filters.zone} onClick={() => update({ zone: null })}>
                 {t("diagram.seeAll")}
@@ -228,6 +248,7 @@ function Catalog({
               {speciesZones.map((z) => (
                 <Chip
                   key={z.key}
+                  data-zone={z.key}
                   pressed={filters.zone === z.key}
                   onClick={() => toggleZone(z.key)}
                   muted={(zoneCounts.get(z.key) ?? 0) === 0}
@@ -416,7 +437,8 @@ function Chip({
       type="button"
       aria-pressed={pressed}
       className={cn(
-        "inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full px-4 text-sm font-semibold whitespace-nowrap ring-1 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700",
+        // Bajo sm, más compacto (40 px de alto, 15 px de texto, menos relleno): entran más por fila.
+        "inline-flex min-h-10 shrink-0 snap-start items-center gap-1.5 rounded-full px-3 text-[15px] font-semibold whitespace-nowrap ring-1 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700 sm:min-h-11 sm:gap-2 sm:px-4 sm:text-sm",
         pressed
           ? "bg-brand-700 text-white ring-brand-700"
           : cn("bg-surface ring-line hover:bg-earth-50 hover:ring-earth-300", muted ? "text-ink-subtle" : "text-ink"),

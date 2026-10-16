@@ -167,11 +167,17 @@ async function main() {
     check(`imágenes con alt ${path}`, noAlt === 0, String(noAlt));
   }
   await open(mobile, `/es/productos`);
-  const chipH = await mobile
+  // Chips compactos en móvil (40 px de alto, pedido en la revisión de v1.0.0): el área táctil queda
+  // cómoda con ≥ 8 px entre chips (WCAG 2.5.8 pide 24 px).
+  const chips = await mobile
     .locator('[role=group][aria-label="Zonas"] button')
-    .first()
-    .evaluate((b) => b.getBoundingClientRect().height);
-  check("móvil: chips de zona de al menos 44 px", chipH >= 44, String(chipH));
+    .evaluateAll((bs) => bs.map((b) => b.getBoundingClientRect()).map((r) => ({ h: r.height, left: r.left, right: r.right })));
+  const chipGap = Math.min(...chips.slice(1).map((c, i) => c.left - chips[i].right));
+  check(
+    "móvil: chips de zona de al menos 40 px y separados ≥ 8 px",
+    chips.every((c) => c.h >= 40) && chipGap >= 8,
+    `${chips[0]?.h} px / ${chipGap} px`,
+  );
 
   await browser.close();
 

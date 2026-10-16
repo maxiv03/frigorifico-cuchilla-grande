@@ -145,7 +145,8 @@ hex sueltos.
   garrón de la zona "Garrón y brazuelo") y etiqueta junto a las patas (`anchor`). Las zonas del
   tronco terminan donde nacen las patas (pecho y falda no bajan entre las patas delanteras). Revisar
   cambios de geometría con `npm run diagram:preview`.
-- Catálogo en móvil (< lg): chips de zona en una fila con desplazamiento horizontal, filtros en
+- Catálogo en móvil (< lg): chips de zona en una fila con desplazamiento horizontal (ver "Filas
+  deslizables" más abajo; bajo `sm`, chips de 40 px y texto de 15 px), filtros en
   un panel modal ("Filtros (n)": foco atrapado, Escape, devuelve el foco) y "Presentaciones y
   formato de caja" plegado debajo de los resultados. Los items de grilla llevan `min-w-0`.
   Bajo `sm` (< 640 px) la tarjeta con silueta es compacta y horizontal (silueta chica a la izquierda;
@@ -260,8 +261,17 @@ hex sueltos.
   Permissions-Policy, X-Frame-Options DENY + frame-ancestors 'none', COOP.
 - Accesibilidad: axe sin violaciones serias/críticas (`qa:a11y`), recorrido por teclado
   (`qa:keyboard`). Dos formularios en la misma página → `<FieldIdScope value="…">` (ids únicos).
-  Links chicos apilados: `min-h-6` (target de 24 px). Regiones con scroll horizontal: `tabIndex={0}`,
-  `role="region"` y nombre. Desplazamientos por JS con `scrollBehavior()`. Movimiento reducido:
+  Links chicos apilados: `min-h-6` (target de 24 px). Regiones con scroll horizontal de datos
+  (gráfico y tabla de la pizarra): `tabIndex={0}`, `role="region"` y nombre, con la barra visible.
+- Filas deslizables de controles (chips de zonas, pestañas; v1.0.1): utilidad `scroll-row` +
+  `useScrollRow()` (`components/ui/use-scroll-row.ts`). Sin barra de scroll, degradado (mask-image)
+  solo en el borde que tiene más contenido (`data-fade-start/end`), `snap-x snap-proximity`,
+  `scroll-px-6` y `snap-start` en cada ítem. En móvil la fila va de borde a borde del contenedor
+  (`-mx-4 px-4`): el primer ítem queda alineado con el texto y el último con aire. El ítem activo se
+  lleva a la vista con `revealInRow()` (solo horizontal, respeta movimiento reducido). qa:fixes lo
+  verifica con emulación táctil a 375 px.
+- Otras filas de controles (filtros activos, cortes elegidos en contacto) hacen `flex-wrap`: no
+  desplazan. Desplazamientos por JS con `scrollBehavior()`. Movimiento reducido:
   sin transiciones ni animaciones (globals.css).
 - Cliente liviano: `NextIntlClientProvider` recibe solo `CLIENT_NAMESPACES` (layout). Un componente
   de cliente que use un namespace nuevo → agregarlo ahí. d3-geo, topojson y world-atlas quedan en el
