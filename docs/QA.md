@@ -41,9 +41,15 @@ midió con Lighthouse sobre un build local con `SITE_INDEXABLE=true` (tabla más
   traducidos, Open Graph (`es_UY` / `en_GB`, `og:site_name`, `og:type` article en noticias) y
   Twitter card `summary_large_image`.
 - **Imágenes OG** con `next/og`, tres plantillas de marca:
-  - general (todas las páginas estáticas): bordó, antetítulo, título y bajada;
-  - corte: silueta de la especie con la zona del corte resaltada;
-  - noticia: foto, fecha y título.
+  - general (todas las páginas estáticas): bordó, antetítulo, título y bajada (PNG, 60–75 KB);
+  - corte: silueta de la especie con la zona del corte resaltada (PNG, 65–75 KB);
+  - noticia: foto, fecha y título (**JPEG, 68–99 KB**).
+
+  Las de noticias pesaban 0,6–1,1 MB en PNG, porque el PNG guarda la foto sin compresión, y WhatsApp
+  y otras redes no muestran la vista previa con imágenes tan pesadas. `ImageResponse` solo genera
+  PNG: la plantilla de noticia recodifica el resultado en JPEG (sharp, calidad 80). Medido en
+  producción en las 212 imágenes OG/Twitter: **máximo 97 KB**; `check:seo` falla si alguna
+  supera 300 KB.
 
   | General | Corte | Noticia |
   |---|---|---|
@@ -208,14 +214,53 @@ Informes completos (JSON y HTML) con `npm run lighthouse`, en `screenshots/light
     todas las páginas): ahora usa un módulo chico propio;
   - el proveedor de next-intl mandaba al navegador los mensajes de todo el sitio: ahora solo los
     namespaces que usan los componentes de cliente (unos 7 KB comprimidos menos de HTML por página).
-- **LCP**: la foto del hero (home) o el título; la foto lleva `fetchpriority="high"`, sin lazy y
-  es descubrible en el HTML inicial. **CLS 0** en todas las páginas.
-- **Fuentes**: Source Serif 4 y Source Sans 3 autohospedadas con `next/font` (`display: swap`), un
-  archivo variable por familia.
+- **CLS 0** en todas las páginas.
+- **Fuentes**: Source Serif 4 y Source Sans 3 autohospedadas con `next/font` (`display: swap`). La
+  serif se usa solo en semibold: un archivo estático de 600 (21 KB) en lugar del variable (51 KB).
+  La sans queda variable (29 KB).
 - **Imágenes**: `next/image` con `sizes` reales. Lighthouse sugiere 107 KB de ahorro en las fotos de
   la home, pero el navegador ya elige el ancho correcto (380 px × DPR 1,75 → 750 px del srcset).
 - **Mercados** es la página más pesada en HTML (unos 107 KB comprimidos) por las rutas del SVG del
   mapa, que van en el HTML y en el payload RSC. Igual mide Performance 95.
+
+### LCP
+
+En la medición de la fase 6 tenían LCP > 2,5 s la home (2,8 / 3,2 s), el detalle de corte (2,9 s) y
+mercados (2,7 / 2,5 s). Desglose (Lighthouse, fases observadas):
+
+| Página | Elemento LCP | Qué demoraba |
+|---|---|---|
+| Home | Foto del hero (40 KB, variante vertical en móvil) | ~350 ms hasta que empieza a bajar y ~600 ms de render después de bajada |
+| Detalle de corte | Foto de la pieza | ~380 ms hasta que empieza a bajar y ~500–900 ms de render |
+| Mercados, catálogo | Bajada del encabezado (texto) | ~850 ms de render, sin red de por medio |
+
+Qué se hizo:
+
+- **Fuentes**: la serif pasó de variable (51 KB) a estática de 600 (21 KB); son 30 KB menos en la
+  ruta crítica de todas las páginas.
+- **Detalles de corte y de noticia**: `preload` en la foto (`<link rel="preload">` con `imagesrcset`
+  en el `<head>`). Se verificó que no se filtra: el catálogo y el listado de noticias no descargan
+  las fotos de los detalles.
+- **Hero de la home**: se probó precargar las dos variantes con `preload()` de React y `media`, y
+  la demora previa a la descarga bajó de ~350 ms a ~50 ms. **Se revirtió**: la sugerencia viaja
+  en el payload RSC y, como las demás páginas precargan la home (logo, "Inicio"), catálogo,
+  contacto y productores descargaban la foto del hero con prioridad alta (40 KB extra en cada página).
+- **Imágenes**: los `sizes` ya eligen el ancho correcto y las fotos LCP pesan unos 40 KB; no hay
+  margen ahí.
+
+Lo que no se pudo bajar más, y por qué:
+
+- El tramo dominante es el **render tardío** (500–900 ms observados), no la red: el navegador pinta
+  el elemento LCP después de evaluar el JavaScript de arranque de Next y React (unos 150 KB
+  comprimidos), y la simulación móvil de Lighthouse lo multiplica por la CPU ×4. Reducirlo exigiría
+  sacar JS del runtime (React, router de Next), que no depende del sitio.
+- En las páginas con LCP de texto, `font-display: optional` evitaría que el cambio de fuente cuente
+  como LCP, pero en la primera visita con red lenta el sitio se vería con la fuente de reemplazo. Se
+  priorizó la identidad tipográfica.
+- Hay ruido entre corridas: el mismo detalle de corte midió 2,5 s en ES y 2,8 s en EN en la misma
+  tanda.
+
+Resultado de la última medición (tabla de arriba): ver el resumen al final de esta sección.
 
 ## Seguridad
 
@@ -263,9 +308,17 @@ Se buscaron los **valores reales** de `SUPABASE_SECRET_KEY`, `SUPABASE_PUBLISHAB
 - Para que esto se pueda verificar en adelante, desde la fase 6 cada ejecución queda registrada en
   la tabla `cron_runs` (sin permisos para anon) y `npm run ops:status` muestra el historial y avisa si
   falta algún día. Primera fila: 16 de octubre a las 18:58 UTC (ejecución manual de verificación).
-- **Rotación del lunes 19 de octubre**: todavía no ocurrió (este informe es del 16). Se puede
-  confirmar con `npm run ops:status` (semana vigente 2026-10-19 cargada y `inserted_quotes = 6`).
-  Antes, en la fase 5, se verificó en producción que el cron inserta la semana con la fórmula nueva.
+- **Rotación del lunes 19 de octubre — verificación pendiente.** Al cerrar el proyecto (16 de
+  octubre) todavía no ocurrió. El lunes 19 de octubre de 2026, después de las 10:00 UTC (07:00 en
+  Montevideo), correr:
+
+  ```
+  npm run ops:status
+  ```
+
+  y confirmar que figura una ejecución del 19 con `semana 2026-10-19 · 6 precios` y que pasa
+  "pizarra: semana vigente (2026-10-19) cargada". En la fase 5 ya se verificó en producción que el
+  cron inserta la semana con la fórmula nueva (borrando la vigente y llamándolo a mano).
 - **Supabase**: el proyecto figura **Healthy** y sin aviso de pausa (panel del proyecto, 16 de octubre). El cron
   diario lo mantiene activo.
 
@@ -305,8 +358,9 @@ Se buscaron los **valores reales** de `SUPABASE_SECRET_KEY`, `SUPABASE_PUBLISHAB
 
 | Pendiente | Motivo |
 |---|---|
-| Confirmar la rotación automática del lunes 19 de octubre | Todavía no ocurrió; `npm run ops:status` lo verifica. |
+| Confirmar la rotación automática del lunes 19 de octubre de 2026 | Todavía no ocurrió al cierre. Comando: `npm run ops:status` después de las 10:00 UTC del 19. |
 | Historial del cron anterior al 16 de octubre | Vercel Hobby y Supabase gratis ya no conservan esos logs; desde la fase 6 queda en `cron_runs`. |
 | CSP sin `'unsafe-inline'` en scripts | Requiere nonce por pedido y renderizar todas las páginas en cada visita (sin prerender ni CDN). |
-| Imágenes OG prerenderizadas | Con Cache Components se generan en el primer pedido y después las sirve el CDN (caché de un año). Las de noticias pesan unos 0,7–1,1 MB porque el PNG guarda la foto sin compresión. |
+| Imágenes OG prerenderizadas | Con Cache Components se generan en el primer pedido y después las sirve el CDN (caché de un año). |
+| LCP ≤ 2,5 s en todas las páginas | El tramo que queda es el render tardío por el JS de arranque de React y Next (ver "LCP"). |
 | SEO 100 medido sobre un deploy de Vercel | Los previews tienen Vercel Authentication y `X-Robots-Tag: noindex` propio de Vercel; se midió con el mismo build en local. |

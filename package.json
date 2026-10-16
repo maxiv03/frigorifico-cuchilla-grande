@@ -1,7 +1,8 @@
 {
   "name": "frigorifico-cuchilla-grande",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
+  "license": "UNLICENSED",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -25,7 +26,8 @@
     "qa:a11y": "tsx scripts/qa-a11y.ts",
     "qa:keyboard": "tsx scripts/qa-keyboard.ts",
     "lighthouse": "tsx scripts/lighthouse.ts",
-    "ops:status": "tsx --env-file=.env.local scripts/ops-status.ts"
+    "ops:status": "tsx --env-file=.env.local scripts/ops-status.ts",
+    "readme:shots": "tsx scripts/readme-shots.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.117.3",

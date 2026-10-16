@@ -6,6 +6,11 @@ pero verosímiles. Público: compradores B2B del exterior y productores ganadero
 
 Planta ficticia: Sarandí del Yí (departamento de Durazno), sobre ruta 6.
 
+**Estado: v1.0.0 terminada (fases 0–7).** Producción: https://frigorifico-cuchilla-grande.vercel.app
+(noindex a propósito). Documentación pública: [README.md](README.md),
+[ARCHITECTURE.md](ARCHITECTURE.md), [PROCESS.md](PROCESS.md) y [docs/QA.md](docs/QA.md). Este archivo
+es la guía de trabajo: convenciones y reglas para cualquier cambio futuro.
+
 ## Stack
 
 | Pieza | Versión fijada | Notas |
@@ -34,7 +39,7 @@ src/
   i18n/                  routing.ts (locales + pathnames), request.ts, navigation.ts
   messages/{es,en}.json  textos de interfaz
   data/company.ts        ÚNICA fuente de verdad de cifras y datos de la empresa
-  config/navigation.ts   ítems de menú con flag `enabled` por sección
+  config/navigation.ts   menú principal y barra superior (se repiten en footer y menú móvil)
   components/ui/         Button, Section, Container, Card, Badge, Tabs (+ cn)
   components/layout/     header, footer, menú móvil, selector de idioma
   components/brand/      Logo e Isotype
@@ -68,7 +73,9 @@ src/
 supabase/
   migrations/            SQL versionado (solo aditivo)
   seed/                  contenido bilingüe en TS → se carga con `npm run db:seed`
-scripts/                 seed, i18n-check, test-permissions, screenshots, check-links, qa-*, diagram-preview
+scripts/                 seed, i18n-check, test-permissions, screenshots, check-links, check-seo, qa-*,
+                         lighthouse, ops-status, readme-shots, diagram-preview
+docs/                    QA.md, img/ (capturas del README), qa/ (capturas del informe de QA)
 public/brand/            isotipo color / mono / blanco (SVG)
 ```
 
@@ -88,24 +95,25 @@ hex sueltos.
 | Espaciado | `py-section` (5rem), `py-section-lg` (7rem), `h-header` (4.5rem), `max-w-site` (76rem) | secciones y layout |
 
 - Tipografía: **Source Serif 4** (títulos, `font-serif`) + **Source Sans 3** (texto,
-  `font-sans`), con `next/font`. Misma superfamilia de Adobe: combinan sin choque.
+  `font-sans`), con `next/font`. Misma superfamilia de Adobe: combinan sin choque. La serif se carga
+  solo en 600 (archivo estático de 21 KB, en la ruta del LCP): los textos serif van en semibold.
 - Contraste AA verificado para todos los pares usados (texto sobre `surface`,
   `surface-muted`, `earth-100`, `night`, blanco sobre `brand-600/700/800`). Al sumar un
   par nuevo, verificarlo.
 - Secciones: alternar `<Section tone="white">` y `tone="muted"`. Encabezados con
   `<SectionHeader eyebrow title lead />`.
-- Fotos: `next/image` con `sizes` reales; prioridad solo en el hero
-  (`loading="eager"` + `fetchPriority="high"`, no `preload`, porque hay una imagen por
-  breakpoint). Todas con `alt` traducido.
+- Fotos: `next/image` con `sizes` reales y `alt` traducido. Foto LCP única (detalle de corte y de
+  noticia): prop `preload`. Hero de la home (una imagen por breakpoint): `loading="eager"` +
+  `fetchPriority="high"`, **sin preload**: ni el `preload` de next/image (bajaría las dos variantes)
+  ni `preload()` de React (viaja en el payload RSC y, como todas las páginas precargan la home, todas
+  bajaban la foto; medido en la fase 7).
 - Logo: `<Logo variant="color|mono|light" />`; isotipo suelto `<Isotype />`
   (currentColor). Favicon `src/app/icon.svg`, `apple-icon.png`, `manifest.ts`.
 
 ## Navegación
-- `src/config/navigation.ts`: cada ítem con `enabled`. **Solo se activan secciones que
-  existen**; al cerrar una fase se activa su ítem. CTAs usan `isEnabled(key)` para ir a
-  la página real o, mientras no exista, a un ancla de la home / mailto / WhatsApp.
-- `NAV_PREVIEW=1 npm run dev` muestra todos los ítems para revisar diseño (ignorado en
-  producción).
+- `src/config/navigation.ts`: `mainNav` (con "Productores" destacado) y `utilityNav`. Durante la
+  construcción cada ítem tenía un flag `enabled` (nunca un link a una página que no existiera); con
+  todas las secciones terminadas se quitaron los flags y `NAV_PREVIEW`.
 - `npm run check:links -- <url>` recorre el sitio y falla ante cualquier link interno o
   ancla rota. Correrlo contra producción al cerrar cada fase.
 - Menú móvil: el panel va en un portal a `<body>` (el header sticky usa
@@ -222,7 +230,6 @@ hex sueltos.
   mínimo (párrafos, `##`, listas). Detalle con generateStaticParams, `instant = false`, alternates y
   `<SetAlternates>`. Sin declaraciones de personas u organismos reales.
 - Trabajá con nosotros: estático, postulación por mail con asunto "[Demo] Postulación" (sin CV).
-- Todos los flags de navegación quedan activos.
 - Scripts de Playwright con tsx: dentro de `page.evaluate` no declarar funciones con nombre (tsx
   inyecta `__name`, que no existe en la página).
 
@@ -238,7 +245,9 @@ hex sueltos.
   (plantilla "%s · Frigorífico Cuchilla Grande"), descripción traducida, canonical, hreflang es/en/
   x-default con slugs traducidos, Open Graph (es_UY / en_GB) y Twitter card.
 - Imágenes OG: un `opengraph-image.tsx` y un `twitter-image.tsx` por ruta, con las plantillas de
-  `lib/og` (general, corte, noticia). Se generan por pedido (Cache Components no las prerenderiza) y
+  `lib/og` (general y corte en PNG, ~70 KB; noticia en **JPEG** vía sharp, <100 KB: en PNG la foto
+  llegaba a 1,1 MB y WhatsApp no mostraba la vista previa; `check:seo` falla por encima de 300 KB).
+  Se generan por pedido (Cache Components no las prerenderiza) y
   el CDN las cachea un año; leen fuentes y fotos del repo (`outputFileTracingIncludes`). El proxy
   excluye `*/opengraph-image` y `*/twitter-image` (si no, `/es/news/opengraph-image` se tomaba como
   slug y redirigía).
@@ -385,12 +394,14 @@ npm run qa:a11y -- <url-base>      # axe (ES/EN, 1440/375, estados), lang, zoom 
 npm run qa:keyboard -- <url-base>  # Tab por formularios, diagrama, mapa, pestañas, menú; foco visible en cada parada
 npm run lighthouse -- <url-base> [--label x]  # Lighthouse móvil, 6 páginas × ES/EN (screenshots/lighthouse/<label>)
 npm run ops:status                 # ejecuciones del cron (cron_runs), pizarra y purga
+npm run readme:shots [-- url]       # capturas del README en docs/img
 ```
 
-## Cierre de cada fase
+## Cierre de cada cambio (antes por fase)
 typecheck, lint, build, i18n:check (y db:test-permissions si se tocó la base),
 check:links, check:seo, qa:layout, qa:catalog, qa:institutional, qa:fixes, qa:producers, qa:contact, qa:a11y,
 qa:keyboard y lighthouse contra producción,
 capturas en escritorio y 375 px de las páginas tocadas en ES y EN (más el catálogo vacuno
-completo a 375 px). Toda captura de página completa pasa por `settlePage` (sin fotos a medio cargar). Esperar revisión
-del usuario antes de pasar a la siguiente fase.
+completo a 375 px). Toda captura de página completa pasa por `settlePage` (sin fotos a medio cargar). Las capturas de
+trabajo van a `screenshots/` (no versionado); solo se versionan `docs/img/` (README) y `docs/qa/` (informe de QA).
+Esperar revisión del usuario antes de publicar cambios grandes.
