@@ -258,7 +258,8 @@ hex sueltos.
   Next inyecta scripts inline en páginas estáticas (con nonce cada página pasaría a renderizarse por
   pedido). CSP estricta en report-only solo con `CSP_STRICT_REPORT_ONLY=true` (en producción genera
   un error de consola por script y baja "Buenas prácticas"). Más nosniff, Referrer-Policy,
-  Permissions-Policy, X-Frame-Options DENY + frame-ancestors 'none', COOP.
+  Permissions-Policy, frame-ancestors 'self' https://fourvexa.com (iframe de "Probalo vos" en el
+  portfolio; por eso sin X-Frame-Options), COOP.
 - Accesibilidad: axe sin violaciones serias/críticas (`qa:a11y`), recorrido por teclado
   (`qa:keyboard`). Dos formularios en la misma página → `<FieldIdScope value="…">` (ids únicos).
   Links chicos apilados: `min-h-6` (target de 24 px). Regiones con scroll horizontal de datos

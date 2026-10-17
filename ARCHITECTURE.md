@@ -182,9 +182,10 @@ sequenceDiagram
   guarda: solo `sha256(IP + IP_HASH_SALT)`.
 - **Checks en la base**: largos, formatos (email, teléfono), valores permitidos (incoterm, unidad,
   motivo) y `privacy_accepted`. `npm run db:test-permissions` los prueba con la clave publicable.
-- **Headers**: CSP sin orígenes externos (`default-src 'self'`, `frame-ancestors 'none'`,
-  `object-src 'none'`), `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`,
-  `X-Frame-Options: DENY`, COOP y HSTS. La CSP necesita `'unsafe-inline'` en scripts porque Next
+- **Headers**: CSP sin orígenes externos (`default-src 'self'`, `frame-ancestors 'self'
+  https://fourvexa.com`, `object-src 'none'`), `X-Content-Type-Options`, `Referrer-Policy`,
+  `Permissions-Policy`, COOP y HSTS. Solo fourvexa.com puede mostrar el sitio en un iframe (la demo
+  "Probalo vos" del portfolio); por eso no hay `X-Frame-Options`, que no admite orígenes permitidos. La CSP necesita `'unsafe-inline'` en scripts porque Next
   inyecta scripts inline en páginas estáticas; la alternativa con nonce obligaría a renderizar cada
   página en cada visita. Hay una variante estricta en report-only para auditar
   (`CSP_STRICT_REPORT_ONLY`).

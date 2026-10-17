@@ -19,7 +19,9 @@ const csp = [
   "img-src 'self' data: blob:",
   "font-src 'self'",
   "connect-src 'self'",
-  "frame-ancestors 'none'",
+  // Solo fourvexa.com la puede mostrar en un iframe ("Probalo vos" del portfolio). Reemplaza a
+  // X-Frame-Options, que no admite una lista de orígenes permitidos.
+  "frame-ancestors 'self' https://fourvexa.com",
   "base-uri 'self'",
   "form-action 'self'",
   "object-src 'none'",
@@ -41,7 +43,6 @@ const securityHeaders = [
   ...(reportOnly ? [{ key: "Content-Security-Policy-Report-Only", value: strictCsp }] : []),
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-  { key: "X-Frame-Options", value: "DENY" },
   { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=()" },
   { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
   // SITE_INDEXABLE=false (por defecto): también las respuestas que no son HTML (OG, sitemap).
